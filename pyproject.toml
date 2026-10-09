@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fastinfer"
+version = "0.1.0"
+description = "An educational LLM inference runtime with measured Triton kernels"
+requires-python = ">=3.10"
+dependencies = ["torch"]
+
+[project.optional-dependencies]
+test = ["pytest"]
+gpu = ["triton"]
+model = ["transformers"]
+analysis = ["numpy", "matplotlib", "pandas"]
+
+[tool.setuptools]
+packages = ["fastinfer", "fastinfer.kernels"]
+
+[tool.setuptools.package-dir]
+fastinfer = "."
+"fastinfer.kernels" = "kernels"
