@@ -15,7 +15,7 @@ FastInfer is an experimental LLM inference runtime centered on custom Triton GPU
 - A CUDA-event benchmark for the PyTorch matmul baseline.
 - An environment reporter that records hardware and software versions.
 
-The repository is in early development: the first Triton kernel and serving components are not implemented yet, and no GPU performance results are published.
+Current measured results cover the [PyTorch matmul baseline](notes/matmul_baseline_analysis.md). Triton kernels and serving components will be reported after their implementations and comparisons are validated.
 
 ## Setup and tests
 
@@ -36,6 +36,8 @@ PYTHONPATH=.. python benchmarks/matmul_baseline.py
 ```
 
 The benchmark defaults to a float16 multiplication of a `1 x 256` matrix by a `256 x 256` matrix. It uses 10 warmup runs and 30 timed repetitions, then writes the latency samples and environment metadata to `results/raw/`. Use `--m`, `--k`, `--n`, `--dtype`, `--warmup`, and `--repetitions` to change the workload.
+
+For small workloads, `--timing-mode graph --graph-ops 100` reports an amortized CUDA graph replay time. It is recorded separately from the default eager timing mode; see `benchmarks/README.md` for the measurement distinction.
 
 The environment report should be checked before installing optional GPU dependencies, so the existing PyTorch and CUDA setup remains compatible.
 

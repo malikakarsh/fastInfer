@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "fastinfer"
 version = "0.1.0"
-description = "An educational LLM inference runtime with measured Triton kernels"
+description = "LLM inference kernels, runtime components, and reproducible benchmarks"
 requires-python = ">=3.10"
 dependencies = ["torch"]
 
