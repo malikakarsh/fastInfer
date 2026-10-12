@@ -47,3 +47,40 @@ PYTHONPATH=.. python benchmarks/matmul_compare.py --m 128 --k 1024 --n 1024 --bl
 ```
 
 The runner checks both Triton variants against a float32 result before timing. With this shape, the output grid changes from 256 programs to 128 programs. The existing 16-row tile remains the default. Only one sweep flag can be used per run.
+
+To inspect the compiled resource use of those two tiles on the same GPU, run:
+
+```bash
+PYTHONPATH=.. python scripts/matmul_kernel_report.py --m 128 --k 1024 --n 1024
+```
+
+This prints registers per thread, spill count, shared memory per program, warp count, and grid size. It launches each kernel once to obtain its compiled metadata; it is a diagnostic, not a timing benchmark. Zero spills rules out register spilling as an explanation for a large slowdown, but these counts alone do not establish the kernel's bottleneck.
+
+## Joint tile and thread configuration sweep
+
+Run the GPU correctness tests first, then the focused sweep:
+
+```bash
+PYTHONPATH=.. python -m unittest discover -s tests -p 'test_triton_matmul.py' -v
+PYTHONPATH=.. python benchmarks/matmul_compare.py --m 128 --k 1024 --n 1024 --config-sweep
+```
+
+In a Kaggle notebook, prefix each command with `!`. The sweep compares PyTorch and nine explicit configurations of the existing tiled kernel:
+
+| BM | BN | BK | Warps | Purpose |
+| ---: | ---: | ---: | ---: | --- |
+| 16 | 32 | 32 | 4 | Original baseline |
+| 32 | 32 | 32 | 4 | Best previous configuration at the target shape |
+| 64 | 32 | 32 | 4 | Increase reuse of B across rows |
+| 32 | 64 | 32 | 4 | Increase reuse of A across columns |
+| 64 | 64 | 32 | 4 | Combine row and column reuse |
+| 64 | 64 | 64 | 4 | Reduce K iterations for the larger output tile |
+| 64 | 64 | 32 | 2 | Fewer threads per program |
+| 64 | 64 | 32 | 8 | More threads per program |
+| 64 | 128 | 32 | 4 | Further increase reuse of A |
+
+A CUDA warp contains 32 threads. Tile sizes and thread counts interact; testing their combinations is part of the approach described in the [official Triton matmul tutorial](https://triton-lang.org/main/getting-started/tutorials/03-matrix-multiplication.html). These configurations are candidates, not guaranteed improvements on the T4.
+
+The timing method remains CUDA graph replay with 100 operations per sample, 10 warmup replays, and 30 samples per implementation. Each repetition rotates through all ten implementations. This changes the amount of work between measurements relative to earlier three-way sweeps, so compare implementations within this run. Every Triton candidate must pass the float32 accuracy check before timing begins. Resource metadata is collected before timing and saved alongside the full samples. The JSON also records PyTorch's FP16 reduced-precision-reduction setting; its accuracy result remains visible even when it fails the recorded tolerance.
+
+The runner prints the fastest measured candidate and the ratio of PyTorch median to that candidate's median. A ratio above 1 means the candidate was faster in that run. Repeat the sweep independently before treating its selected winner as reproducible. Then validate the candidate at larger K/N and adjacent shapes. No runtime dispatch or default tile changes are selected automatically.

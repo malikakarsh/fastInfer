@@ -3,6 +3,26 @@ import triton
 import triton.language as tl
 
 
+# Explicit candidates: compare output-tile reuse and threads per program.
+# These are experimental configurations, not automatic dispatch rules.
+MATMUL_SWEEP_CONFIGS = {
+    f"triton_m{bm}_n{bn}_k{bk}_w{warps}": {
+        "block_m": bm, "block_n": bn, "block_k": bk, "num_warps": warps,
+    }
+    for bm, bn, bk, warps in (
+        (16, 32, 32, 4),  # Original baseline.
+        (32, 32, 32, 4),  # Best measured M=128, K=N=1024 configuration so far.
+        (64, 32, 32, 4),
+        (32, 64, 32, 4),
+        (64, 64, 32, 4),
+        (64, 64, 64, 4),
+        (64, 64, 32, 2),
+        (64, 64, 32, 8),
+        (64, 128, 32, 4),
+    )
+}
+
+
 @triton.jit
 def _tiled_matmul(
     a_ptr,
@@ -49,11 +69,12 @@ def _tiled_matmul(
     )
 
 
-def triton_matmul(
+def _launch_matmul(
     a: torch.Tensor, b: torch.Tensor, *,
     block_m: int = 16, block_n: int = 32, block_k: int = 32,
-) -> torch.Tensor:
-    """Multiply nonempty float16 CUDA matrices with tiled K accumulation."""
+    num_warps: int = 4,
+):
+    """Validate, launch, and return the output plus compiled kernel metadata."""
 
     if a.ndim != 2 or b.ndim != 2:
         raise ValueError("expected two 2D matrices")
@@ -63,12 +84,14 @@ def triton_matmul(
         raise ValueError("both inputs must be on the same CUDA device")
     if a.dtype != torch.float16 or b.dtype != torch.float16:
         raise TypeError("this kernel requires float16 inputs")
-    if block_m not in (16, 32):
-        raise ValueError("block_m must be 16 or 32")
+    if block_m not in (16, 32, 64):
+        raise ValueError("block_m must be 16, 32, or 64")
     if block_k not in (32, 64):
         raise ValueError("block_k must be 32 or 64")
-    if block_n not in (32, 64):
-        raise ValueError("block_n must be 32 or 64")
+    if block_n not in (32, 64, 128):
+        raise ValueError("block_n must be 32, 64, or 128")
+    if num_warps not in (2, 4, 8):
+        raise ValueError("num_warps must be 2, 4, or 8")
 
     m, k = a.shape
     _, n = b.shape
@@ -77,7 +100,7 @@ def triton_matmul(
 
     output = torch.empty((m, n), device=a.device, dtype=torch.float16)
     grid = (triton.cdiv(m, block_m), triton.cdiv(n, block_n))
-    _tiled_matmul[grid](
+    compiled = _tiled_matmul[grid](
         a,
         b,
         output,
@@ -91,5 +114,41 @@ def triton_matmul(
         BLOCK_M=block_m,
         BLOCK_N=block_n,
         BLOCK_K=block_k,
+        num_warps=num_warps,
+    )
+    return output, compiled
+
+
+def triton_matmul(
+    a: torch.Tensor, b: torch.Tensor, *,
+    block_m: int = 16, block_n: int = 32, block_k: int = 32,
+    num_warps: int = 4,
+) -> torch.Tensor:
+    """Multiply nonempty float16 CUDA matrices with tiled K accumulation."""
+    output, _ = _launch_matmul(
+        a, b, block_m=block_m, block_n=block_n,
+        block_k=block_k, num_warps=num_warps,
     )
     return output
+
+
+def matmul_kernel_resources(
+    a: torch.Tensor, b: torch.Tensor, *,
+    block_m: int = 16, block_n: int = 32, block_k: int = 32,
+    num_warps: int = 4,
+) -> dict:
+    """Launch once and report static resource counts; do not call while timing."""
+    output, compiled = _launch_matmul(
+        a, b, block_m=block_m, block_n=block_n,
+        block_k=block_k, num_warps=num_warps,
+    )
+    grid = (triton.cdiv(a.shape[0], block_m), triton.cdiv(b.shape[1], block_n))
+    return {
+        "grid": list(grid),
+        "programs": grid[0] * grid[1],
+        "registers_per_thread": compiled.n_regs,
+        "spills": compiled.n_spills,
+        "shared_memory_bytes_per_program": compiled.metadata.shared,
+        "warps_per_program": compiled.metadata.num_warps,
+        "num_stages": compiled.metadata.num_stages,
+    }

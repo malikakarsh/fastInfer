@@ -100,3 +100,15 @@ This completes the initial matmul comparison across six shapes and three Triton 
 ## Next experiment: output-row tile height
 
 The M=128,K=N=1024 workload produces 8 row tiles by 32 column tiles, or 256 GPU programs, with the current `BLOCK_M=16`, `BLOCK_N=32` output tile. Raising only `BLOCK_M` to 32 changes that to 4 by 32, or 128 programs. Each program can use a loaded B block across twice as many output rows, but must maintain twice as many output accumulators. The paired sweep holds `BLOCK_N=32` and `BLOCK_K=32` fixed, checks both variants against the same float32 reference, and records their timings alongside PyTorch float16. This tests one output-tile change; it does not assume fewer programs will be faster. The existing 16-row tile remains the default until measured evidence supports changing it.
+
+The [paired BM16/BM32 run](../results/raw/matmul_compare_128x1024x1024_float16_graph100_bm16vs32_bn32_bk32_20261012T201016Z_shared.json) on a Kaggle Tesla T4 at commit `39008314a1a2a3d3d4a54cdeaa8cc7cf90fa262d` produced these per-matmul CUDA-graph medians:
+
+| Implementation | Median | p95 | Mismatches versus FP32 |
+| --- | ---: | ---: | ---: |
+| PyTorch float16 | 21.03 µs | 21.44 µs | 86 / 131,072 |
+| Triton BM16, BN32, BK32 | 185.50 µs | 188.56 µs | 0 / 131,072 |
+| Triton BM32, BN32, BK32 | 147.26 µs | 149.77 µs | 0 / 131,072 |
+
+BM32 reduced this Triton kernel's median latency by 20.6% (1.26× speedup) relative to BM16 in the same run. It remained 7.00× slower than the PyTorch float16 implementation. The 30 samples per implementation stayed in a narrow band; the result is not explained by the abrupt timing shifts seen in some earlier runs. Both Triton variants met the recorded `rtol=0.01`, `atol=0.01` check against the float32 reference. These timings establish a tile-size effect, not its precise hardware cause: fewer programs and greater within-program B reuse are plausible benefits, while register use, occupancy, generated instructions, and memory behavior have not yet been measured. Keep BM16 as the existing default until a competitive configuration is established and checked across shapes.
+
+The next [configuration sweep](../benchmarks/README.md#joint-tile-and-thread-configuration-sweep) compares both measured baselines with larger output tiles and multiple warp counts. It records compiled resource counts together with timings to evaluate the reuse/resource tradeoff. These additional configurations have no GPU results yet. Any fastest candidate selected by the sweep requires an independent repeat and validation on adjacent dimensions before a broader performance claim.

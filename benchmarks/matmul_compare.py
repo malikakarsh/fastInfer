@@ -6,13 +6,16 @@ import statistics
 import subprocess
 import sys
 from datetime import datetime, timezone
+from functools import partial
 from pathlib import Path
 from typing import Callable
 
 import torch
 
 from fastinfer.kernels.matmul import reference_matmul
-from fastinfer.kernels.triton_matmul import triton_matmul
+from fastinfer.kernels.triton_matmul import (
+    MATMUL_SWEEP_CONFIGS, matmul_kernel_resources, triton_matmul,
+)
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -55,7 +58,9 @@ def accuracy_against_fp32(output: torch.Tensor, reference: torch.Tensor) -> dict
     difference = (output.float() - reference).abs()
     allowed = 1e-2 + 1e-2 * reference.abs()
     return {
-        "mismatched_elements": int((difference > allowed).sum().item()),
+        "mismatched_elements": int(
+            ((difference > allowed) | ~torch.isfinite(output)).sum().item()
+        ),
         "total_elements": reference.numel(),
         "max_abs_error": difference.max().item(),
     }
@@ -82,6 +87,10 @@ def main() -> None:
         "--block-m-sweep", action="store_true",
         help="compare BLOCK_M=16 and 32 while keeping BLOCK_N=32, BLOCK_K=32",
     )
+    sweep.add_argument(
+        "--config-sweep", action="store_true",
+        help="compare nine explicit tile/thread configurations and record resources",
+    )
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
 
@@ -93,7 +102,14 @@ def main() -> None:
     a = torch.randn((args.m, args.k), device="cuda", dtype=torch.float16)
     b = torch.randn((args.k, args.n), device="cuda", dtype=torch.float16)
     operations = {"pytorch": reference_matmul}
-    if args.block_k_sweep:
+    if args.config_sweep:
+        for name, config in MATMUL_SWEEP_CONFIGS.items():
+            operations[name] = partial(triton_matmul, **config)
+        benchmark_name = "pytorch_vs_triton_configurations"
+        measurement_order = "rotating_pytorch_triton_configurations"
+        triton_tile = {"configurations": MATMUL_SWEEP_CONFIGS}
+        sweep_suffix = "_configs"
+    elif args.block_k_sweep:
         operations["triton_bk32"] = lambda x, y: triton_matmul(x, y, block_k=32)
         operations["triton_bk64"] = lambda x, y: triton_matmul(x, y, block_k=64)
         benchmark_name = "pytorch_vs_triton_block_k"
@@ -145,6 +161,14 @@ def main() -> None:
                     raise AssertionError(f"{name} failed the FP32 check") from error
         del expected_fp32, actual
         torch.cuda.synchronize()
+
+        resources = {}
+        if args.config_sweep:
+            resources = {
+                name: matmul_kernel_resources(a, b, **config)
+                for name, config in MATMUL_SWEEP_CONFIGS.items()
+            }
+            torch.cuda.synchronize()
 
         warmup_stream = torch.cuda.Stream()
         warmup_stream.wait_stream(torch.cuda.current_stream())
@@ -213,6 +237,11 @@ def main() -> None:
         "triton_tile": triton_tile,
         "implementations": {name: summarize(values) for name, values in samples.items()},
     }
+    if args.config_sweep:
+        result["kernel_resources"] = resources
+        result["pytorch_allow_fp16_reduced_precision_reduction"] = (
+            torch.backends.cuda.matmul.allow_fp16_reduced_precision_reduction
+        )
 
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     output = args.output or (
@@ -229,6 +258,24 @@ def main() -> None:
             f"  FP32 mismatches: {accuracy[name]['mismatched_elements']}"
             f"/{accuracy[name]['total_elements']}"
         )
+        if name in resources:
+            resource = resources[name]
+            print(
+                f"  registers/thread: {resource['registers_per_thread']}"
+                f" | spills: {resource['spills']}"
+                f" | shared bytes: {resource['shared_memory_bytes_per_program']}"
+                f" | programs: {resource['programs']}"
+            )
+    if args.config_sweep:
+        fastest = min(
+            MATMUL_SWEEP_CONFIGS,
+            key=lambda name: result["implementations"][name]["latency_us"]["median"],
+        )
+        best_us = result["implementations"][fastest]["latency_us"]["median"]
+        pytorch_us = result["implementations"]["pytorch"]["latency_us"]["median"]
+        print(f"Fastest measured Triton: {fastest} ({best_us:.2f} us)")
+        print(f"PyTorch / fastest Triton median: {pytorch_us / best_us:.3f}x")
+        print("This sweep selects a candidate; confirm it in a separate repeat run.")
     print(f"Saved: {output}")
 
 
