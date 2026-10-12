@@ -59,6 +59,10 @@ def main() -> None:
     parser.add_argument("--warmup", type=positive_int, default=10)
     parser.add_argument("--repetitions", type=positive_int, default=30)
     parser.add_argument("--graph-ops", type=positive_int, default=100)
+    parser.add_argument(
+        "--block-k-sweep", action="store_true",
+        help="compare the existing BLOCK_K=32 kernel with BLOCK_K=64 on the same inputs",
+    )
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
 
@@ -68,13 +72,28 @@ def main() -> None:
     torch.manual_seed(0)
     a = torch.randn((args.m, args.k), device="cuda", dtype=torch.float16)
     b = torch.randn((args.k, args.n), device="cuda", dtype=torch.float16)
-    operations = {"pytorch": reference_matmul, "triton": triton_matmul}
+    operations = {"pytorch": reference_matmul}
+    if args.block_k_sweep:
+        operations["triton_bk32"] = lambda x, y: triton_matmul(x, y, block_k=32)
+        operations["triton_bk64"] = lambda x, y: triton_matmul(x, y, block_k=64)
+    else:
+        operations["triton"] = triton_matmul
 
     with torch.inference_mode():
-        # Compiles the Triton specialization and checks this exact workload.
-        torch.testing.assert_close(
-            triton_matmul(a, b), reference_matmul(a, b), rtol=1e-2, atol=1e-2
-        )
+        # Compile each Triton specialization and check this exact workload.
+        if args.block_k_sweep:
+            expected = reference_matmul(a, b)
+            for name, operation in operations.items():
+                if name == "pytorch":
+                    continue
+                torch.testing.assert_close(
+                    operation(a, b), expected, rtol=1e-2, atol=1e-2
+                )
+            del expected
+        else:
+            torch.testing.assert_close(
+                triton_matmul(a, b), reference_matmul(a, b), rtol=1e-2, atol=1e-2
+            )
         torch.cuda.synchronize()
 
         warmup_stream = torch.cuda.Stream()
@@ -100,8 +119,10 @@ def main() -> None:
 
         samples = {name: [] for name in operations}
         for repetition in range(args.repetitions):
-            # Reverse each pair so a slow clock drift does not always favor one implementation.
-            order = ("pytorch", "triton") if repetition % 2 == 0 else ("triton", "pytorch")
+            # Rotate measurement order so no implementation always runs first.
+            names = list(operations)
+            shift = repetition % len(names)
+            order = names[shift:] + names[:shift]
             for name in order:
                 start = torch.cuda.Event(enable_timing=True)
                 end = torch.cuda.Event(enable_timing=True)
@@ -122,7 +143,9 @@ def main() -> None:
         )
     )
     result = {
-        "benchmark": "pytorch_vs_triton_matmul",
+        "benchmark": (
+            "pytorch_vs_triton_block_k" if args.block_k_sweep else "pytorch_vs_triton_matmul"
+        ),
         "environment": environment,
         "shape": {"m": args.m, "k": args.k, "n": args.n},
         "dtype": "float16",
@@ -132,16 +155,21 @@ def main() -> None:
         "graph_replay_warmup": args.warmup,
         "repetitions": args.repetitions,
         "operations_per_timed_sample": args.graph_ops,
-        "measurement_order": "alternating_pytorch_triton_pairs",
+        "measurement_order": (
+            "rotating_pytorch_triton_bk32_bk64"
+            if args.block_k_sweep else "alternating_pytorch_triton_pairs"
+        ),
+        "triton_tile": {"block_m": 16, "block_n": 32, "block_k": [32, 64] if args.block_k_sweep else 32},
         "implementations": {name: summarize(values) for name, values in samples.items()},
     }
 
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    sweep_suffix = "_bk32vs64" if args.block_k_sweep else ""
     output = args.output or (
         REPO_ROOT
         / "results"
         / "raw"
-        / f"matmul_compare_{args.m}x{args.k}x{args.n}_float16_graph{args.graph_ops}_{stamp}.json"
+        / f"matmul_compare_{args.m}x{args.k}x{args.n}_float16_graph{args.graph_ops}{sweep_suffix}_{stamp}.json"
     )
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, indent=2) + "\n")

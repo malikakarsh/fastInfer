@@ -18,7 +18,7 @@ FastInfer is an experimental LLM inference runtime centered on custom Triton GPU
 - A paired PyTorch-versus-Triton graph-replay benchmark runner.
 - An environment reporter that records hardware and software versions.
 
-Current measured results cover the [PyTorch matmul baseline](notes/matmul_baseline_analysis.md). The Triton comparison runner is ready; no Triton performance result has been recorded yet.
+Measured results cover the [PyTorch matmul baseline](notes/matmul_baseline_analysis.md) and an initial [paired PyTorch–Triton comparison](notes/matmul_triton_comparison.md).
 
 ## Setup and tests
 

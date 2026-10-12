@@ -37,12 +37,15 @@ class TritonMatmulTest(unittest.TestCase):
 
         torch.manual_seed(1)
         for m, k, n in ((17, 65, 35), (1, 1024, 256)):
-            with self.subTest(shape=(m, k, n)):
-                a = torch.randn((m, k), device="cuda", dtype=torch.float16)
-                b = torch.randn((k, n), device="cuda", dtype=torch.float16)
-                torch.testing.assert_close(
-                    triton_matmul(a, b), a @ b, rtol=1e-2, atol=1e-2
-                )
+            a = torch.randn((m, k), device="cuda", dtype=torch.float16)
+            b = torch.randn((k, n), device="cuda", dtype=torch.float16)
+            expected = a @ b
+            for block_k in (32, 64):
+                with self.subTest(shape=(m, k, n), block_k=block_k):
+                    torch.testing.assert_close(
+                        triton_matmul(a, b, block_k=block_k), expected,
+                        rtol=1e-2, atol=1e-2,
+                    )
 
 
 if __name__ == "__main__":
