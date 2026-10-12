@@ -111,4 +111,26 @@ The [paired BM16/BM32 run](../results/raw/matmul_compare_128x1024x1024_float16_g
 
 BM32 reduced this Triton kernel's median latency by 20.6% (1.26× speedup) relative to BM16 in the same run. It remained 7.00× slower than the PyTorch float16 implementation. The 30 samples per implementation stayed in a narrow band; the result is not explained by the abrupt timing shifts seen in some earlier runs. Both Triton variants met the recorded `rtol=0.01`, `atol=0.01` check against the float32 reference. These timings establish a tile-size effect, not its precise hardware cause: fewer programs and greater within-program B reuse are plausible benefits, while register use, occupancy, generated instructions, and memory behavior have not yet been measured. Keep BM16 as the existing default until a competitive configuration is established and checked across shapes.
 
-The next [configuration sweep](../benchmarks/README.md#joint-tile-and-thread-configuration-sweep) compares both measured baselines with larger output tiles and multiple warp counts. It records compiled resource counts together with timings to evaluate the reuse/resource tradeoff. These additional configurations have no GPU results yet. Any fastest candidate selected by the sweep requires an independent repeat and validation on adjacent dimensions before a broader performance claim.
+The [configuration sweep](../benchmarks/README.md#joint-tile-and-thread-configuration-sweep) was prepared to compare both measured baselines with larger output tiles and multiple warp counts. It records compiled resource counts together with timings to evaluate the reuse/resource tradeoff. Its results and the resulting change in direction are recorded below.
+
+## Joint configuration sweep and compiler compatibility
+
+The [configuration sweep](../results/raw/matmul_compare_128x1024x1024_float16_graph100_configs_20261012T202555Z_shared.json) at commit `64a134d88bd6239eab169aab8ecaf31dbc49faa0` measured M=128,K=N=1024 on a Tesla T4 with Triton 3.6.0. PyTorch's median was 22.42 µs. Every Triton variant passed the recorded FP32 tolerance; PyTorch FP16 had 86/131,072 mismatches with reduced-precision reduction enabled.
+
+| BM / BN / BK / warps | Median | Registers/thread | Reported spills | Programs |
+| --- | ---: | ---: | ---: | ---: |
+| 16 / 32 / 32 / 4 | 194.90 µs | 116 | 0 | 256 |
+| 32 / 32 / 32 / 4 | 153.36 µs | 168 | 0 | 128 |
+| 64 / 32 / 32 / 4 | 141.57 µs | 196 | 0 | 64 |
+| 32 / 64 / 32 / 4 | 112.94 µs | 204 | 0 | 64 |
+| 64 / 64 / 32 / 4 | 157.13 µs | 255 | 96 | 32 |
+| 64 / 64 / 64 / 4 | 839.92 µs | 168 | 484 | 32 |
+| 64 / 64 / 32 / 2 | 1992.08 µs | 64 | 970 | 32 |
+| 64 / 64 / 32 / 8 | 114.58 µs | 194 | 0 | 32 |
+| 64 / 128 / 32 / 4 | 2129.06 µs | 64 | 1004 | 16 |
+
+The fastest observed Triton configuration reduced median latency by 42.1% relative to the original tile in the same run, but remained 5.04× slower than PyTorch. It had no reported spills. Large spill counts accompanied the worst latency regressions. At the same 64/64/32 tile, increasing warps from four to eight eliminated reported spills and lowered the median from 157.13 to 114.58 µs; other effects of changing thread count are not isolated. The small difference between 112.94 and 114.58 µs needs an independent repeat before selecting between those candidates. Several series drifted lower toward the end, so the full samples remain important.
+
+Inspection of the exact compiler version revealed a more fundamental limitation. The [Triton 3.6 matmul acceleration pass](https://github.com/triton-lang/triton/blob/v3.6.0/lib/Dialect/TritonGPU/Transforms/AccelerateMatmul.cpp#L344-L350) explicitly rejects the MMA path below compute capability 8.0 and falls back to FMA. NVIDIA lists the [T4 as compute capability 7.5](https://developer.nvidia.com/cuda/gpus). Therefore this standard `tl.dot` kernel is expected to compile to scalar arithmetic on this environment despite executing successfully on CUDA. The [upstream change](https://github.com/triton-lang/triton/pull/5066) also documents this fallback. The exact generated instructions from the Kaggle run have not yet been collected.
+
+This changes the interpretation of the earlier sweeps: they tune the fallback implementation, and do not establish the performance of this kernel using Tensor Cores. The next step is to inspect generated PTX and rerun correctness and paired benchmarks on a supported GPU such as an A100 (8.0) or L4 (8.9). Compare PyTorch and Triton on that same GPU and software environment. Moving hardware does not itself establish a speedup over PyTorch, which also benefits from the new GPU. No further T4 tile sweep is planned on Triton 3.6.

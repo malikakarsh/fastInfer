@@ -1,4 +1,4 @@
-"""Report compiled resource use for the measured Triton matmul tiles."""
+"""Report resources and PTX matrix instructions for measured Triton matmul tiles."""
 
 import argparse
 import json
@@ -30,8 +30,7 @@ def main() -> None:
     b = torch.zeros((args.k, args.n), device="cuda", dtype=torch.float16)
     variants = []
 
-    for block_m in (16, 32):
-        block_n, block_k = 32, 32
+    for block_m, block_n, block_k in ((16, 32, 32), (32, 32, 32), (32, 64, 32)):
         resources = matmul_kernel_resources(
             a, b, block_m=block_m, block_n=block_n, block_k=block_k,
         )
@@ -45,6 +44,7 @@ def main() -> None:
     torch.cuda.synchronize()
     print(json.dumps({
         "gpu": torch.cuda.get_device_name(),
+        "compute_capability": list(torch.cuda.get_device_capability()),
         "torch_version": torch.__version__,
         "triton_version": triton.__version__,
         "shape": {"m": args.m, "k": args.k, "n": args.n},

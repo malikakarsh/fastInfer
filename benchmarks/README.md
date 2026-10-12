@@ -16,6 +16,8 @@ Graph mode captures 100 matmuls, times each replay, and divides replay time by 1
 
 ## PyTorch versus Triton
 
+For Triton 3.6 matmul tuning, use a GPU with compute capability 8.0 or above, such as an A100 or L4. The [3.6 compiler](https://github.com/triton-lang/triton/blob/v3.6.0/lib/Dialect/TritonGPU/Transforms/AccelerateMatmul.cpp#L344-L350) falls back from matrix instructions to scalar FMA for compute capability below 8.0. The T4 has compute capability 7.5: a successful CUDA correctness test does not establish that its Tensor Cores are being used. Historical T4 results remain valid measurements of that setup, but should not be interpreted as measurements of a Tensor Core Triton matmul.
+
 Run the paired comparison on a CUDA machine with Triton installed:
 
 ```bash
@@ -54,7 +56,9 @@ To inspect the compiled resource use of those two tiles on the same GPU, run:
 PYTHONPATH=.. python scripts/matmul_kernel_report.py --m 128 --k 1024 --n 1024
 ```
 
-This prints registers per thread, spill count, shared memory per program, warp count, and grid size. It launches each kernel once to obtain its compiled metadata; it is a diagnostic, not a timing benchmark. Zero spills rules out register spilling as an explanation for a large slowdown, but these counts alone do not establish the kernel's bottleneck.
+This inspects BM16/BN32, BM32/BN32, and BM32/BN64 at BK32 and four warps. It prints compute capability, registers per thread, spill count, shared memory per program, warp count, grid size, and a summary of generated PTX instructions. It launches each kernel once to obtain its compiled metadata; it is a diagnostic, not a timing benchmark. Resource counts alone do not establish the kernel's bottleneck.
+
+`ptx.matrix_instruction_statements` counts matrix instruction statements such as `mma.sync` in the generated PTX, while `ptx.fma_instruction_statements` counts scalar FMA statements. These are static code counts, not execution counts or throughput measurements. Zero matrix statements alongside many FMA statements provides evidence of a scalar arithmetic path. Check the report on the actual GPU before selecting larger tiles. Missing PTX is reported as unavailable rather than interpreted as zero matrix instructions.
 
 ## Joint tile and thread configuration sweep
 
@@ -84,3 +88,7 @@ A CUDA warp contains 32 threads. Tile sizes and thread counts interact; testing 
 The timing method remains CUDA graph replay with 100 operations per sample, 10 warmup replays, and 30 samples per implementation. Each repetition rotates through all ten implementations. This changes the amount of work between measurements relative to earlier three-way sweeps, so compare implementations within this run. Every Triton candidate must pass the float32 accuracy check before timing begins. Resource metadata is collected before timing and saved alongside the full samples. The JSON also records PyTorch's FP16 reduced-precision-reduction setting; its accuracy result remains visible even when it fails the recorded tolerance.
 
 The runner prints the fastest measured candidate and the ratio of PyTorch median to that candidate's median. A ratio above 1 means the candidate was faster in that run. Repeat the sweep independently before treating its selected winner as reproducible. Then validate the candidate at larger K/N and adjacent shapes. No runtime dispatch or default tile changes are selected automatically.
+
+## Single-row transposed-weight experiment
+
+`matmul_gemv_compare.ipynb` embeds the new kernel, GPU tests, and runner for transfer into the existing Kaggle session. It uses the isolated Python 3.12 / PyTorch 2.5.1 / Triton 3.1 environment. The script `matmul_gemv_compare.py` compares default PyTorch, BM64/BN64/BK64/W4, and FP32 row-reduction GEMV candidates (1, 4, 8 weight rows per program) on M=1,K=1536,N=8960. All implementations consume the same contiguous stored W[N,K]. No layout conversion is timed. This is a candidate-selection study, with three rounds and raw samples; confirm any selected winner separately. No GPU measurements for GEMV are available yet.

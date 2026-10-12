@@ -169,6 +169,15 @@ def main() -> None:
                 for name, config in MATMUL_SWEEP_CONFIGS.items()
             }
             torch.cuda.synchronize()
+            if all(
+                resource["ptx"].get("matrix_instruction_statements") == 0
+                for resource in resources.values()
+            ):
+                print(
+                    "Diagnostic: no PTX matrix instructions detected in any candidate. "
+                    "Check the compiler/GPU Tensor Core support before further tuning.",
+                    flush=True,
+                )
 
         warmup_stream = torch.cuda.Stream()
         warmup_stream.wait_stream(torch.cuda.current_stream())
@@ -265,6 +274,10 @@ def main() -> None:
                 f" | spills: {resource['spills']}"
                 f" | shared bytes: {resource['shared_memory_bytes_per_program']}"
                 f" | programs: {resource['programs']}"
+            )
+            print(
+                "  PTX matrix instruction statements: "
+                f"{resource['ptx'].get('matrix_instruction_statements', 'unavailable')}"
             )
     if args.config_sweep:
         fastest = min(

@@ -2,6 +2,8 @@ import torch
 import triton
 import triton.language as tl
 
+from fastinfer.kernels.ptx import summarize_ptx
+
 
 # Explicit candidates: compare output-tile reuse and threads per program.
 # These are experimental configurations, not automatic dispatch rules.
@@ -151,4 +153,5 @@ def matmul_kernel_resources(
         "shared_memory_bytes_per_program": compiled.metadata.shared,
         "warps_per_program": compiled.metadata.num_warps,
         "num_stages": compiled.metadata.num_stages,
+        "ptx": summarize_ptx(compiled.asm.get("ptx")),
     }
