@@ -51,6 +51,21 @@ class TritonMatmulTest(unittest.TestCase):
                         rtol=1e-2, atol=1e-2,
                     )
 
+    def test_large_k_against_float32_reference(self) -> None:
+        from fastinfer.kernels.triton_matmul import triton_matmul
+
+        torch.manual_seed(0)
+        a = torch.randn((128, 1024), device="cuda", dtype=torch.float16)
+        b = torch.randn((1024, 1024), device="cuda", dtype=torch.float16)
+        expected = a.float() @ b.float()
+
+        for block_k in (32, 64):
+            with self.subTest(block_k=block_k):
+                torch.testing.assert_close(
+                    triton_matmul(a, b, block_k=block_k).float(), expected,
+                    rtol=1e-2, atol=1e-2,
+                )
+
 
 if __name__ == "__main__":
     unittest.main()

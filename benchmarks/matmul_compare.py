@@ -51,6 +51,16 @@ def summarize(samples_us: list[float]) -> dict:
     }
 
 
+def accuracy_against_fp32(output: torch.Tensor, reference: torch.Tensor) -> dict:
+    difference = (output.float() - reference).abs()
+    allowed = 1e-2 + 1e-2 * reference.abs()
+    return {
+        "mismatched_elements": int((difference > allowed).sum().item()),
+        "total_elements": reference.numel(),
+        "max_abs_error": difference.max().item(),
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--m", type=positive_int, default=1)
@@ -74,6 +84,7 @@ def main() -> None:
     if not torch.cuda.is_available():
         parser.error("a CUDA GPU is required")
 
+    torch.set_float32_matmul_precision("highest")
     torch.manual_seed(0)
     a = torch.randn((args.m, args.k), device="cuda", dtype=torch.float16)
     b = torch.randn((args.k, args.n), device="cuda", dtype=torch.float16)
@@ -104,20 +115,20 @@ def main() -> None:
         sweep_suffix = ""
 
     with torch.inference_mode():
-        # Compile each Triton specialization and check this exact workload.
-        if args.block_k_sweep or args.block_n_sweep:
-            expected = reference_matmul(a, b)
-            for name, operation in operations.items():
-                if name == "pytorch":
-                    continue
-                torch.testing.assert_close(
-                    operation(a, b), expected, rtol=1e-2, atol=1e-2
-                )
-            del expected
-        else:
-            torch.testing.assert_close(
-                triton_matmul(a, b), reference_matmul(a, b), rtol=1e-2, atol=1e-2
-            )
+        # Compare every float16 output to the same higher-precision result.
+        expected_fp32 = reference_matmul(a.float(), b.float())
+        accuracy = {}
+        for name, operation in operations.items():
+            actual = operation(a, b)
+            accuracy[name] = accuracy_against_fp32(actual, expected_fp32)
+            if name != "pytorch":
+                try:
+                    torch.testing.assert_close(
+                        actual.float(), expected_fp32, rtol=1e-2, atol=1e-2,
+                    )
+                except AssertionError as error:
+                    raise AssertionError(f"{name} failed the FP32 check") from error
+        del expected_fp32, actual
         torch.cuda.synchronize()
 
         warmup_stream = torch.cuda.Stream()
@@ -171,7 +182,13 @@ def main() -> None:
         "environment": environment,
         "shape": {"m": args.m, "k": args.k, "n": args.n},
         "dtype": "float16",
-        "correctness": {"reference": "pytorch", "rtol": 1e-2, "atol": 1e-2},
+        "correctness": {
+            "reference": "pytorch_float32",
+            "rtol": 1e-2,
+            "atol": 1e-2,
+            "triton_checked": True,
+            "accuracy_by_implementation": accuracy,
+        },
         "timing_mode": "cuda_graph_replay_amortized",
         "warmup": args.warmup,
         "graph_replay_warmup": args.warmup,
@@ -193,6 +210,10 @@ def main() -> None:
     output.write_text(json.dumps(result, indent=2) + "\n")
     for name, values in result["implementations"].items():
         print(f"{name}: {values['latency_us']['median']:.2f} us median per matmul")
+        print(
+            f"  FP32 mismatches: {accuracy[name]['mismatched_elements']}"
+            f"/{accuracy[name]['total_elements']}"
+        )
     print(f"Saved: {output}")
 
 

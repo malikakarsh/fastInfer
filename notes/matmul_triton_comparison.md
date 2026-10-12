@@ -61,4 +61,22 @@ For this tested K=N=256 workload, BK64 was faster at all three row counts, most 
 
 ## Next experiment: output-column tile width
 
-With N=256, `BLOCK_N=32` launches eight column tiles per 16-row output band; `BLOCK_N=64` launches four. A wider tile lets each loaded A block contribute to more output columns within one program. It also enlarges the B block and output accumulator, which may raise resource use. The controlled sweep holds `BLOCK_M=16` and `BLOCK_K=64` fixed, checks both variants against PyTorch, and measures M=1, 16, and 128 with the same graph method. No BLOCK_N performance result is available yet.
+With N=256, `BLOCK_N=32` launches eight column tiles per 16-row output band; `BLOCK_N=64` launches four. A wider tile lets each loaded A block contribute to more output columns within one program. It also enlarges the B block and output accumulator, which may raise resource use. The controlled sweep held `BLOCK_M=16` and `BLOCK_K=64` fixed, checked both variants against PyTorch, and measured M=1, 16, and 128 with the same graph method.
+
+| M | PyTorch median | Triton BN32 median | Triton BN64 median | BN64 versus BN32 | Raw result |
+| ---: | ---: | ---: | ---: | ---: | --- |
+| 1 | 6.00 µs | 13.03 µs | 23.77 µs | 1.83× slower | [JSON](../results/raw/matmul_compare_1x256x256_float16_graph100_bn32vs64_bk64_20261012T193939Z_shared.json) |
+| 16 | 19.73 µs | 13.80 µs | 25.36 µs | 1.84× slower | [JSON](../results/raw/matmul_compare_16x256x256_float16_graph100_bn32vs64_bk64_20261012T193947Z_shared.json) |
+| 128 | 11.09 µs | 33.32 µs | 34.14 µs | 1.02× slower | [JSON](../results/raw/matmul_compare_128x256x256_float16_graph100_bn32vs64_bk64_20261012T193955Z_shared.json) |
+
+These runs used the same Kaggle Tesla T4 environment at commit `19b92d1de71ffcb53d9033b6f1f6a0fd2772d05d`. Each run's correctness check passed at `rtol=0.01`, `atol=0.01` before timing. All three runs showed an abrupt shared shift to lower latency near their end: around sample 23 at M=1, sample 21 at M=16, and sample 20 at M=128. The median represents the earlier, longer regime. BN64 was slower than BN32 both before and after each shift, including the small gap at M=128. The shift's cause is unknown; absolute medians from these runs should not be compared directly with the earlier BK sweep.
+
+Widening the output-column tile did not help any of these three shapes. Fewer output programs and more A reuse were insufficient to offset the costs of the wider program on this setup. The measurements do not isolate whether the cost came from register pressure, lower occupancy, generated instruction count, or another factor. Keep `BLOCK_N=32` for this kernel and test a different design for decode-like M=1 rather than widening N again.
+
+## Larger K and N: accuracy reference correction
+
+A later BK32/BK64 sweep at K=N=1024 completed M=1 and M=16 on the same T4. Screenshot summaries were PyTorch/BK32/BK64 medians of 6.99/30.18/27.53 µs at M=1 and 11.60/34.16/31.41 µs at M=16. Raw JSON for these runs remains on Kaggle and has not been copied into this repository. The M=128 run stopped at its pre-timing correctness check; it has no latency result. These larger-shape results show that the M=16 Triton advantage at K=N=256 does not carry over to K=N=1024 in these runs.
+
+The stopped run used PyTorch float16 output as its reference. It reported 85/131,072 Triton elements outside `rtol=0.01`, `atol=0.01`. A follow-up on the same seeded input compared both implementations to a PyTorch float32 matmul: PyTorch float16 had 86 mismatches, while both Triton BK32 and BK64 had zero. Thus this failure does not demonstrate a Triton indexing error; it shows that the two float16 implementations disagree and the Triton outputs satisfy the stated tolerance against the higher-precision reference. PyTorch float16 remains a meaningful speed baseline, but it is not the appropriate sole accuracy oracle for this case.
+
+The benchmark now checks Triton against the float32 result and records mismatch counts and maximum absolute errors for every implementation, including PyTorch float16. Its correctness metadata names the reference explicitly. New GPU runs are needed to validate this benchmark change and obtain M=128 timings at K=N=1024. Older JSON files retain their original PyTorch float16 correctness metadata.
