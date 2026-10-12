@@ -7,3 +7,5 @@ PYTHONPATH=.. python -m unittest discover -s tests -v
 ```
 
 Add CPU baseline tests and GPU kernel correctness tests as their implementations are introduced. The test also runs under pytest when it is installed.
+
+The first Triton matmul tests run on a CUDA machine with Triton installed. They are skipped on the local CPU-only machine. Run the full suite on Kaggle before benchmarking the kernel.
