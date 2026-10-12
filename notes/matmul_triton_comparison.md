@@ -80,3 +80,23 @@ A later BK32/BK64 sweep at K=N=1024 completed M=1 and M=16 on the same T4. Scree
 The stopped run used PyTorch float16 output as its reference. It reported 85/131,072 Triton elements outside `rtol=0.01`, `atol=0.01`. A follow-up on the same seeded input compared both implementations to a PyTorch float32 matmul: PyTorch float16 had 86 mismatches, while both Triton BK32 and BK64 had zero. Thus this failure does not demonstrate a Triton indexing error; it shows that the two float16 implementations disagree and the Triton outputs satisfy the stated tolerance against the higher-precision reference. PyTorch float16 remains a meaningful speed baseline, but it is not the appropriate sole accuracy oracle for this case.
 
 The benchmark now checks Triton against the float32 result and records mismatch counts and maximum absolute errors for every implementation, including PyTorch float16. Its correctness metadata names the reference explicitly. New GPU runs are needed to validate this benchmark change and obtain M=128 timings at K=N=1024. Older JSON files retain their original PyTorch float16 correctness metadata.
+
+The corrected benchmark's [M=1, K=N=1024 run](../results/raw/matmul_compare_1x1024x1024_float16_graph100_bk32vs64_20261012T195516Z_shared.json) passed the float32 check for all three implementations (zero mismatches out of 1,024 at the recorded tolerance). Medians were PyTorch 10.09 µs, BK32 43.96 µs, and BK64 39.79 µs. All three shifted to a faster regime around repetition 20; these medians describe the earlier regime. BK64 remained faster than BK32 but about 3.95× slower than PyTorch within this run.
+
+The corrected [M=16 run](../results/raw/matmul_compare_16x1024x1024_float16_graph100_bk32vs64_20261012T195523Z_shared.json) also passed the float32 check for all three implementations (zero mismatches out of 16,384). Medians were PyTorch 11.25 µs, BK32 33.06 µs, and BK64 30.29 µs. The first sample was high for every implementation, especially the Triton variants; their later samples settled near 33.0 and 30.0 µs. BK64 was 2.69× slower than PyTorch by the run medians.
+
+The corrected [M=128 run](../results/raw/matmul_compare_128x1024x1024_float16_graph100_bk32vs64_20261012T195532Z_shared.json) completed with stable samples. PyTorch float16 had 86 mismatches out of 131,072 against the float32 result at the recorded tolerance; both Triton variants had zero. Medians were PyTorch 20.37 µs, BK32 180.09 µs, and BK64 180.20 µs. BK64 and BK32 were effectively tied here, and each took about 8.85× as long as PyTorch. The larger absolute errors allowed by the relative tolerance can still be present among values counted as matching; zero mismatches does not mean exact equality.
+
+| M, K=N=1024 | PyTorch float16 | Triton BK32 | Triton BK64 | BK64 versus PyTorch |
+| ---: | ---: | ---: | ---: | ---: |
+| 1 | 10.09 µs | 43.96 µs | 39.79 µs | 3.95× slower |
+| 16 | 11.25 µs | 33.06 µs | 30.29 µs | 2.69× slower |
+| 128 | 20.37 µs | 180.09 µs | 180.20 µs | 8.85× slower |
+
+All three medians are from separate paired runs, each comparing the implementations on identical inputs with the same graph method. The M=1 run shifted to a faster timing regime near repetition 20, so its absolute median should not be compared directly with a separate run's median. The within-run outcome is clear: this kernel was slower than PyTorch at all three tested M values for K=N=1024. This contrasts with the M=16, K=N=256 result, where Triton BK64 was faster. The larger dimensions leave the output tile fixed at `BLOCK_M=16`, `BLOCK_N=32`; the measurements do not identify the kernel's exact bottleneck.
+
+This completes the initial matmul comparison across six shapes and three Triton tile configurations. The implementation, tests, and raw results remain available as a baseline. The K=N=1024 results show that the current kernel is not yet a competitive matmul implementation for these shapes. Further tuning is warranted before selecting it for the inference runtime.
+
+## Next experiment: output-row tile height
+
+The M=128,K=N=1024 workload produces 8 row tiles by 32 column tiles, or 256 GPU programs, with the current `BLOCK_M=16`, `BLOCK_N=32` output tile. Raising only `BLOCK_M` to 32 changes that to 4 by 32, or 128 programs. Each program can use a loaded B block across twice as many output rows, but must maintain twice as many output accumulators. The paired sweep holds `BLOCK_N=32` and `BLOCK_K=32` fixed, checks both variants against the same float32 reference, and records their timings alongside PyTorch float16. This tests one output-tile change; it does not assume fewer programs will be faster. The existing 16-row tile remains the default until measured evidence supports changing it.

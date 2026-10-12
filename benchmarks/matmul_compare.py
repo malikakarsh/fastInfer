@@ -78,6 +78,10 @@ def main() -> None:
         "--block-n-sweep", action="store_true",
         help="compare BLOCK_N=32 and 64 while keeping BLOCK_K=64",
     )
+    sweep.add_argument(
+        "--block-m-sweep", action="store_true",
+        help="compare BLOCK_M=16 and 32 while keeping BLOCK_N=32, BLOCK_K=32",
+    )
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
 
@@ -107,6 +111,17 @@ def main() -> None:
         measurement_order = "rotating_pytorch_triton_bn32_bn64"
         triton_tile = {"block_m": 16, "block_n": [32, 64], "block_k": 64}
         sweep_suffix = "_bn32vs64_bk64"
+    elif args.block_m_sweep:
+        operations["triton_bm16"] = lambda x, y: triton_matmul(
+            x, y, block_m=16, block_n=32, block_k=32
+        )
+        operations["triton_bm32"] = lambda x, y: triton_matmul(
+            x, y, block_m=32, block_n=32, block_k=32
+        )
+        benchmark_name = "pytorch_vs_triton_block_m"
+        measurement_order = "rotating_pytorch_triton_bm16_bm32"
+        triton_tile = {"block_m": [16, 32], "block_n": 32, "block_k": 32}
+        sweep_suffix = "_bm16vs32_bn32_bk32"
     else:
         operations["triton"] = triton_matmul
         benchmark_name = "pytorch_vs_triton_matmul"

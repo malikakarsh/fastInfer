@@ -29,10 +29,12 @@ class TritonMatmulTest(unittest.TestCase):
         b = torch.randn((19, 35), device="cuda", dtype=torch.float16)
 
         expected = a @ b
-        for block_n in (32, 64):
-            with self.subTest(block_n=block_n):
+        for block_m, block_n in ((16, 32), (16, 64), (32, 32)):
+            with self.subTest(block_m=block_m, block_n=block_n):
                 torch.testing.assert_close(
-                    triton_matmul(a, b, block_k=64, block_n=block_n), expected,
+                    triton_matmul(
+                        a, b, block_m=block_m, block_n=block_n, block_k=64
+                    ), expected,
                     rtol=1e-2, atol=1e-2,
                 )
 
@@ -59,10 +61,11 @@ class TritonMatmulTest(unittest.TestCase):
         b = torch.randn((1024, 1024), device="cuda", dtype=torch.float16)
         expected = a.float() @ b.float()
 
-        for block_k in (32, 64):
-            with self.subTest(block_k=block_k):
+        for block_m, block_k in ((16, 32), (16, 64), (32, 32)):
+            with self.subTest(block_m=block_m, block_k=block_k):
                 torch.testing.assert_close(
-                    triton_matmul(a, b, block_k=block_k).float(), expected,
+                    triton_matmul(a, b, block_m=block_m, block_k=block_k).float(),
+                    expected,
                     rtol=1e-2, atol=1e-2,
                 )
 
