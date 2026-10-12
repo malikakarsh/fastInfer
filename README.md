@@ -11,11 +11,14 @@ FastInfer is an experimental LLM inference runtime centered on custom Triton GPU
 ## Implemented
 
 - A PyTorch reference for two-dimensional matrix multiplication.
+- A tiled float16 Triton matrix multiplication with K-block accumulation, validated against PyTorch on tested CUDA shapes.
 - CPU correctness tests for the reference and environment reporter.
+- CUDA correctness tests for the Triton kernel, including partial tiles and multiple K blocks.
 - A CUDA-event benchmark for the PyTorch matmul baseline.
+- A paired PyTorch-versus-Triton graph-replay benchmark runner.
 - An environment reporter that records hardware and software versions.
 
-Current measured results cover the [PyTorch matmul baseline](notes/matmul_baseline_analysis.md). Triton kernels and serving components will be reported after their implementations and comparisons are validated.
+Current measured results cover the [PyTorch matmul baseline](notes/matmul_baseline_analysis.md). The Triton comparison runner is ready; no Triton performance result has been recorded yet.
 
 ## Setup and tests
 
@@ -38,6 +41,14 @@ PYTHONPATH=.. python benchmarks/matmul_baseline.py
 The benchmark defaults to a float16 multiplication of a `1 x 256` matrix by a `256 x 256` matrix. It uses 10 warmup runs and 30 timed repetitions, then writes the latency samples and environment metadata to `results/raw/`. Use `--m`, `--k`, `--n`, `--dtype`, `--warmup`, and `--repetitions` to change the workload.
 
 For small workloads, `--timing-mode graph --graph-ops 100` reports an amortized CUDA graph replay time. It is recorded separately from the default eager timing mode; see `benchmarks/README.md` for the measurement distinction.
+
+To compare PyTorch and Triton on the same float16 inputs and graph timing method, run:
+
+```bash
+PYTHONPATH=.. python benchmarks/matmul_compare.py --m 1 --k 256 --n 256
+```
+
+The comparison checks correctness before timing and saves samples for both implementations in one JSON file. See `benchmarks/README.md` for the method and limits.
 
 The environment report should be checked before installing optional GPU dependencies, so the existing PyTorch and CUDA setup remains compatible.
 

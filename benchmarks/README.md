@@ -13,3 +13,13 @@ PYTHONPATH=.. python benchmarks/matmul_baseline.py --timing-mode graph --graph-o
 ```
 
 Graph mode captures 100 matmuls, times each replay, and divides replay time by 100. This reports amortized time per operation under graph replay, not eager end-to-end latency or isolated kernel duration. Compare results only when their timing modes match.
+
+## PyTorch versus Triton
+
+Run the paired comparison on a CUDA machine with Triton installed:
+
+```bash
+PYTHONPATH=.. python benchmarks/matmul_compare.py --m 1 --k 256 --n 256
+```
+
+The script checks the Triton result against PyTorch on the benchmark inputs before timing. It captures 100 operations per implementation by default, warms both graphs, then alternates their measurement order across 30 paired repetitions. Both receive the same float16 inputs. The JSON file records every sample, timing parameters, environment, and correctness tolerance. These graph-replay measurements use repeated fixed inputs and do not represent eager-call latency. Compare the two implementations within this paired run; the older standalone PyTorch results used a different sample order.
