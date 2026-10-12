@@ -31,3 +31,11 @@ PYTHONPATH=.. python benchmarks/matmul_compare.py --m 16 --k 256 --n 256 --block
 ```
 
 This mode validates both Triton variants against PyTorch on the same inputs, captures a separate graph for each of the three implementations, and rotates their measurement order. Only `BLOCK_K` differs between the two Triton variants; `BLOCK_M=16` and `BLOCK_N=32` stay fixed. A separate result label and filename distinguish this three-way sweep from the original paired method.
+
+To compare output-column tiles while holding `BLOCK_K=64` fixed, run:
+
+```bash
+PYTHONPATH=.. python benchmarks/matmul_compare.py --m 1 --k 256 --n 256 --block-n-sweep
+```
+
+This checks `BLOCK_N=32` and `BLOCK_N=64` against PyTorch, then times all three with rotating measurement order. `BLOCK_M=16` stays fixed. Run the same command with `--m 16` and `--m 128` to compare the three row counts from the K-tile experiment. The two sweep flags cannot be combined.

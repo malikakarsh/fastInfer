@@ -28,9 +28,13 @@ class TritonMatmulTest(unittest.TestCase):
         a = torch.randn((17, 19), device="cuda", dtype=torch.float16)
         b = torch.randn((19, 35), device="cuda", dtype=torch.float16)
 
-        torch.testing.assert_close(
-            triton_matmul(a, b), a @ b, rtol=1e-2, atol=1e-2
-        )
+        expected = a @ b
+        for block_n in (32, 64):
+            with self.subTest(block_n=block_n):
+                torch.testing.assert_close(
+                    triton_matmul(a, b, block_k=64, block_n=block_n), expected,
+                    rtol=1e-2, atol=1e-2,
+                )
 
     def test_multiple_k_blocks_against_pytorch(self) -> None:
         from fastinfer.kernels.triton_matmul import triton_matmul

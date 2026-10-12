@@ -59,9 +59,14 @@ def main() -> None:
     parser.add_argument("--warmup", type=positive_int, default=10)
     parser.add_argument("--repetitions", type=positive_int, default=30)
     parser.add_argument("--graph-ops", type=positive_int, default=100)
-    parser.add_argument(
+    sweep = parser.add_mutually_exclusive_group()
+    sweep.add_argument(
         "--block-k-sweep", action="store_true",
         help="compare the existing BLOCK_K=32 kernel with BLOCK_K=64 on the same inputs",
+    )
+    sweep.add_argument(
+        "--block-n-sweep", action="store_true",
+        help="compare BLOCK_N=32 and 64 while keeping BLOCK_K=64",
     )
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
@@ -76,12 +81,31 @@ def main() -> None:
     if args.block_k_sweep:
         operations["triton_bk32"] = lambda x, y: triton_matmul(x, y, block_k=32)
         operations["triton_bk64"] = lambda x, y: triton_matmul(x, y, block_k=64)
+        benchmark_name = "pytorch_vs_triton_block_k"
+        measurement_order = "rotating_pytorch_triton_bk32_bk64"
+        triton_tile = {"block_m": 16, "block_n": 32, "block_k": [32, 64]}
+        sweep_suffix = "_bk32vs64"
+    elif args.block_n_sweep:
+        operations["triton_bn32"] = lambda x, y: triton_matmul(
+            x, y, block_k=64, block_n=32
+        )
+        operations["triton_bn64"] = lambda x, y: triton_matmul(
+            x, y, block_k=64, block_n=64
+        )
+        benchmark_name = "pytorch_vs_triton_block_n"
+        measurement_order = "rotating_pytorch_triton_bn32_bn64"
+        triton_tile = {"block_m": 16, "block_n": [32, 64], "block_k": 64}
+        sweep_suffix = "_bn32vs64_bk64"
     else:
         operations["triton"] = triton_matmul
+        benchmark_name = "pytorch_vs_triton_matmul"
+        measurement_order = "alternating_pytorch_triton_pairs"
+        triton_tile = {"block_m": 16, "block_n": 32, "block_k": 32}
+        sweep_suffix = ""
 
     with torch.inference_mode():
         # Compile each Triton specialization and check this exact workload.
-        if args.block_k_sweep:
+        if args.block_k_sweep or args.block_n_sweep:
             expected = reference_matmul(a, b)
             for name, operation in operations.items():
                 if name == "pytorch":
@@ -143,9 +167,7 @@ def main() -> None:
         )
     )
     result = {
-        "benchmark": (
-            "pytorch_vs_triton_block_k" if args.block_k_sweep else "pytorch_vs_triton_matmul"
-        ),
+        "benchmark": benchmark_name,
         "environment": environment,
         "shape": {"m": args.m, "k": args.k, "n": args.n},
         "dtype": "float16",
@@ -155,16 +177,12 @@ def main() -> None:
         "graph_replay_warmup": args.warmup,
         "repetitions": args.repetitions,
         "operations_per_timed_sample": args.graph_ops,
-        "measurement_order": (
-            "rotating_pytorch_triton_bk32_bk64"
-            if args.block_k_sweep else "alternating_pytorch_triton_pairs"
-        ),
-        "triton_tile": {"block_m": 16, "block_n": 32, "block_k": [32, 64] if args.block_k_sweep else 32},
+        "measurement_order": measurement_order,
+        "triton_tile": triton_tile,
         "implementations": {name: summarize(values) for name, values in samples.items()},
     }
 
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    sweep_suffix = "_bk32vs64" if args.block_k_sweep else ""
     output = args.output or (
         REPO_ROOT
         / "results"

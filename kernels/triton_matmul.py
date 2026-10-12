@@ -50,7 +50,7 @@ def _tiled_matmul(
 
 
 def triton_matmul(
-    a: torch.Tensor, b: torch.Tensor, *, block_k: int = 32
+    a: torch.Tensor, b: torch.Tensor, *, block_k: int = 32, block_n: int = 32
 ) -> torch.Tensor:
     """Multiply nonempty float16 CUDA matrices with tiled K accumulation."""
 
@@ -64,6 +64,8 @@ def triton_matmul(
         raise TypeError("this kernel requires float16 inputs")
     if block_k not in (32, 64):
         raise ValueError("block_k must be 32 or 64")
+    if block_n not in (32, 64):
+        raise ValueError("block_n must be 32 or 64")
 
     m, k = a.shape
     _, n = b.shape
@@ -71,7 +73,7 @@ def triton_matmul(
         raise ValueError("M, N, and K must be positive")
 
     output = torch.empty((m, n), device=a.device, dtype=torch.float16)
-    block_m, block_n = 16, 32
+    block_m = 16
     grid = (triton.cdiv(m, block_m), triton.cdiv(n, block_n))
     _tiled_matmul[grid](
         a,
