@@ -1,0 +1,75 @@
+{
+  "provenance": "User-supplied rounded Kaggle console output; not original raw samples",
+  "raw_file_on_kaggle": "/kaggle/working/fastinfer/results/raw/qwen_decode_20261013T051943862663Z.json",
+  "model": "Qwen/Qwen2.5-1.5B",
+  "revision": "8faed761d45a263340a0528343f099c05c9a4323",
+  "dtype": "float16",
+  "attention": "math SDPA",
+  "steps": 16,
+  "paired_rounds": 30,
+  "replacement": "model.layers.0.mlp.up_proj only",
+  "timing_status": "exploratory_strict_logits_failed",
+  "conclusion": "No consistent complete-decode speedup established; strict logits tolerance remains failed",
+  "cases": [
+    {
+      "prompt": "The capital of France is",
+      "pytorch_wall_ms_per_step": 33.165,
+      "custom_wall_ms_per_step": 33.549,
+      "ratio_of_separate_medians": 0.989,
+      "paired_median_saving_us_per_step": -147.4,
+      "custom_faster_rounds": 11,
+      "logit_mismatches": 7054,
+      "identical_greedy_tokens": true,
+      "baseline_repeat_max_abs_error": 0,
+      "all_per_step_projection_fp32_checks_passed": true,
+      "validation_dispatch": {
+        "gemv_calls": 16,
+        "fallback_calls": 0
+      },
+      "timed_candidate_dispatch_total": {
+        "gemv_calls": 480,
+        "fallback_calls": 0
+      }
+    },
+    {
+      "prompt": "Explain why the sky appears blue in one sentence.",
+      "pytorch_wall_ms_per_step": 33.392,
+      "custom_wall_ms_per_step": 33.233,
+      "ratio_of_separate_medians": 1.005,
+      "paired_median_saving_us_per_step": -75.43,
+      "custom_faster_rounds": 12,
+      "logit_mismatches": 12419,
+      "identical_greedy_tokens": true,
+      "baseline_repeat_max_abs_error": 0,
+      "all_per_step_projection_fp32_checks_passed": true,
+      "validation_dispatch": {
+        "gemv_calls": 16,
+        "fallback_calls": 0
+      },
+      "timed_candidate_dispatch_total": {
+        "gemv_calls": 480,
+        "fallback_calls": 0
+      }
+    },
+    {
+      "prompt": "def add(a, b):\n    return",
+      "pytorch_wall_ms_per_step": 33.254,
+      "custom_wall_ms_per_step": 33.153,
+      "ratio_of_separate_medians": 1.003,
+      "paired_median_saving_us_per_step": -69.28,
+      "custom_faster_rounds": 12,
+      "logit_mismatches": 2500,
+      "identical_greedy_tokens": true,
+      "baseline_repeat_max_abs_error": 0,
+      "all_per_step_projection_fp32_checks_passed": true,
+      "validation_dispatch": {
+        "gemv_calls": 16,
+        "fallback_calls": 0
+      },
+      "timed_candidate_dispatch_total": {
+        "gemv_calls": 480,
+        "fallback_calls": 0
+      }
+    }
+  ]
+}
