@@ -55,6 +55,30 @@ class DecodeCaptureTest(unittest.TestCase):
         self.assertEqual(model.calls[1][1].tolist(), [[1, 1, 1]])
         self.assertEqual(len(model.projection._forward_hooks), 0)
 
+    def test_nonfinite_projection_stops_prefill_and_removes_hooks(self):
+        model = TinyModel()
+        with torch.no_grad():
+            model.projection.weight.fill_(float("nan"))
+        with self.assertRaises(module.NonfiniteTensorError) as caught:
+            module.capture_decode_projection(model, model.projection, self.encoded)
+        self.assertEqual(caught.exception.details["stage"], "prefill:projection.output")
+        self.assertEqual(len(model.calls), 1)
+        self.assertEqual(len(model.projection._forward_hooks), 0)
+        self.assertEqual(len(model.projection._forward_pre_hooks), 0)
+
+    def test_nonfinite_logits_rejected_before_token_selection(self):
+        model = TinyModel()
+        def corrupt_logits(module_, inputs, output):
+            output.logits.fill_(float("inf"))
+        handle = model.register_forward_hook(corrupt_logits)
+        try:
+            with self.assertRaises(module.NonfiniteTensorError) as caught:
+                module.capture_decode_projection(model, model.projection, self.encoded)
+            self.assertEqual(caught.exception.details["stage"], "prefill.logits")
+            self.assertEqual(len(model.calls), 1)
+        finally:
+            handle.remove()
+
     def test_removes_hook_when_decode_fails(self):
         model = TinyModel(fail_decode=True)
         with self.assertRaisesRegex(RuntimeError, "decode failure"):

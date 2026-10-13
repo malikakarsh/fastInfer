@@ -1,6 +1,7 @@
 """Check a frozen GEMV on real Qwen weights and captured decode activations."""
 
 import argparse
+from contextlib import contextmanager
 import hashlib
 import json
 import runpy
@@ -19,6 +20,62 @@ PROMPTS = (
 )
 
 
+class NonfiniteTensorError(RuntimeError):
+    """A numerical failure with JSON-safe diagnostic details."""
+
+    def __init__(self, details):
+        self.details = details
+        super().__init__(f"Nonfinite tensor at {details['stage']}: {details}")
+
+
+def require_finite(value, stage):
+    import torch
+
+    if not torch.isfinite(value).all().item():
+        raise NonfiniteTensorError({
+            "stage": stage,
+            "shape": list(value.shape),
+            "dtype": str(value.dtype),
+            "nan_count": torch.isnan(value).sum().item(),
+            "inf_count": torch.isinf(value).sum().item(),
+            "elements": value.numel(),
+        })
+
+
+@contextmanager
+def trace_finite_modules(model, phase):
+    """Check leaf-module boundaries; hooks are removed before any timing.
+
+    Inspect the first tensor only: attention masks can legitimately contain -inf.
+    This locates the first observed failure, not necessarily its internal operation.
+    """
+    import torch
+
+    handles = []
+
+    def check(value, stage):
+        if isinstance(value, (tuple, list)) and value:
+            value = value[0]
+        if isinstance(value, torch.Tensor) and value.is_floating_point():
+            require_finite(value, stage)
+
+    try:
+        for name, child in model.named_modules():
+            if not name or any(child.children()):
+                continue
+            stage = f"{phase}:{name}"
+            handles.append(child.register_forward_pre_hook(
+                lambda module, inputs, stage=stage: check(inputs, stage + ".input")
+            ))
+            handles.append(child.register_forward_hook(
+                lambda module, inputs, output, stage=stage: check(output, stage + ".output")
+            ))
+        yield
+    finally:
+        for handle in handles:
+            handle.remove()
+
+
 def capture_decode_projection(model, projection, encoded):
     """Run prefill, then capture this layer's input/output for one decoded token."""
     import torch
@@ -29,19 +86,23 @@ def capture_decode_projection(model, projection, encoded):
         captured.append((inputs[0].detach().clone(), output.detach().clone()))
 
     with torch.inference_mode():
-        prefill = model(**encoded, use_cache=True, return_dict=True)
+        with trace_finite_modules(model, "prefill"):
+            prefill = model(**encoded, use_cache=True, return_dict=True)
+        require_finite(prefill.logits, "prefill.logits")
         token = prefill.logits[:, -1, :].argmax(dim=-1, keepdim=True)
         mask = torch.cat((encoded["attention_mask"], torch.ones_like(token)), dim=1)
         # Register only after prefill: the captured input must be a single token.
         handle = projection.register_forward_hook(capture)
         try:
-            model(
-                input_ids=token,
-                attention_mask=mask,
-                past_key_values=prefill.past_key_values,
-                use_cache=True,
-                return_dict=True,
-            )
+            with trace_finite_modules(model, "decode"):
+                decode = model(
+                    input_ids=token,
+                    attention_mask=mask,
+                    past_key_values=prefill.past_key_values,
+                    use_cache=True,
+                    return_dict=True,
+                )
+            require_finite(decode.logits, "decode.logits")
         finally:
             handle.remove()
 
@@ -159,12 +220,25 @@ def main():
     with torch.inference_mode():
         for index, prompt in enumerate(PROMPTS):
             encoded = tokenizer(prompt, return_tensors="pt").to("cuda")
-            activation, model_output, token = capture_decode_projection(model, projection, encoded)
-            a = activation.reshape(1, -1).contiguous()
-            captured_output = model_output.reshape(1, -1)
-            reference = F.linear(a.float(), weight.float())
-            if not torch.isfinite(reference).all().item():
-                raise RuntimeError("FP32 reference contains nonfinite values")
+            try:
+                require_finite(weight, "projection.weight")
+                activation, model_output, token = capture_decode_projection(model, projection, encoded)
+                require_finite(activation, "captured_activation")
+                require_finite(model_output, "captured_model_output")
+                a = activation.reshape(1, -1).contiguous()
+                captured_output = model_output.reshape(1, -1)
+                reference = F.linear(a.float(), weight.float())
+                require_finite(reference, "float32_reference")
+            except NonfiniteTensorError as error:
+                report["cases"].append({
+                    "prompt": prompt,
+                    "status": "nonfinite_model_or_reference",
+                    "diagnostics": error.details,
+                    "timing_skipped": True,
+                })
+                destination.write_text(json.dumps(report, indent=2) + "\n")
+                print(f"Diagnosis saved: {destination}", flush=True)
+                raise
             actual = gemv(a, weight, block_rows=1, num_warps=4)
             pytorch_output = F.linear(a, weight)
             accuracy = {
