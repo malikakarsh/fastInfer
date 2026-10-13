@@ -17,17 +17,59 @@
       {
         "remote_raw_file": "qwen_rmsnorm_decode_mean_candidate_20261013T080534845270Z.json",
         "prompts": [
-          {"label": "France", "pytorch_ms_per_step": 33.835, "candidate_ms_per_step": 31.712, "reported_speedup": 1.067, "paired_median_saving_us": 2261.52, "candidate_faster_rounds": 29},
-          {"label": "Sky", "pytorch_ms_per_step": 34.097, "candidate_ms_per_step": 32.190, "reported_speedup": 1.059, "paired_median_saving_us": 1987.90, "candidate_faster_rounds": 28},
-          {"label": "Code", "pytorch_ms_per_step": 34.002, "candidate_ms_per_step": 31.955, "reported_speedup": 1.064, "paired_median_saving_us": 2080.04, "candidate_faster_rounds": 30}
+          {
+            "label": "France",
+            "pytorch_ms_per_step": 33.835,
+            "candidate_ms_per_step": 31.712,
+            "reported_speedup": 1.067,
+            "paired_median_saving_us": 2261.52,
+            "candidate_faster_rounds": 29
+          },
+          {
+            "label": "Sky",
+            "pytorch_ms_per_step": 34.097,
+            "candidate_ms_per_step": 32.19,
+            "reported_speedup": 1.059,
+            "paired_median_saving_us": 1987.9,
+            "candidate_faster_rounds": 28
+          },
+          {
+            "label": "Code",
+            "pytorch_ms_per_step": 34.002,
+            "candidate_ms_per_step": 31.955,
+            "reported_speedup": 1.064,
+            "paired_median_saving_us": 2080.04,
+            "candidate_faster_rounds": 30
+          }
         ]
       },
       {
         "remote_raw_file": "qwen_rmsnorm_decode_mean_candidate_20261013T081509571489Z.json",
         "prompts": [
-          {"label": "France", "pytorch_ms_per_step": 32.990, "candidate_ms_per_step": 31.402, "reported_speedup": 1.051, "paired_median_saving_us": 1880.08, "candidate_faster_rounds": 29},
-          {"label": "Sky", "pytorch_ms_per_step": 33.382, "candidate_ms_per_step": 31.598, "reported_speedup": 1.056, "paired_median_saving_us": 2023.22, "candidate_faster_rounds": 30},
-          {"label": "Code", "pytorch_ms_per_step": 33.180, "candidate_ms_per_step": 31.187, "reported_speedup": 1.064, "paired_median_saving_us": 1930.71, "candidate_faster_rounds": 30}
+          {
+            "label": "France",
+            "pytorch_ms_per_step": 32.99,
+            "candidate_ms_per_step": 31.402,
+            "reported_speedup": 1.051,
+            "paired_median_saving_us": 1880.08,
+            "candidate_faster_rounds": 29
+          },
+          {
+            "label": "Sky",
+            "pytorch_ms_per_step": 33.382,
+            "candidate_ms_per_step": 31.598,
+            "reported_speedup": 1.056,
+            "paired_median_saving_us": 2023.22,
+            "candidate_faster_rounds": 30
+          },
+          {
+            "label": "Code",
+            "pytorch_ms_per_step": 33.18,
+            "candidate_ms_per_step": 31.187,
+            "reported_speedup": 1.064,
+            "paired_median_saving_us": 1930.71,
+            "candidate_faster_rounds": 30
+          }
         ]
       }
     ]
@@ -47,5 +89,7 @@
     "science_case_identical_through_64_generated_tokens": true
   },
   "remote_evidence_zip": "/kaggle/working/fastinfer/results/raw/qwen_rmsnorm_quality_mean_candidate_20261013T081712201293Z.evidence.zip",
-  "local_original_evidence_archived": false
+  "local_original_evidence_archived": true,
+  "local_evidence_zip": "results/raw/qwen_rmsnorm_quality_mean_candidate_20261013T081712201293Z.evidence.zip",
+  "local_evidence_sha256": "6477b0a310299ed17eecf8b8acbc169def3f8a577df74ed8919852854ce2fbdd"
 }

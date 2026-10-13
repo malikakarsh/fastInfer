@@ -83,8 +83,10 @@ These findings cover the tested batch-one FP16 setup and curated prompts;
 they do not establish equivalence on arbitrary inputs, a language-task quality
 score, or an advantage over a fully compiled model. The
 [console summary](results/raw/rmsnorm_mean_candidate_confirmed_console_summary.json)
-records supplied results. The full quality JSON and two raw timing reports
-are packaged in a candidate evidence ZIP on Kaggle; local archival is pending.
+records supplied results. The
+[original evidence ZIP](results/raw/qwen_rmsnorm_quality_mean_candidate_20261013T081712201293Z.evidence.zip)
+is archived locally with the full quality JSON and both original raw timing
+reports. Archive integrity passed and its manifest reports no missing files.
 
 ## Initial RMSNorm kernel: exploratory full-decode result
 

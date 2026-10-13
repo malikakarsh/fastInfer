@@ -315,7 +315,8 @@ tests pass. Broader candidate generation and the timing repeat completed:
 Raw repeat report: `qwen_rmsnorm_decode_mean_candidate_20261013T081509571489Z.json`.
 Raw quality report: `qwen_rmsnorm_quality_mean_candidate_20261013T081712201293Z.json`.
 Evidence ZIP: `qwen_rmsnorm_quality_mean_candidate_20261013T081712201293Z.evidence.zip`.
-These files remain on Kaggle and need downloading for local archival. Console
+The ZIP and all three original JSON reports are now archived in `results/raw/`.
+ZIP integrity passed and its manifest reports no missing timing evidence. Console
 summaries are labeled separately and are not the original raw samples. This is
 confirmation on the same GPU session and small curated suite, not a universal
 equivalence guarantee or fully compiled model comparison.
