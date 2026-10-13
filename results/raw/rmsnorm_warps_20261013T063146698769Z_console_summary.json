@@ -1,0 +1,32 @@
+{
+  "provenance": "User-supplied rounded Kaggle console output, not original timing samples",
+  "raw_file_on_kaggle": "/kaggle/working/fastinfer/results/raw/rmsnorm_warps_20261013T063146698769Z.json",
+  "shape": [
+    128,
+    1536
+  ],
+  "scope": "One controlled manual-kernel warp-count run; not whole-model or all-shape tuning",
+  "configurations": {
+    "warps4": {
+      "median_us": 6.234,
+      "registers_per_thread": 36,
+      "spills": 0,
+      "shared_bytes": 16,
+      "accuracy": "PASS"
+    },
+    "warps8": {
+      "median_us": 6.12,
+      "registers_per_thread": 27,
+      "spills": 0,
+      "shared_bytes": 32,
+      "accuracy": "PASS"
+    },
+    "warps16": {
+      "median_us": 8.335,
+      "registers_per_thread": 22,
+      "spills": 0,
+      "shared_bytes": 64,
+      "accuracy": "PASS"
+    }
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "provenance": "User-supplied rounded Kaggle console output; original paired samples not archived locally",
+  "raw_file_on_kaggle": "/kaggle/working/fastinfer/results/raw/rmsnorm_warps_confirmation_20261013T063930797938Z.json",
+  "hidden": 1536,
+  "dtype": "float16",
+  "paired_samples_per_case": 30,
+  "scope": "Same-session four-versus-eight confirmation across three new seeds and token counts",
+  "decision": "Retain four as general default; eight remains a small possible improvement for128tokens, not a universal win",
+  "cases": [
+    {
+      "seed": 3,
+      "tokens": 1,
+      "four_warp_median_us": 3.395,
+      "eight_warp_median_us": 3.429,
+      "paired_median_saving_us": -0.017,
+      "eight_faster_rounds": 9,
+      "accuracy": "PASS"
+    },
+    {
+      "seed": 3,
+      "tokens": 16,
+      "four_warp_median_us": 4.383,
+      "eight_warp_median_us": 4.38,
+      "paired_median_saving_us": 0.005,
+      "eight_faster_rounds": 17,
+      "accuracy": "PASS"
+    },
+    {
+      "seed": 3,
+      "tokens": 128,
+      "four_warp_median_us": 6.126,
+      "eight_warp_median_us": 6.103,
+      "paired_median_saving_us": 0.032,
+      "eight_faster_rounds": 17,
+      "accuracy": "PASS"
+    },
+    {
+      "seed": 4,
+      "tokens": 128,
+      "four_warp_median_us": 6.022,
+      "eight_warp_median_us": 6.025,
+      "paired_median_saving_us": 0.02,
+      "eight_faster_rounds": 17,
+      "accuracy": "PASS"
+    },
+    {
+      "seed": 4,
+      "tokens": 16,
+      "four_warp_median_us": 4.27,
+      "eight_warp_median_us": 4.336,
+      "paired_median_saving_us": -0.023,
+      "eight_faster_rounds": 9,
+      "accuracy": "PASS"
+    },
+    {
+      "seed": 4,
+      "tokens": 1,
+      "four_warp_median_us": 4.096,
+      "eight_warp_median_us": 4.116,
+      "paired_median_saving_us": -0.002,
+      "eight_faster_rounds": 15,
+      "accuracy": "PASS"
+    },
+    {
+      "seed": 5,
+      "tokens": 1,
+      "four_warp_median_us": 4.135,
+      "eight_warp_median_us": 4.1,
+      "paired_median_saving_us": 0.053,
+      "eight_faster_rounds": 17,
+      "accuracy": "PASS"
+    },
+    {
+      "seed": 5,
+      "tokens": 16,
+      "four_warp_median_us": 4.295,
+      "eight_warp_median_us": 4.342,
+      "paired_median_saving_us": -0.034,
+      "eight_faster_rounds": 13,
+      "accuracy": "PASS"
+    },
+    {
+      "seed": 5,
+      "tokens": 128,
+      "four_warp_median_us": 6.111,
+      "eight_warp_median_us": 5.974,
+      "paired_median_saving_us": 0.138,
+      "eight_faster_rounds": 29,
+      "accuracy": "PASS"
+    }
+  ]
+}
