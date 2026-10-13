@@ -13,7 +13,7 @@ FastInfer is an experimental LLM inference runtime centered on custom Triton GPU
 - A PyTorch reference for two-dimensional matrix multiplication.
 - A tiled float16 Triton matrix multiplication with K-block accumulation, validated against PyTorch on tested CUDA shapes.
 - A specialized single-row FP16 matrix–vector kernel with FP32 reductions for contiguous stored linear weights.
-- A readable PyTorch RMSNorm reference and an initial fused Triton implementation preserving Qwen's rounding order; CPU checks pass, GPU correctness and performance are pending.
+- A readable PyTorch RMSNorm reference and an initial fused Triton implementation preserving Qwen's rounding order; all seven CPU/GPU checks passed on the tested setup, with a first isolated performance comparison recorded below.
 - CPU correctness tests for the reference and environment reporter.
 - CUDA correctness tests for the Triton kernel, including partial tiles and multiple K blocks.
 - A CUDA-event benchmark for the PyTorch matmul baseline.
@@ -47,6 +47,10 @@ Reproduce with the [confirmation notebook](benchmarks/matmul_gemv_confirm.ipynb)
 On three real decode inputs from Qwen2.5-1.5B, the first layer's `up_proj` took 116.56–116.60 µs in PyTorch versus 99.14–99.30 µs with our frozen GEMV (1.174–1.176×). Captured model outputs, PyTorch replay and GEMV all passed the FP32-reference tolerance. The model was loaded in FP16 with math SDPA attention; native BF16 execution was not tested. These are isolated CUDA-graph projection timings, not a whole-model speedup. The [console summary](results/raw/qwen_real_linear_20261013T042024726496Z_console_summary.json) preserves the supplied rounded measurements; full raw samples remain on Kaggle.
 
 An opt-in [decode integration](decode_linear.py) now routes that one projection through GEMV for eligible single-token inputs and restores the original forward afterwards. The [full decode comparison](benchmarks/qwen_decode_compare.py) checks logits and greedy token sequences before measuring the complete cached decode loop. An exploratory T4 run completed: baseline repeats were identical, all per-step projection FP32 checks passed, and greedy tokens matched, but strict logits tolerance failed. Complete decode took roughly 33 ms per step; the custom version won only 11–12 of 30 paired rounds per prompt, with negative paired median savings. This establishes no consistent whole-model speedup. See the [rounded console summary](results/raw/qwen_decode_20261013T051943862663Z_console_summary.json). See the [methodology](benchmarks/README.md#one-projection-decode-integration).
+
+## Fused RMSNorm first result
+
+The initial FP16 fused RMSNorm comparison on the Kaggle T4 passed all seven tests and all in-run FP32/PyTorch accuracy checks. Across seven synthetic shapes, the kernel measured 5.441–10.481× speedup over the Qwen-style PyTorch reference using amortized CUDA-graph timing. At hidden width1536, PyTorch/Triton medians were32.23/3.54µs for one token,23.28/2.33µs for16tokens and32.70/3.12µs for128tokens. This is a first-run isolated comparison, not a model-level improvement or a comparison against compiled PyTorch. A separate same-seed repeat also won all seven shapes (5.399–10.878×), with all accuracy comparisons passing. Comparisons against compiled PyTorch and real-model integration remain pending. The [console summary](results/raw/rmsnorm_first_comparison_20261013T055701423727Z_console_summary.json) stores rounded supplied measurements; full timing samples remain on Kaggle.
 
 ## Setup and tests
 

@@ -1,0 +1,71 @@
+{
+  "provenance": "User-supplied rounded Kaggle console output; not original raw timing samples",
+  "raw_file_on_kaggle": "/kaggle/working/fastinfer/results/raw/rmsnorm_first_comparison_20261013T055701423727Z.json",
+  "benchmark": "qwen_style_pytorch_vs_fused_rmsnorm",
+  "dtype": "float16",
+  "seed": 2,
+  "timing_mode": "cuda_graph_replay_amortized",
+  "tests": {
+    "ran": 7,
+    "status": "OK"
+  },
+  "scope": "First synthetic isolated comparison against Qwen-style eager PyTorch reference; not full model or torch.compile",
+  "cases": [
+    {
+      "tokens": 1,
+      "hidden": 1536,
+      "pytorch_median_us": 32.23,
+      "triton_median_us": 3.54,
+      "reported_speedup": 9.105,
+      "fp32_and_pytorch_comparisons": "PASS"
+    },
+    {
+      "tokens": 16,
+      "hidden": 1536,
+      "pytorch_median_us": 23.28,
+      "triton_median_us": 2.33,
+      "reported_speedup": 9.973,
+      "fp32_and_pytorch_comparisons": "PASS"
+    },
+    {
+      "tokens": 128,
+      "hidden": 1536,
+      "pytorch_median_us": 32.7,
+      "triton_median_us": 3.12,
+      "reported_speedup": 10.481,
+      "fp32_and_pytorch_comparisons": "PASS"
+    },
+    {
+      "tokens": 1,
+      "hidden": 65,
+      "pytorch_median_us": 14.42,
+      "triton_median_us": 1.89,
+      "reported_speedup": 7.64,
+      "fp32_and_pytorch_comparisons": "PASS"
+    },
+    {
+      "tokens": 1,
+      "hidden": 1024,
+      "pytorch_median_us": 17.1,
+      "triton_median_us": 1.89,
+      "reported_speedup": 9.028,
+      "fp32_and_pytorch_comparisons": "PASS"
+    },
+    {
+      "tokens": 1,
+      "hidden": 4096,
+      "pytorch_median_us": 17.47,
+      "triton_median_us": 2.38,
+      "reported_speedup": 7.354,
+      "fp32_and_pytorch_comparisons": "PASS"
+    },
+    {
+      "tokens": 1,
+      "hidden": 8192,
+      "pytorch_median_us": 17.94,
+      "triton_median_us": 3.3,
+      "reported_speedup": 5.441,
+      "fp32_and_pytorch_comparisons": "PASS"
+    }
+  ]
+}

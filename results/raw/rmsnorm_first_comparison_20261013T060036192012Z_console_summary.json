@@ -1,0 +1,63 @@
+{
+  "provenance": "User-supplied rounded Kaggle console output; not original timing samples",
+  "raw_file_on_kaggle": "/kaggle/working/fastinfer/results/raw/rmsnorm_first_comparison_20261013T060036192012Z.json",
+  "scope": "Separate repeat of same frozen synthetic isolated FP16 benchmark, seed2, CUDA graphs",
+  "cases": [
+    {
+      "tokens": 1,
+      "hidden": 1536,
+      "pytorch_median_us": 39.88,
+      "triton_median_us": 4.14,
+      "reported_speedup": 9.629,
+      "fp32_and_pytorch_comparisons": "PASS"
+    },
+    {
+      "tokens": 16,
+      "hidden": 1536,
+      "pytorch_median_us": 28.82,
+      "triton_median_us": 2.87,
+      "reported_speedup": 10.029,
+      "fp32_and_pytorch_comparisons": "PASS"
+    },
+    {
+      "tokens": 128,
+      "hidden": 1536,
+      "pytorch_median_us": 42.11,
+      "triton_median_us": 3.87,
+      "reported_speedup": 10.878,
+      "fp32_and_pytorch_comparisons": "PASS"
+    },
+    {
+      "tokens": 1,
+      "hidden": 65,
+      "pytorch_median_us": 14.52,
+      "triton_median_us": 1.98,
+      "reported_speedup": 7.328,
+      "fp32_and_pytorch_comparisons": "PASS"
+    },
+    {
+      "tokens": 1,
+      "hidden": 1024,
+      "pytorch_median_us": 17.1,
+      "triton_median_us": 1.95,
+      "reported_speedup": 8.773,
+      "fp32_and_pytorch_comparisons": "PASS"
+    },
+    {
+      "tokens": 1,
+      "hidden": 4096,
+      "pytorch_median_us": 17.49,
+      "triton_median_us": 2.39,
+      "reported_speedup": 7.322,
+      "fp32_and_pytorch_comparisons": "PASS"
+    },
+    {
+      "tokens": 1,
+      "hidden": 8192,
+      "pytorch_median_us": 17.95,
+      "triton_median_us": 3.32,
+      "reported_speedup": 5.399,
+      "fp32_and_pytorch_comparisons": "PASS"
+    }
+  ]
+}
