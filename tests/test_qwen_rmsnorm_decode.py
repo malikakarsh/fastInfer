@@ -46,15 +46,29 @@ class ToyModel(torch.nn.Module):
 
 
 class NormDecodeDiagnosticsTest(unittest.TestCase):
-    def run_trial(self, model):
+    def run_trial(self, model, *, custom=False, kernel=None):
         encoded = {"input_ids": torch.tensor([[1, 2]]), "attention_mask": torch.ones(1, 2, dtype=torch.long)}
         event = Mock()
         event.elapsed_time.return_value = 1.
         with patch.dict(sys.modules, {"transformers": SimpleNamespace(DynamicCache=object)}), \
                 patch.object(torch.cuda, "synchronize"), patch.object(torch.cuda, "Event", return_value=event):
-            return shared.decode_trial(model, encoded, 3, custom=False, validate=True,
+            return shared.decode_trial(model, encoded, 3, custom=custom, validate=True,
                                        replacement="rmsnorm", norms={"norm": model.norm},
-                                       capture_normalization=True)
+                                       capture_normalization=True, normalization_kernel=kernel)
+
+    def test_selected_kernel_runs_only_during_decode_and_restores(self):
+        model = ToyModel().eval()
+        kernel = Mock(wraps=reference_rmsnorm)
+        with patch("fastinfer.decode_rmsnorm.eligible_norm_input", return_value=True):
+            result = self.run_trial(model, custom=True, kernel=kernel)
+        self.assertEqual(kernel.call_count, 3)  # Original prefill excluded.
+        self.assertEqual(result["dispatch"]["rmsnorm_calls"], 3)
+        self.assertEqual(result["dispatch"]["fallback_calls"], 0)
+        self.assertNotIn("forward", model.norm.__dict__)
+        self.assertEqual(len(model.norm._forward_hooks), 0)
+        diagnostics = benchmark.normalization_diagnostics(result, {"norm": model.norm})
+        self.assertEqual(diagnostics["exactly_matching_calls"], 3)
+        self.assertEqual(diagnostics["different_elements_from_original"], 0)
 
     def test_capture_excludes_prefill_and_cleans_up(self):
         model = ToyModel()
@@ -79,6 +93,8 @@ class NormDecodeDiagnosticsTest(unittest.TestCase):
         candidate = {"normalization": {"norm": [(x, norm(x) + .1)]}}
         diagnostics = benchmark.normalization_diagnostics(candidate, {"norm": norm})
         self.assertFalse(diagnostics["all_passed"])
+        self.assertEqual(diagnostics["exactly_matching_calls"], 0)
+        self.assertEqual(diagnostics["different_elements_from_original"], 2)
 
     def test_explicit_exploratory_mode_retains_strict_failure(self):
         case = {"accuracy": {"passed": False, "identical_greedy_tokens": True},

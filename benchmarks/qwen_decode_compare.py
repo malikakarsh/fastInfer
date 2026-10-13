@@ -23,7 +23,8 @@ REVISION = "8faed761d45a263340a0528343f099c05c9a4323"
 
 
 def decode_trial(model, encoded, steps, *, custom, validate=False, capture_projection=False,
-                 replacement="gemv", norms=None, capture_normalization=False):
+                 replacement="gemv", norms=None, capture_normalization=False,
+                 normalization_kernel=None):
     """Fresh prefill/cache per trial; time only the cached greedy decode loop.
 
     Fixed length, including tokens after EOS, so paired workloads have equal
@@ -56,7 +57,7 @@ def decode_trial(model, encoded, steps, *, custom, validate=False, capture_proje
         elif replacement == "gemv":
             context = use_decode_gemv(projection)
         else:
-            context = use_decode_rmsnorm(norms)
+            context = use_decode_rmsnorm(norms, kernel=normalization_kernel)
         with context as counts, ExitStack() as cleanup:
             if capture_projection:
                 def capture(module, inputs, output):

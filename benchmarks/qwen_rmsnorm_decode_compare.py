@@ -34,8 +34,12 @@ def normalization_diagnostics(candidate, norms):
                     "triton_vs_original": error_report(actual, original),
                 }
                 rows.append({"module": name, "step": index + 1, "comparisons": comparisons,
+                             "exactly_matches_original": torch.equal(actual, original),
+                             "different_elements_from_original": int((actual != original).sum().item()),
                              "passed": all(value["mismatches"] == 0 for value in comparisons.values())})
     return {"calls_checked": len(rows), "all_passed": all(row["passed"] for row in rows),
+            "exactly_matching_calls": sum(row["exactly_matches_original"] for row in rows),
+            "different_elements_from_original": sum(row["different_elements_from_original"] for row in rows),
             "largest_local_difference": max(row["comparisons"]["triton_vs_original"]["max_abs_error"]
                                              for row in rows),
             "per_call": rows}
@@ -63,6 +67,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--steps", type=int, default=16)
     parser.add_argument("--repetitions", type=int, default=30)
+    parser.add_argument("--kernel", choices=("current", "mean_candidate"), default="current",
+                        help="explicit experimental kernel selection; default remains current")
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--diagnose", action="store_true", help="check every actual normalization call, skip timing")
     mode.add_argument("--exploratory-timing", action="store_true",
@@ -71,12 +77,20 @@ def main():
     inspect_normalization = args.diagnose or args.exploratory_timing
     if args.steps < 1 or args.repetitions < 2 or not torch.cuda.is_available():
         parser.error("CUDA, positive steps and at least two repetitions required")
+    selected_kernel = None
+    kernel_path = "kernels/triton_rmsnorm.py"
+    if args.kernel == "mean_candidate":
+        if torch.__version__.split("+")[0] != "2.5.1":
+            parser.error("mean_candidate targets the pinned PyTorch 2.5.1 reduction")
+        from fastinfer.kernels.rmsnorm_mean_candidate import rmsnorm_candidate
+        selected_kernel = rmsnorm_candidate
+        kernel_path = "kernels/rmsnorm_mean_candidate.py"
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
     torch.set_float32_matmul_precision("highest")
     torch.backends.cuda.matmul.allow_fp16_reduced_precision_reduction = True
     tokenizer = AutoTokenizer.from_pretrained(MODEL, revision=REVISION, trust_remote_code=False)
-    print(f"Loading {MODEL}; FP16, math SDPA; RMSNorm replacement only", flush=True)
+    print(f"Loading {MODEL}; FP16, math SDPA; RMSNorm replacement only; kernel={args.kernel}", flush=True)
     model = AutoModelForCausalLM.from_pretrained(
         MODEL, revision=REVISION, torch_dtype=torch.float16,
         attn_implementation="sdpa", output_attentions=False,
@@ -87,13 +101,15 @@ def main():
     if len(norms) != 2 * model.config.num_hidden_layers + 1:
         raise RuntimeError("unexpected normalization module count")
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
-    destination = ROOT / "results/raw" / f"qwen_rmsnorm_decode_{stamp}.json"
+    suffix = "mean_candidate_" if args.kernel == "mean_candidate" else ""
+    destination = ROOT / "results/raw" / f"qwen_rmsnorm_decode_{suffix}{stamp}.json"
     destination.parent.mkdir(parents=True, exist_ok=True)
     report = {
         "benchmark": "qwen_all_rmsnorm_full_decode", "model": MODEL, "revision": REVISION,
         "dtype": "float16", "attention": "sdpa_math", "cache": "DynamicCache",
         "replacement_modules": list(norms), "gemv_replacement": False,
-        "rmsnorm": {"num_warps": 4, "enable_fp_fusion": False},
+        "rmsnorm": {"kernel": args.kernel, "source": kernel_path,
+                    "num_warps": 4, "enable_fp_fusion": False},
         "diagnostic_mode": args.diagnose,
         "exploratory_timing_requested": args.exploratory_timing,
         "steps": args.steps, "repetitions": args.repetitions,
@@ -109,7 +125,7 @@ def main():
                  "Explicit exploratory mode retains failed logits and requires all local checks. "
                  "Uncompiled original model baseline; no attention or GEMV replacement.",
         "source_sha256": {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
-                          for name in ("decode_rmsnorm.py", "kernels/triton_rmsnorm.py",
+                          for name in ("decode_rmsnorm.py", kernel_path,
                                        "benchmarks/qwen_rmsnorm_decode_compare.py",
                                        "benchmarks/qwen_decode_compare.py", "kernels/rmsnorm.py",
                                        "benchmarks/qwen_rmsnorm_check.py")},
@@ -120,7 +136,8 @@ def main():
 
     def trial(encoded, custom, validate=False, capture=False):
         return decode_trial(model, encoded, args.steps, custom=custom, validate=validate,
-                            replacement="rmsnorm", norms=norms, capture_normalization=capture)
+                            replacement="rmsnorm", norms=norms, capture_normalization=capture,
+                            normalization_kernel=selected_kernel)
 
     def save():
         destination.write_text(json.dumps(report, indent=2) + "\n")
@@ -144,6 +161,9 @@ def main():
                 print(f"  Local normalization checks: {local['calls_checked']} | "
                       f"all passed {local['all_passed']} | max local difference "
                       f"{local['largest_local_difference']:.6f}", flush=True)
+                print(f"  Exactly matching original normalization: "
+                      f"{local['exactly_matching_calls']}/{local['calls_checked']} calls | "
+                      f"different output elements {local['different_elements_from_original']}", flush=True)
             del baseline, repeat, candidate
             calls = case["validation_dispatch"]
             print(f"  RMSNorm calls: {calls['rmsnorm_calls']} | fallback {calls['fallback_calls']} "
@@ -152,6 +172,7 @@ def main():
             print(f"  Logit mismatches: {accuracy['logit_mismatches']} | max error "
                   f"{accuracy['max_abs_logit_error']:.6f} | identical tokens "
                   f"{accuracy['identical_greedy_tokens']}", flush=True)
+            print(f"  Strict logits/token check passed: {accuracy['passed']}", flush=True)
             worst_tv = max(row["probability_total_variation_max"] for row in accuracy["per_step"])
             print(f"  Worst probability total variation: {worst_tv:.6f}", flush=True)
             allowed, status = timing_decision(case, diagnose=args.diagnose,

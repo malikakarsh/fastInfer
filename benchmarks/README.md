@@ -252,3 +252,24 @@ match exactly before timing. Alternating paired CUDA-graph timings use30samples
 of100operations each, after warmup. This does not validate full-generation
 behavior or speed. Two CPU statistics tests pass locally; two GPU arithmetic
 and eligibility tests require Kaggle execution.
+
+The first candidate run passed all five tests on T4. Its mean and final output
+matched PyTorch exactly on all three selected real inputs and all five new
+synthetic seeds. It eliminated the one output difference in the selected layer7
+input. Candidate medians were6.707–7.183us versus3.970–4.180us for the current
+kernel; paired savings were negative in every case (approximately-2.709 to
+-3.034us). Exact agreement on eight inputs does not establish full-model
+equivalence. The full raw JSON remains on Kaggle:
+`rmsnorm_mean_candidate_20261013T075927668712Z.json`.
+
+Run `python benchmarks/qwen_rmsnorm_decode_compare.py --kernel mean_candidate
+--diagnose --steps 16` to evaluate the candidate inside all57 normalization
+layers during decode for the original three prompts. Prefill and other model
+operations remain original. This diagnostic checks912 local calls per prompt
+against original normalization and the FP32 reference, reports exact local
+agreement as well as unchanged tolerance checks, and compares full-model logits
+and greedy tokens. No timing is collected in diagnostic mode. The selected
+kernel and source hash are recorded; candidate reports have a
+`qwen_rmsnorm_decode_mean_candidate_` prefix. The default selection remains the
+current kernel. Five local normalization-decode tests and five shared comparison
+tests pass; actual candidate model execution is pending on Kaggle.
