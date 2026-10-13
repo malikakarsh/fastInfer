@@ -273,3 +273,29 @@ kernel and source hash are recorded; candidate reports have a
 `qwen_rmsnorm_decode_mean_candidate_` prefix. The default selection remains the
 current kernel. Five local normalization-decode tests and five shared comparison
 tests pass; actual candidate model execution is pending on Kaggle.
+
+Candidate full-model diagnosis subsequently matched original normalization
+exactly on all2736calls across three prompts and16cachedsteps each. Final
+logits and greedy tokens also matched exactly. The first strict-gated timing
+run reported original/candidate medians33.835/31.712,34.097/32.190,and
+34.002/31.955ms per decode step. These correspond to5.6–6.3percent lower
+latency, with candidate-faster paired rounds29/30,28/30,and30/30.
+Raw diagnostic and timing reports remain on Kaggle as
+`qwen_rmsnorm_decode_mean_candidate_20261013T080422814381Z.json` and
+`qwen_rmsnorm_decode_mean_candidate_20261013T080534845270Z.json`.
+This compares against the uncompiled FP16 model with math SDPA on T4; it is
+not a direct model-level comparison between the two Triton implementations.
+The candidate is slower than the first Triton kernel in isolated same-run
+normalization timing, while improving this original-model decode baseline.
+
+Repeat the frozen timing command with `--kernel mean_candidate --steps 16
+--repetitions 30`, then run `python benchmarks/qwen_rmsnorm_quality.py
+--kernel mean_candidate --max-new-tokens 64 --archive`. The quality suite
+retains the same16prompts, EOS stopping and baseline-fed comparison after
+divergence. Candidate selection applies to both independent and baseline-fed
+decode. Reports identify/hash the selected kernel and include exact-logit
+agreement alongside the unchanged strict tolerance. Candidate ZIPs include
+the latest two complete strict-passing candidate timing reports with matching
+kernel source hashes; diagnostic runs and current-kernel timings are excluded.
+Missing timing evidence is reported in the archive manifest. Nine local suite
+tests pass. Broader candidate generation and the timing repeat are pending.

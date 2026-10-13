@@ -5,7 +5,7 @@ from types import SimpleNamespace
 import sys
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 import zipfile
 import json
 
@@ -62,16 +62,27 @@ class ToyModel(torch.nn.Module):
 
 
 class QualityCheckTest(unittest.TestCase):
-    def rollout(self, model, *, limit=64, teacher=None):
+    def rollout(self, model, *, limit=64, teacher=None, kernel=None):
         encoded = {"input_ids": torch.tensor([[1, 2]]),
                    "attention_mask": torch.ones(1, 2, dtype=torch.long)}
-        def context(norms):
-            return use_decode_rmsnorm(norms, kernel=reference_rmsnorm)
+        def context(norms, *, kernel=reference_rmsnorm):
+            return use_decode_rmsnorm(norms, kernel=kernel)
         with patch.dict(sys.modules, {"transformers": SimpleNamespace(DynamicCache=Cache)}), \
                 patch.object(benchmark, "use_decode_rmsnorm", context), \
                 patch("fastinfer.decode_rmsnorm.eligible_norm_input", return_value=True):
             return benchmark.rollout(model, encoded, {"norm": model.norm}, limit, {3},
-                                     custom=True, teacher_tokens=teacher)
+                                     custom=True, teacher_tokens=teacher, normalization_kernel=kernel)
+
+    def test_selected_kernel_runs_in_greedy_and_shared_history_decode(self):
+        kernel = Mock(wraps=reference_rmsnorm)
+        model = ToyModel()
+        result = self.rollout(model, kernel=kernel)
+        self.assertEqual(kernel.call_count, 2)
+        self.assertEqual(result["dispatch"]["rmsnorm_calls"], 2)
+        self.assertNotIn("forward", model.norm.__dict__)
+        kernel.reset_mock()
+        self.rollout(ToyModel(predict_after_one=0), teacher=[1, 2, 3], kernel=kernel)
+        self.assertEqual(kernel.call_count, 2)
 
     def test_eos_stops_and_prefill_does_not_count_as_custom_decode(self):
         model = ToyModel()
@@ -116,7 +127,9 @@ class QualityCheckTest(unittest.TestCase):
         b["scores"] = a["scores"] + 1
         metrics = benchmark.probability_comparison(a, b)
         self.assertFalse(metrics["strict_logits_passed"])
+        self.assertFalse(metrics["logits_exactly_equal"])
         self.assertAlmostEqual(metrics["worst_probability_total_variation"], 0., places=6)
+        self.assertTrue(benchmark.probability_comparison(a, a)["logits_exactly_equal"])
 
     def test_archive_keeps_available_raw_files_and_reports_missing(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -133,6 +146,30 @@ class QualityCheckTest(unittest.TestCase):
                 self.assertIn("quality.json", bundle.namelist())
                 self.assertIn("qwen_rmsnorm_decode_20261013T065623423837Z.json", bundle.namelist())
                 self.assertEqual(len(json.loads(bundle.read("archive_manifest.json"))["missing_timing_files"]), 1)
+
+    def test_candidate_archive_excludes_current_kernel_and_diagnostic_runs(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            raw = root / "results/raw"
+            raw.mkdir(parents=True)
+            destination = raw / "quality.json"
+            destination.write_text('{}')
+            for number, kernel, status in ((1, "mean_candidate", "strict_accuracy_passed"),
+                                           (2, "mean_candidate", "diagnostic_only"),
+                                           (3, "current", "strict_accuracy_passed"),
+                                           (4, "mean_candidate", "strict_accuracy_passed")):
+                path = raw / f"qwen_rmsnorm_decode_mean_candidate_{number}.json"
+                path.write_text(json.dumps({"rmsnorm": {"kernel": kernel},
+                    "cases": [{"timing_status": status, "samples": {"pytorch": [1]}}] * 3}))
+            with patch.object(benchmark, "ROOT", root):
+                archive, missing = benchmark.archive_evidence(destination, kernel="mean_candidate")
+            self.assertEqual(missing, [])
+            with zipfile.ZipFile(archive) as bundle:
+                files = bundle.namelist()
+                self.assertIn("qwen_rmsnorm_decode_mean_candidate_1.json", files)
+                self.assertIn("qwen_rmsnorm_decode_mean_candidate_4.json", files)
+                self.assertNotIn("qwen_rmsnorm_decode_mean_candidate_2.json", files)
+                self.assertNotIn("qwen_rmsnorm_decode_mean_candidate_3.json", files)
 
 
 if __name__ == "__main__":
