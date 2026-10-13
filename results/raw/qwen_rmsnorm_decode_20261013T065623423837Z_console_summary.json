@@ -1,0 +1,98 @@
+{
+  "provenance": "User-supplied rounded Kaggle console output; not original timing samples",
+  "raw_file_on_kaggle": "/kaggle/working/fastinfer/results/raw/qwen_rmsnorm_decode_20261013T065623423837Z.json",
+  "model": "Qwen/Qwen2.5-1.5B",
+  "dtype": "float16",
+  "attention": "math SDPA",
+  "steps": 16,
+  "paired_rounds": 30,
+  "replacements": "57 RMSNorm modules during decode only",
+  "gemv_replacement": false,
+  "scope": "First exploratory full cached decode performance run versus original eager model, prefill excluded; strict logits tolerance failed",
+  "cases": [
+    {
+      "prompt": "The capital of France is",
+      "pytorch_wall_median_ms_per_step": 33.475,
+      "fused_wall_median_ms_per_step": 31.617,
+      "reported_speedup": 1.059,
+      "latency_reduction_percent_from_rounded_medians": 5.550410754294251,
+      "paired_median_saving_us": 1963.75,
+      "custom_faster_rounds": 30,
+      "strict_logit_mismatches": 4322,
+      "max_abs_logit_error": 0.024048,
+      "identical_tokens": true,
+      "baseline_repeat_mismatches": 0,
+      "local_checks": {
+        "calls": 912,
+        "all_passed": true,
+        "max_abs_difference": 0.000977
+      },
+      "worst_probability_total_variation": 0.00366,
+      "timing_status": "exploratory_strict_logits_failed",
+      "validation_dispatch": {
+        "rmsnorm_calls": 912,
+        "fallback_calls": 0
+      },
+      "timed_dispatch": {
+        "rmsnorm_calls": 27360,
+        "fallback_calls": 0
+      }
+    },
+    {
+      "prompt": "Explain why the sky appears blue in one sentence.",
+      "pytorch_wall_median_ms_per_step": 33.909,
+      "fused_wall_median_ms_per_step": 31.879,
+      "reported_speedup": 1.064,
+      "latency_reduction_percent_from_rounded_medians": 5.9866112241587714,
+      "paired_median_saving_us": 1972.62,
+      "custom_faster_rounds": 30,
+      "strict_logit_mismatches": 28913,
+      "max_abs_logit_error": 0.046875,
+      "identical_tokens": true,
+      "baseline_repeat_mismatches": 0,
+      "local_checks": {
+        "calls": 912,
+        "all_passed": true,
+        "max_abs_difference": 0.003906
+      },
+      "worst_probability_total_variation": 0.004265,
+      "timing_status": "exploratory_strict_logits_failed",
+      "validation_dispatch": {
+        "rmsnorm_calls": 912,
+        "fallback_calls": 0
+      },
+      "timed_dispatch": {
+        "rmsnorm_calls": 27360,
+        "fallback_calls": 0
+      }
+    },
+    {
+      "prompt": "def add(a, b):\n    return",
+      "pytorch_wall_median_ms_per_step": 33.954,
+      "fused_wall_median_ms_per_step": 32.049,
+      "reported_speedup": 1.059,
+      "latency_reduction_percent_from_rounded_medians": 5.610531896094719,
+      "paired_median_saving_us": 2005.09,
+      "custom_faster_rounds": 28,
+      "strict_logit_mismatches": 4781,
+      "max_abs_logit_error": 0.035156,
+      "identical_tokens": true,
+      "baseline_repeat_mismatches": 0,
+      "local_checks": {
+        "calls": 912,
+        "all_passed": true,
+        "max_abs_difference": 0.000977
+      },
+      "worst_probability_total_variation": 0.001031,
+      "timing_status": "exploratory_strict_logits_failed",
+      "validation_dispatch": {
+        "rmsnorm_calls": 912,
+        "fallback_calls": 0
+      },
+      "timed_dispatch": {
+        "rmsnorm_calls": 27360,
+        "fallback_calls": 0
+      }
+    }
+  ]
+}
