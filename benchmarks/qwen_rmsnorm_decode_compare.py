@@ -12,14 +12,63 @@ import sys
 import torch
 
 from qwen_decode_compare import MODEL, REVISION, ROOT, decode_trial, compare_outputs
-from qwen_linear_check import PROMPTS
+from qwen_linear_check import PROMPTS, require_finite
+from qwen_rmsnorm_check import error_report
+from fastinfer.kernels.rmsnorm import reference_rmsnorm
+
+
+def normalization_diagnostics(candidate, norms):
+    """Replay original normalization on the same candidate input at each step."""
+    rows = []
+    with torch.inference_mode():
+        for name, samples in candidate["normalization"].items():
+            module = norms[name]
+            weight32 = module.weight.float()
+            for index, (x, actual) in enumerate(samples):
+                require_finite(x, name + ".input")
+                original = module(x)  # Replacement context has already restored forward.
+                oracle = reference_rmsnorm(x.float(), weight32, eps=module.variance_epsilon)
+                comparisons = {
+                    "original_vs_fp32": error_report(original, oracle),
+                    "triton_vs_fp32": error_report(actual, oracle),
+                    "triton_vs_original": error_report(actual, original),
+                }
+                rows.append({"module": name, "step": index + 1, "comparisons": comparisons,
+                             "passed": all(value["mismatches"] == 0 for value in comparisons.values())})
+    return {"calls_checked": len(rows), "all_passed": all(row["passed"] for row in rows),
+            "largest_local_difference": max(row["comparisons"]["triton_vs_original"]["max_abs_error"]
+                                             for row in rows),
+            "per_call": rows}
+
+
+def timing_decision(case, *, diagnose, exploratory, expected_calls):
+    if diagnose:
+        return False, "diagnostic_only"
+    if not case["baseline_repeat_accuracy"]["passed"]:
+        return False, "baseline_repeat_failed"
+    if exploratory:
+        local = case.get("normalization_diagnostics", {})
+        if local.get("calls_checked") != expected_calls or not local.get("all_passed", False):
+            return False, "local_normalization_checks_failed_or_missing"
+    if case["accuracy"]["passed"]:
+        return True, "strict_accuracy_passed"
+    if not exploratory:
+        return False, "strict_logits_failed"
+    if not case["accuracy"]["identical_greedy_tokens"]:
+        return False, "greedy_tokens_differ"
+    return True, "exploratory_strict_logits_failed"
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--steps", type=int, default=16)
     parser.add_argument("--repetitions", type=int, default=30)
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--diagnose", action="store_true", help="check every actual normalization call, skip timing")
+    mode.add_argument("--exploratory-timing", action="store_true",
+                      help="allow labeled timing after local checks despite failed strict logits")
     args = parser.parse_args()
+    inspect_normalization = args.diagnose or args.exploratory_timing
     if args.steps < 1 or args.repetitions < 2 or not torch.cuda.is_available():
         parser.error("CUDA, positive steps and at least two repetitions required")
     from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -45,6 +94,8 @@ def main():
         "dtype": "float16", "attention": "sdpa_math", "cache": "DynamicCache",
         "replacement_modules": list(norms), "gemv_replacement": False,
         "rmsnorm": {"num_warps": 4, "enable_fp_fusion": False},
+        "diagnostic_mode": args.diagnose,
+        "exploratory_timing_requested": args.exploratory_timing,
         "steps": args.steps, "repetitions": args.repetitions,
         "warmup_trajectories_per_implementation": 2,
         "allow_fp16_reduced_precision_reduction": True,
@@ -54,20 +105,22 @@ def main():
         "scope": "All Qwen RMSNorm modules use the frozen kernel on eligible single-token "
                  "decode inputs. Original prefill, independent fresh cache per trial. "
                  "Includes model, LM head, growing cache and argmax; fixed steps after EOS. "
-                 "Strict logits/token and baseline-repeat checks before timing. "
+                 "Default mode requires strict logits/token and baseline-repeat checks. "
+                 "Explicit exploratory mode retains failed logits and requires all local checks. "
                  "Uncompiled original model baseline; no attention or GEMV replacement.",
         "source_sha256": {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
                           for name in ("decode_rmsnorm.py", "kernels/triton_rmsnorm.py",
                                        "benchmarks/qwen_rmsnorm_decode_compare.py",
-                                       "benchmarks/qwen_decode_compare.py")},
+                                       "benchmarks/qwen_decode_compare.py", "kernels/rmsnorm.py",
+                                       "benchmarks/qwen_rmsnorm_check.py")},
         "environment": json.loads(subprocess.check_output(
             [sys.executable, str(ROOT / "scripts/environment_report.py")], cwd=ROOT, text=True)),
         "cases": [],
     }
 
-    def trial(encoded, custom, validate=False):
+    def trial(encoded, custom, validate=False, capture=False):
         return decode_trial(model, encoded, args.steps, custom=custom, validate=validate,
-                            replacement="rmsnorm", norms=norms)
+                            replacement="rmsnorm", norms=norms, capture_normalization=capture)
 
     def save():
         destination.write_text(json.dumps(report, indent=2) + "\n")
@@ -78,13 +131,19 @@ def main():
             encoded = tokenizer(prompt, return_tensors="pt").to("cuda")
             baseline = trial(encoded, False, True)
             repeat = trial(encoded, False, True)
-            candidate = trial(encoded, True, True)
+            candidate = trial(encoded, True, True, capture=inspect_normalization)
             accuracy = compare_outputs(baseline, candidate)
             baseline_accuracy = compare_outputs(baseline, repeat)
             case = {"prompt": prompt, "accuracy": accuracy,
                     "baseline_repeat_accuracy": baseline_accuracy,
                     "validation_dispatch": candidate["dispatch"]}
             report["cases"].append(case)
+            if inspect_normalization:
+                case["normalization_diagnostics"] = normalization_diagnostics(candidate, norms)
+                local = case["normalization_diagnostics"]
+                print(f"  Local normalization checks: {local['calls_checked']} | "
+                      f"all passed {local['all_passed']} | max local difference "
+                      f"{local['largest_local_difference']:.6f}", flush=True)
             del baseline, repeat, candidate
             calls = case["validation_dispatch"]
             print(f"  RMSNorm calls: {calls['rmsnorm_calls']} | fallback {calls['fallback_calls']} "
@@ -93,9 +152,16 @@ def main():
             print(f"  Logit mismatches: {accuracy['logit_mismatches']} | max error "
                   f"{accuracy['max_abs_logit_error']:.6f} | identical tokens "
                   f"{accuracy['identical_greedy_tokens']}", flush=True)
-            if not accuracy["passed"] or not baseline_accuracy["passed"]:
+            worst_tv = max(row["probability_total_variation_max"] for row in accuracy["per_step"])
+            print(f"  Worst probability total variation: {worst_tv:.6f}", flush=True)
+            allowed, status = timing_decision(case, diagnose=args.diagnose,
+                                             exploratory=args.exploratory_timing,
+                                             expected_calls=args.steps * len(norms))
+            case["timing_status"] = status
+            print(f"  Timing status: {status}", flush=True)
+            if not allowed:
                 case["timing_skipped"] = True
-                print("  Timing skipped: strict accuracy or baseline-repeat check failed.", flush=True)
+                print("  Timing skipped.", flush=True)
                 save()
                 continue
             for _ in range(2):

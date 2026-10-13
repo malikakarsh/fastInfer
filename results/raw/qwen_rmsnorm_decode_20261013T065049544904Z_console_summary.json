@@ -1,0 +1,44 @@
+{
+  "provenance": "User-supplied rounded console output; full logits/call data remains on Kaggle",
+  "raw_file_on_kaggle": "/kaggle/working/fastinfer/results/raw/qwen_rmsnorm_decode_20261013T065049544904Z.json",
+  "benchmark": "qwen_all_rmsnorm_full_decode",
+  "steps": 16,
+  "modules": 57,
+  "integration_tests": {
+    "ran": 5,
+    "status": "OK"
+  },
+  "scope": "Integrated accuracy check; timing skipped for every prompt; no full-model speed result",
+  "cases": [
+    {
+      "prompt": "The capital of France is",
+      "rmsnorm_calls": 912,
+      "fallback_calls": 0,
+      "baseline_repeat_mismatches": 0,
+      "logit_mismatches": 4322,
+      "max_abs_logit_error": 0.024048,
+      "identical_tokens": true,
+      "timing_skipped": true
+    },
+    {
+      "prompt": "Explain why the sky appears blue in one sentence.",
+      "rmsnorm_calls": 912,
+      "fallback_calls": 0,
+      "baseline_repeat_mismatches": 0,
+      "logit_mismatches": 28913,
+      "max_abs_logit_error": 0.046875,
+      "identical_tokens": true,
+      "timing_skipped": true
+    },
+    {
+      "prompt": "def add(a, b):\n    return",
+      "rmsnorm_calls": 912,
+      "fallback_calls": 0,
+      "baseline_repeat_mismatches": 0,
+      "logit_mismatches": 4781,
+      "max_abs_logit_error": 0.035156,
+      "identical_tokens": true,
+      "timing_skipped": true
+    }
+  ]
+}

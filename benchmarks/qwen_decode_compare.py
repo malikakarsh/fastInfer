@@ -23,7 +23,7 @@ REVISION = "8faed761d45a263340a0528343f099c05c9a4323"
 
 
 def decode_trial(model, encoded, steps, *, custom, validate=False, capture_projection=False,
-                 replacement="gemv", norms=None):
+                 replacement="gemv", norms=None, capture_normalization=False):
     """Fresh prefill/cache per trial; time only the cached greedy decode loop.
 
     Fixed length, including tokens after EOS, so paired workloads have equal
@@ -36,6 +36,8 @@ def decode_trial(model, encoded, steps, *, custom, validate=False, capture_proje
         raise ValueError("replacement must be gemv or rmsnorm")
     if custom and replacement == "rmsnorm" and not norms:
         raise ValueError("normalization modules required")
+    if capture_normalization and not norms:
+        raise ValueError("normalization modules required for capture")
     projection = model.model.layers[0].mlp.up_proj
     with torch.inference_mode(), sdpa_kernel(SDPBackend.MATH):
         # Prefill always uses the original projection, even for a one-token prompt.
@@ -48,6 +50,7 @@ def decode_trial(model, encoded, steps, *, custom, validate=False, capture_proje
         mask = encoded["attention_mask"]
         del prefill
         logits, tokens, projections = [], [], []
+        normalization = {name: [] for name in norms} if capture_normalization else {}
         if not custom:
             context = nullcontext(None)
         elif replacement == "gemv":
@@ -60,6 +63,14 @@ def decode_trial(model, encoded, steps, *, custom, validate=False, capture_proje
                     projections.append((inputs[0].detach().clone(), output.detach().clone()))
                 handle = projection.register_forward_hook(capture)
                 cleanup.callback(handle.remove)
+            if capture_normalization:
+                def capture_norm(name, inputs, output):
+                    normalization[name].append((inputs[0].detach().clone(), output.detach().clone()))
+                for name, module in norms.items():
+                    handle = module.register_forward_hook(
+                        lambda module, inputs, output, name=name: capture_norm(name, inputs, output)
+                    )
+                    cleanup.callback(handle.remove)
             start = torch.cuda.Event(enable_timing=True)
             end = torch.cuda.Event(enable_timing=True)
             torch.cuda.synchronize()
@@ -95,6 +106,10 @@ def decode_trial(model, encoded, steps, *, custom, validate=False, capture_proje
             result["tokens"] = torch.cat([initial_token, *tokens], dim=1).cpu().tolist()
         if capture_projection:
             result["projections"] = projections
+        if capture_normalization:
+            if any(len(values) != steps for values in normalization.values()):
+                raise RuntimeError("Expected one capture per normalization per decode step")
+            result["normalization"] = normalization
         return result
 
 
