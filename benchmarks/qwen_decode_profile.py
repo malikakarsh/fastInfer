@@ -99,6 +99,13 @@ def event_summary(event):
     }
 
 
+def component_summaries(averages):
+    """CPU annotations attribute nested GPU work; device annotations stay separate."""
+    return [event_summary(event) for event in averages
+            if event.key.startswith("component/")
+            and event.device_type == torch.autograd.DeviceType.CPU]
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--steps", type=int, default=4)
@@ -136,11 +143,16 @@ def main():
         require_finite(logits, "profiled_decode.logits")
 
     averages = list(prof.key_averages())
-    regions = [event_summary(event) for event in averages if event.key.startswith("component/")]
+    regions = component_summaries(averages)
+    device_annotations = [event_summary(event) for event in averages
+                          if event.key.startswith("component/")
+                          and event.device_type == torch.autograd.DeviceType.CUDA]
     raw_device_events = [event for event in prof.events()
                          if event.device_type == torch.autograd.DeviceType.CUDA]
     gpu_events = len(raw_device_events)
-    device_us = sum(event.self_device_time_total for event in raw_device_events)
+    non_component_events = [event for event in raw_device_events
+                            if not event.name.startswith("component/")]
+    device_us = sum(event.self_device_time_total for event in non_component_events)
     cpu_top = sorted((event_summary(event) for event in averages
                       if not event.key.startswith("component/")),
                      key=lambda row: row["self_cpu_us"], reverse=True)[:15]
@@ -156,14 +168,19 @@ def main():
         "dtype": "float16", "attention": "sdpa_math", "cache": "DynamicCache",
         "allow_fp16_reduced_precision_reduction": True,
         "prompt": args.prompt, "steps": args.steps, "warmup_trajectories": 2,
-        "gpu_activity_events": gpu_events, "summed_device_activity_us": device_us,
+        "gpu_activity_events": gpu_events,
+        "gpu_non_component_activity_events": len(non_component_events),
+        "summed_non_component_device_activity_us": device_us,
+        "device_component_annotations": device_annotations,
         "component_regions": regions, "top_self_cpu_operations": cpu_top,
         "top_self_device_operations": device_top,
         "scope": "Diagnostic original-model decode profile. Prefill excluded. Profiling and "
                  "annotation overhead prevent comparison with unprofiled benchmark latency. "
                  "CPU time is host operation duration, not necessarily active CPU computation. "
                  "Component totals include nested work; target_up_proj overlaps MLP. "
-                 "Summed GPU activity durations are not wall time and may overlap.",
+                 "GPU component annotations are stored separately from CPU component records. "
+                 "Only non-component device events enter the summed activity duration; "
+                 "this is not wall time and may overlap.",
         "source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "environment": json.loads(subprocess.check_output(
             [sys.executable, str(ROOT / "scripts/environment_report.py")], cwd=ROOT, text=True)),
@@ -177,7 +194,7 @@ def main():
     if not gpu_events:
         print("GPU activity unavailable: CPU timings cannot establish GPU bottlenecks.", flush=True)
     print("\nModel regions: totals include nested operations; target up_proj is inside MLP.")
-    print("Region                          Calls    CPU total ms    GPU total ms")
+    print("Region                          Calls    Host total ms   GPU work ms")
     for row in sorted(regions, key=lambda row: row["total_device_us"], reverse=True):
         print(f"{row['name']:31} {row['calls']:5} {row['total_cpu_us']/1000:15.3f} "
               f"{row['total_device_us']/1000:15.3f}")

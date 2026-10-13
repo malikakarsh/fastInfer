@@ -298,4 +298,24 @@ agreement alongside the unchanged strict tolerance. Candidate ZIPs include
 the latest two complete strict-passing candidate timing reports with matching
 kernel source hashes; diagnostic runs and current-kernel timings are excluded.
 Missing timing evidence is reported in the archive manifest. Nine local suite
-tests pass. Broader candidate generation and the timing repeat are pending.
+tests pass. Broader candidate generation and the timing repeat completed:
+
+- Repeat original/candidate medians were32.990/31.402,33.382/31.598,and
+  33.180/31.187ms per step. Paired median savings were1880.08,2023.22,and
+  1930.71us, with candidate faster29/30,30/30,and30/30rounds. All three
+  validation trajectories again had exact logits and identical tokens.
+- Across both timing runs, latency was4.8–6.3percent lower. Each timed prompt
+  recorded27360candidate normalization calls and zero fallbacks.
+- All16broader cases exercised custom decode, had stable baseline repeats,
+  passed strict logits tolerance, and had exactly equal logits and identical
+  greedy tokens. Worst aligned probability total variation was0.0. The science
+  case matched through the64-token cap, resolving the previously observed
+  divergence for this tested prompt.
+
+Raw repeat report: `qwen_rmsnorm_decode_mean_candidate_20261013T081509571489Z.json`.
+Raw quality report: `qwen_rmsnorm_quality_mean_candidate_20261013T081712201293Z.json`.
+Evidence ZIP: `qwen_rmsnorm_quality_mean_candidate_20261013T081712201293Z.evidence.zip`.
+These files remain on Kaggle and need downloading for local archival. Console
+summaries are labeled separately and are not the original raw samples. This is
+confirmation on the same GPU session and small curated suite, not a universal
+equivalence guarantee or fully compiled model comparison.

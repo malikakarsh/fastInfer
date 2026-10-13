@@ -1,0 +1,169 @@
+{
+  "provenance": "User-supplied rounded Kaggle console output; full texts/token arrays and per-position metrics remain in remote JSON/ZIP",
+  "raw_file_on_kaggle": "/kaggle/working/fastinfer/results/raw/qwen_rmsnorm_quality_20261013T071906163552Z.json",
+  "evidence_zip_on_kaggle": "/kaggle/working/fastinfer/results/raw/qwen_rmsnorm_quality_20261013T071906163552Z.evidence.zip",
+  "scope": "16 curated raw-text prompts, up to64 greedy tokens, stopEOS; numerical behavior suite, not scored task accuracy",
+  "summary": {
+    "cases": 16,
+    "baseline_stable_cases": 16,
+    "identical_greedy_cases": 15,
+    "divergent_greedy_cases": 1,
+    "custom_decode_exercised_cases": 16,
+    "identical_greedy_cases_with_custom_decode": 15,
+    "strict_logits_passed_cases": 0,
+    "worst_aligned_probability_total_variation": 0.0051970710046589375
+  },
+  "cases": [
+    {
+      "category": "original_fact",
+      "original_generated_tokens": 64,
+      "custom_generated_tokens": 64,
+      "identical_greedy_tokens": true,
+      "first_divergence_position": null,
+      "reported_worst_shared_history_tv": 0.003891,
+      "strict_logit_mismatches": 31462
+    },
+    {
+      "category": "original_explanation",
+      "original_generated_tokens": 31,
+      "custom_generated_tokens": 31,
+      "identical_greedy_tokens": true,
+      "first_divergence_position": null,
+      "reported_worst_shared_history_tv": 0.004265,
+      "strict_logit_mismatches": 43350
+    },
+    {
+      "category": "original_code",
+      "original_generated_tokens": 64,
+      "custom_generated_tokens": 64,
+      "identical_greedy_tokens": true,
+      "first_divergence_position": null,
+      "reported_worst_shared_history_tv": 0.004,
+      "strict_logit_mismatches": 51952
+    },
+    {
+      "category": "arithmetic",
+      "original_generated_tokens": 44,
+      "custom_generated_tokens": 44,
+      "identical_greedy_tokens": true,
+      "first_divergence_position": null,
+      "reported_worst_shared_history_tv": 0.003895,
+      "strict_logit_mismatches": 219872
+    },
+    {
+      "category": "arithmetic_steps",
+      "original_generated_tokens": 64,
+      "custom_generated_tokens": 64,
+      "identical_greedy_tokens": true,
+      "first_divergence_position": null,
+      "reported_worst_shared_history_tv": 0.003759,
+      "strict_logit_mismatches": 138312
+    },
+    {
+      "category": "python",
+      "original_generated_tokens": 64,
+      "custom_generated_tokens": 64,
+      "identical_greedy_tokens": true,
+      "first_divergence_position": null,
+      "reported_worst_shared_history_tv": 0.003862,
+      "strict_logit_mismatches": 46419
+    },
+    {
+      "category": "code_explanation",
+      "original_generated_tokens": 64,
+      "custom_generated_tokens": 64,
+      "identical_greedy_tokens": true,
+      "first_divergence_position": null,
+      "reported_worst_shared_history_tv": 0.004337,
+      "strict_logit_mismatches": 70270
+    },
+    {
+      "category": "science",
+      "original_generated_tokens": 64,
+      "custom_generated_tokens": 64,
+      "identical_greedy_tokens": false,
+      "first_divergence_position": 21,
+      "reported_worst_shared_history_tv": 0.004442,
+      "strict_logit_mismatches": 85419,
+      "divergence_details_from_user": {
+        "baseline_top_two_score_gap": 0.015625,
+        "shared_history_probability_total_variation_at_divergence": 0.0038997011724859476,
+        "baseline_continuation": ": \u2460 Light energy is absorbed by chloroplasts, which are then converted into chemical energy by the light-dependent reactions. \u2461 The chemical energy is stored in the ATP and NADPH produced by the light-dependent reactions. \u2462 Carbon dioxide and water are reduced to form glucose. Which of the",
+        "custom_continuation": ": \u2460 Light energy is absorbed by chloroplasts, which are then converted into chemical energy and stored in the chemical bonds of organic matter. \u2461 Carbon dioxide and water are reduced to form organic matter and release oxygen. \u2462 Organic matter is broken down to release energy, which is used for the",
+        "interpretation": "Close baseline top-two scores are consistent with ranking sensitivity to numerical changes; exact output preservation failed. No scientific task scoring performed."
+      }
+    },
+    {
+      "category": "story",
+      "original_generated_tokens": 64,
+      "custom_generated_tokens": 64,
+      "identical_greedy_tokens": true,
+      "first_divergence_position": null,
+      "reported_worst_shared_history_tv": 0.004807,
+      "strict_logit_mismatches": 109605
+    },
+    {
+      "category": "dialogue",
+      "original_generated_tokens": 64,
+      "custom_generated_tokens": 64,
+      "identical_greedy_tokens": true,
+      "first_divergence_position": null,
+      "reported_worst_shared_history_tv": 0.003953,
+      "strict_logit_mismatches": 35552
+    },
+    {
+      "category": "translation",
+      "original_generated_tokens": 64,
+      "custom_generated_tokens": 64,
+      "identical_greedy_tokens": true,
+      "first_divergence_position": null,
+      "reported_worst_shared_history_tv": 0.005075,
+      "strict_logit_mismatches": 50631
+    },
+    {
+      "category": "few_shot",
+      "original_generated_tokens": 64,
+      "custom_generated_tokens": 64,
+      "identical_greedy_tokens": true,
+      "first_divergence_position": null,
+      "reported_worst_shared_history_tv": 0.002926,
+      "strict_logit_mismatches": 17133
+    },
+    {
+      "category": "structured_text",
+      "original_generated_tokens": 27,
+      "custom_generated_tokens": 27,
+      "identical_greedy_tokens": true,
+      "first_divergence_position": null,
+      "reported_worst_shared_history_tv": 0.003355,
+      "strict_logit_mismatches": 4044
+    },
+    {
+      "category": "summary",
+      "original_generated_tokens": 64,
+      "custom_generated_tokens": 64,
+      "identical_greedy_tokens": true,
+      "first_divergence_position": null,
+      "reported_worst_shared_history_tv": 0.005197,
+      "strict_logit_mismatches": 83112
+    },
+    {
+      "category": "long_context",
+      "original_generated_tokens": 64,
+      "custom_generated_tokens": 64,
+      "identical_greedy_tokens": true,
+      "first_divergence_position": null,
+      "reported_worst_shared_history_tv": 0.003282,
+      "strict_logit_mismatches": 33471
+    },
+    {
+      "category": "repeated_context",
+      "original_generated_tokens": 14,
+      "custom_generated_tokens": 14,
+      "identical_greedy_tokens": true,
+      "first_divergence_position": null,
+      "reported_worst_shared_history_tv": 0.00391,
+      "strict_logit_mismatches": 2454
+    }
+  ]
+}

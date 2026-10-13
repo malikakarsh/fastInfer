@@ -46,6 +46,19 @@ class DecodeProfileTest(unittest.TestCase):
         self.assertEqual(len(model.lm_head._forward_hooks), 0)
         self.assertEqual(len(model.lm_head._forward_pre_hooks), 0)
 
+    def test_component_summary_excludes_duplicate_device_annotations(self):
+        from types import SimpleNamespace
+
+        def event(device, cpu, gpu):
+            return SimpleNamespace(key="component/mlp", count=4, device_type=device,
+                                   self_cpu_time_total=cpu, cpu_time_total=cpu,
+                                   self_device_time_total=0, device_time_total=gpu)
+        cpu = event(torch.autograd.DeviceType.CPU, 100, 50)
+        gpu = event(torch.autograd.DeviceType.CUDA, 0, 300)
+        rows = benchmark.component_summaries([cpu, gpu])
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["total_device_us"], 50)
+
     def test_hooks_removed_on_model_failure(self):
         model = ToyModel(fail=True)
         with self.assertRaisesRegex(RuntimeError, "model failure"):

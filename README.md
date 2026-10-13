@@ -52,7 +52,41 @@ An opt-in [decode integration](decode_linear.py) now routes that one projection 
 
 The initial FP16 fused RMSNorm comparison on the Kaggle T4 passed all seven tests and all in-run FP32/PyTorch accuracy checks. Across seven synthetic shapes, the kernel measured 5.441–10.481× speedup over the Qwen-style PyTorch reference using amortized CUDA-graph timing. At hidden width1536, PyTorch/Triton medians were32.23/3.54µs for one token,23.28/2.33µs for16tokens and32.70/3.12µs for128tokens. This is a first-run isolated comparison, not a model-level improvement or a comparison against compiled PyTorch. A separate same-seed repeat also won all seven shapes (5.399–10.878×), with all accuracy comparisons passing. A first compiled-PyTorch comparison also passed all checks: at width1536, compiled/manual medians were4.64/4.20,2.86/2.63 and4.56/3.36µs for1,16,128tokens. Compiled PyTorch had lower medians at widths65 and8192; the other shapes favored the manual kernel in this run, with some differences too small to interpret without repeats. See the [compiled console summary](results/raw/rmsnorm_compiled_comparison_20261013T061150230668Z_console_summary.json). A second same-seed compiled comparison reproduced the width1536 advantage; the128-token case measured1.351× versus1.357× in the first run (approximately26% lower latency). Generated-code inspection identified different warp counts and input-read structure; controlled warp tests retain four as the general default. A real Qwen data check passed all57 normalization modules on three prompts (171cases), with largest reported differences0,0,0.000488. The first full-model normalization replacement ran all912calls per16-step trajectory with zero fallbacks and matching greedy tokens, but failed strict logits tolerance; timing was skipped. Subsequent multi-step local checks passed; exploratory full-decode performance is recorded below. The [console summary](results/raw/rmsnorm_first_comparison_20261013T055701423727Z_console_summary.json) stores rounded supplied measurements; full timing samples remain on Kaggle.
 
-## Exploratory full-decode RMSNorm result
+## RMSNorm candidate: decode speedup with matching tested outputs
+
+An opt-in RMSNorm candidate reduced cached decode latency by **4.8–6.3%**
+across two runs on a Tesla T4, compared with the original uncompiled FP16
+Qwen2.5-1.5B model using math SDPA attention. Both runs passed the existing
+strict accuracy checks with **exactly matching logits and generated tokens**
+on all three timed prompts. Each prompt used16decode steps and30alternating
+timing pairs; prefill was excluded. The repeat measured:
+
+| Prompt | Original model (ms/step) | Candidate (ms/step) | Speedup | Candidate faster rounds |
+| --- | ---: | ---: | ---: | ---: |
+| France | 32.990 | 31.402 | 1.051× | 29/30 |
+| Sky | 33.382 | 31.598 | 1.056× | 30/30 |
+| Code | 33.180 | 31.187 | 1.064× | 30/30 |
+
+The candidate follows the mean-reduction addition grouping from PyTorch2.5.1
+for one1536-feature token. A separate decode diagnostic found exact agreement
+on all2736normalization calls across the three prompts. The broader16-prompt
+suite, with up to64generated tokens and EOS stopping, also reported stable
+baselines, exact logits and identical greedy token sequences in **16/16cases**.
+The earlier photosynthesis divergence did not occur with this candidate.
+
+The candidate takes approximately7µs versus4µs for the first Triton kernel
+in isolated same-run normalization tests. Full-model timings here compare
+the candidate against the original PyTorch model; they do not directly rank
+the two Triton variants. The default kernel remains unchanged. Use
+`--kernel mean_candidate` in the decode and numerical-behavior benchmarks.
+These findings cover the tested batch-one FP16 setup and curated prompts;
+they do not establish equivalence on arbitrary inputs, a language-task quality
+score, or an advantage over a fully compiled model. The
+[console summary](results/raw/rmsnorm_mean_candidate_confirmed_console_summary.json)
+records supplied results. The full quality JSON and two raw timing reports
+are packaged in a candidate evidence ZIP on Kaggle; local archival is pending.
+
+## Initial RMSNorm kernel: exploratory full-decode result
 
 Replacing all 57 Qwen normalization modules during single-token decode reduced median wall latency by approximately **5.0–6.0%** across two exploratory T4 runs. This compares against the original uncompiled FP16 model, with math SDPA attention, fresh caches, 16 decode steps and 30 alternating pairs per prompt; prefill is excluded.
 
@@ -62,7 +96,11 @@ Replacing all 57 Qwen normalization modules during single-token decode reduced m
 | Sky | 33.909 | 31.879 | 1.064× | 30/30 |
 | Code | 33.954 | 32.049 | 1.059× | 28/30 |
 
-All 912 local normalization checks per prompt passed, baseline repeats agreed, and greedy token sequences matched. **Strict final-logit tolerance still failed**, so these are exploratory timing results rather than a model-quality acceptance claim. Worst probability total variation ranged 0.001031–0.004265 on the tested trajectories. Every timed candidate used 27,360 custom normalization calls per prompt with zero fallbacks. A second run reproduced the advantage: original/custom medians were 33.379/31.509, 33.474/31.787 and 33.400/31.638 ms per step, with custom faster in 30/30, 29/30 and 29/30 paired rounds. The [repeat console summary](results/raw/qwen_rmsnorm_decode_20261013T070551021237Z_console_summary.json) preserves those results. This repeats the same three prompts; broader quality evaluation and raw-sample archival remain pending. The [console summary](results/raw/qwen_rmsnorm_decode_20261013T065623423837Z_console_summary.json) preserves rounded supplied results; original raw samples remain on Kaggle.
+All 912 local normalization checks per prompt passed, baseline repeats agreed, and greedy token sequences matched. **Strict final-logit tolerance still failed**, so these are exploratory timing results rather than a model-quality acceptance claim. Worst probability total variation ranged 0.001031–0.004265 on the tested trajectories. Every timed candidate used 27,360 custom normalization calls per prompt with zero fallbacks. A second run reproduced the advantage: original/custom medians were 33.379/31.509, 33.474/31.787 and 33.400/31.638 ms per step, with custom faster in 30/30, 29/30 and 29/30 paired rounds. The [repeat console summary](results/raw/qwen_rmsnorm_decode_20261013T070551021237Z_console_summary.json) preserves those results. This repeats the same three prompts; a broader numerical-behavior check is recorded below; full raw evidence has been packaged on Kaggle and still needs downloading. The [console summary](results/raw/qwen_rmsnorm_decode_20261013T065623423837Z_console_summary.json) preserves rounded supplied results; original raw samples remain on Kaggle.
+
+## Initial RMSNorm kernel: broader numerical-behavior result
+
+On 16 fixed raw-text prompts with up to 64 generated tokens and EOS stopping, baseline repeats were stable and the fused-normalization model matched the original greedy sequence on **15/16 prompts**. The science continuation first differed at token 21. Strict final-logit tolerance failed on every prompt. Worst probability total variation on shared token histories was 0.005197 (approximately 0.52 percentage points). This is agreement on a small curated suite, not a task-accuracy score or a general quality guarantee. The replacement remains experimental and opt-in; its measured performance benefit does not establish exact output preservation. The [console summary](results/raw/qwen_rmsnorm_quality_20261013T071906163552Z_console_summary.json) records the supplied results. Original JSONs and both timing runs are packaged in an evidence ZIP on Kaggle; local archival and examination of the divergent continuation remain pending.
 
 ## Setup and tests
 
