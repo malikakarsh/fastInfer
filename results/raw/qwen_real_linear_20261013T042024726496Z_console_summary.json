@@ -1,0 +1,48 @@
+{
+  "source": "User-supplied Kaggle console output; rounded values only, not raw timing samples",
+  "raw_file_on_kaggle": "/kaggle/working/fastinfer/results/raw/qwen_real_linear_20261013T042024726496Z.json",
+  "model": "Qwen/Qwen2.5-1.5B",
+  "revision": "8faed761d45a263340a0528343f099c05c9a4323",
+  "projection": "model.layers.0.mlp.up_proj",
+  "dtype": "float16",
+  "attention": "sdpa_math",
+  "scope": "Isolated CUDA-graph replay on real weights and captured decode inputs, not full-model speedup",
+  "cases": [
+    {
+      "prompt": "The capital of France is",
+      "pytorch_us": 116.56,
+      "gemv_us": 99.3,
+      "speedup": 1.174,
+      "mismatches": {
+        "captured_model_output": 0,
+        "pytorch_linear": 0,
+        "gemv_rows1": 0
+      },
+      "max_abs_error_each": 0.000659
+    },
+    {
+      "prompt": "Explain why the sky appears blue in one sentence.",
+      "pytorch_us": 116.58,
+      "gemv_us": 99.14,
+      "speedup": 1.176,
+      "mismatches": {
+        "captured_model_output": 0,
+        "pytorch_linear": 0,
+        "gemv_rows1": 0
+      },
+      "max_abs_error_each": 0.000854
+    },
+    {
+      "prompt": "def add(a, b):\n    return",
+      "pytorch_us": 116.6,
+      "gemv_us": 99.23,
+      "speedup": 1.175,
+      "mismatches": {
+        "captured_model_output": 0,
+        "pytorch_linear": 0,
+        "gemv_rows1": 0
+      },
+      "max_abs_error_each": 0.000923
+    }
+  ]
+}
