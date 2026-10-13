@@ -14,6 +14,19 @@ import triton.language as tl
 
 
 @triton.jit
+def _add_halves(values, SIZE: tl.constexpr):
+    halves = tl.reshape(values, (2, SIZE // 2))
+    left, right = tl.split(tl.trans(halves))
+    return left + right
+
+
+@triton.jit
+def _add_adjacent(values, SIZE: tl.constexpr):
+    left, right = tl.split(tl.reshape(values, (SIZE // 2, 2)))
+    return left + right
+
+
+@triton.jit
 def _candidate(X, W, Y, MEAN, EPS: tl.constexpr, SAVE_MEAN: tl.constexpr):
     features = tl.arange(0, 2048)
     valid = features < 1536
@@ -23,25 +36,26 @@ def _candidate(X, W, Y, MEAN, EPS: tl.constexpr, SAVE_MEAN: tl.constexpr):
 
     # Model 256 logical lanes, each accumulating four separate vector columns.
     # Lanes 0..127 also have a second vector at feature offset 1024.
-    lanes = tl.arange(0, 256)
-    base = lanes * 4
-    a0 = tl.gather(squares, base, axis=0) + tl.gather(squares, base + 1024, axis=0)
-    a1 = tl.gather(squares, base + 1, axis=0) + tl.gather(squares, base + 1025, axis=0)
-    a2 = tl.gather(squares, base + 2, axis=0) + tl.gather(squares, base + 1026, axis=0)
-    a3 = tl.gather(squares, base + 3, axis=0) + tl.gather(squares, base + 1027, axis=0)
+    vectors = tl.reshape(squares, (2, 256, 4))
+    first_vector, second_vector = tl.split(tl.permute(vectors, (1, 2, 0)))
+    columns = first_vector + second_vector
+    even, odd = tl.split(tl.reshape(columns, (256, 2, 2)))
+    a0, a2 = tl.split(even)
+    a1, a3 = tl.split(odd)
     partial = ((a0 + a1) + a2) + a3
 
-    # PyTorch combines block halves down to 32 lanes, then shuffles at 1,2,4,8,16.
-    for step in tl.static_range(3):
-        offset = 128 >> step
-        other = tl.gather(partial, (lanes + offset) % 256, axis=0)
-        partial = tl.where(lanes < offset, partial + other, partial)
-    for step in tl.static_range(5):
-        offset = 1 << step
-        index = tl.where((lanes % 32) + offset < 32, lanes + offset, lanes)
-        other = tl.gather(partial, index, axis=0)
-        partial = partial + other
-    total = tl.sum(tl.where(lanes == 0, partial, 0), axis=0)
+    # Preserve lane zero's arithmetic from block offsets 128,64,32.
+    partial = _add_halves(partial, 256)
+    partial = _add_halves(partial, 128)
+    partial = _add_halves(partial, 64)
+    # Adjacent pairing reproduces lane zero's tree for shuffle offsets 1,2,4,8,16.
+    # Reshape/transpose/split are available in the pinned Triton 3.1 release.
+    partial = _add_adjacent(partial, 32)
+    partial = _add_adjacent(partial, 16)
+    partial = _add_adjacent(partial, 8)
+    partial = _add_adjacent(partial, 4)
+    partial = _add_adjacent(partial, 2)
+    total = tl.sum(partial, axis=0)
     factor = tl.full((), 1.0 / 1536, tl.float32)
     mean_square = total * factor
 

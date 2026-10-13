@@ -1,6 +1,7 @@
 """Check candidate benchmark statistics and GPU arithmetic before model dispatch."""
 
 from pathlib import Path
+import importlib.util
 import sys
 import unittest
 
@@ -15,6 +16,13 @@ finally:
 
 
 class CandidateTest(unittest.TestCase):
+    @unittest.skipUnless(importlib.util.find_spec("triton"), "Triton required")
+    def test_jit_dependencies_resolve(self):
+        from fastinfer.kernels.rmsnorm_mean_candidate import _candidate
+
+        # Resolve all referenced Triton APIs before any GPU launch.
+        self.assertIsInstance(_candidate.cache_key, str)
+
     def test_paired_savings_preserve_rounds(self):
         result = paired_savings([5, 2, 9], [4, 4, 6])
         self.assertEqual(result["samples_us"], [1, -2, 3])
