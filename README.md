@@ -13,6 +13,7 @@ FastInfer is an experimental LLM inference runtime centered on custom Triton GPU
 - A PyTorch reference for two-dimensional matrix multiplication.
 - A tiled float16 Triton matrix multiplication with K-block accumulation, validated against PyTorch on tested CUDA shapes.
 - A specialized single-row FP16 matrix–vector kernel with FP32 reductions for contiguous stored linear weights.
+- A readable PyTorch RMSNorm reference and an initial fused Triton implementation preserving Qwen's rounding order; CPU checks pass, GPU correctness and performance are pending.
 - CPU correctness tests for the reference and environment reporter.
 - CUDA correctness tests for the Triton kernel, including partial tiles and multiple K blocks.
 - A CUDA-event benchmark for the PyTorch matmul baseline.
