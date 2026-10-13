@@ -1,0 +1,30 @@
+{
+  "provenance": "User-supplied selected-launcher console output; full sources remain on Kaggle",
+  "raw_directory_on_kaggle": "/kaggle/working/fastinfer/results/raw/rmsnorm_generated_20261013T062732982132Z",
+  "shape": [
+    128,
+    1536
+  ],
+  "generated_triton_definitions": 1,
+  "compiled_runtime": {
+    "XBLOCK": 1,
+    "RBLOCK": 2048,
+    "programs": 128,
+    "num_warps": 16,
+    "threads_per_program": 512,
+    "num_stages": 1,
+    "registers_per_thread": 20,
+    "spills": 0,
+    "shared_bytes": 64
+  },
+  "manual_runtime": {
+    "programs": 128,
+    "block": 2048,
+    "num_warps": 4,
+    "threads_per_program": 128,
+    "registers_per_thread": 36,
+    "spills": 0,
+    "shared_bytes": 16
+  },
+  "scope": "Selected settings and static metadata; not measured occupancy or proof of latency cause"
+}
