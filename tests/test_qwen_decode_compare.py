@@ -25,6 +25,29 @@ class DecodeComparisonTest(unittest.TestCase):
         candidate["logits"] += 1
         self.assertFalse(benchmark.compare_outputs(baseline, candidate)["passed"])
 
+    def test_diagnostics_locate_failing_step(self):
+        baseline = {"logits": torch.zeros(2, 1, 2), "tokens": [[1, 2, 3]]}
+        logits = torch.tensor([[[0., 0.]], [[.02, 0.]]])
+        candidate = {"logits": logits, "tokens": [[1, 2, 3]]}
+        report = benchmark.compare_outputs(baseline, candidate)
+        self.assertEqual([row["mismatches"] for row in report["per_step"]], [0, 1])
+        self.assertEqual(report["mismatch_fraction"], .25)
+        self.assertAlmostEqual(report["per_step"][0]["probability_total_variation_max"], 0.)
+        self.assertGreater(report["per_step"][1]["probability_total_variation_max"], 0.)
+
+    def test_projection_diagnostics_use_identical_input(self):
+        weight = torch.tensor([[1., 2.], [3., 4.]])
+        x = torch.tensor([[[2., 3.]]])
+        actual = torch.nn.functional.linear(x, weight)
+        candidate = {"projections": [(x, actual)]}
+        row = benchmark.projection_diagnostics(candidate, weight)[0]
+        self.assertEqual(row["pytorch_gemv_different_elements"], 0)
+        self.assertEqual(row["accuracy"]["gemv"]["fp32_mismatches"], 0)
+        candidate["projections"] = [(x, actual + 2)]
+        row = benchmark.projection_diagnostics(candidate, weight)[0]
+        self.assertEqual(row["accuracy"]["gemv"]["fp32_mismatches"], 2)
+        self.assertEqual(row["accuracy"]["pytorch"]["fp32_mismatches"], 0)
+
     def test_nonfinite_logits_rejected(self):
         baseline = {"logits": torch.ones(1, 1, 2), "tokens": [[1, 2]]}
         candidate = {"logits": torch.full((1, 1, 2), float("nan")), "tokens": [[1, 2]]}

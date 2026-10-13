@@ -1,7 +1,7 @@
 """Compare full cached Qwen decode with one opt-in GEMV projection."""
 
 import argparse
-from contextlib import nullcontext
+from contextlib import ExitStack, nullcontext
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -21,7 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REVISION = "8faed761d45a263340a0528343f099c05c9a4323"
 
 
-def decode_trial(model, encoded, steps, *, custom, validate=False):
+def decode_trial(model, encoded, steps, *, custom, validate=False, capture_projection=False):
     """Fresh prefill/cache per trial; time only the cached greedy decode loop.
 
     Fixed length, including tokens after EOS, so paired workloads have equal
@@ -41,9 +41,14 @@ def decode_trial(model, encoded, steps, *, custom, validate=False):
         initial_token = token
         mask = encoded["attention_mask"]
         del prefill
-        logits, tokens = [], []
+        logits, tokens, projections = [], [], []
         context = use_decode_gemv(projection) if custom else nullcontext(None)
-        with context as counts:
+        with context as counts, ExitStack() as cleanup:
+            if capture_projection:
+                def capture(module, inputs, output):
+                    projections.append((inputs[0].detach().clone(), output.detach().clone()))
+                handle = projection.register_forward_hook(capture)
+                cleanup.callback(handle.remove)
             start = torch.cuda.Event(enable_timing=True)
             end = torch.cuda.Event(enable_timing=True)
             torch.cuda.synchronize()
@@ -71,6 +76,8 @@ def decode_trial(model, encoded, steps, *, custom, validate=False):
         if validate:
             result["logits"] = torch.stack(logits).float()
             result["tokens"] = torch.cat([initial_token, *tokens], dim=1).cpu().tolist()
+        if capture_projection:
+            result["projections"] = projections
         return result
 
 
@@ -82,12 +89,54 @@ def compare_outputs(baseline, candidate):
     error = (a - b).abs()
     mismatches = int((error > .01 + .01 * a.abs()).sum().item())
     same_tokens = baseline["tokens"] == candidate["tokens"]
+    per_step = []
+    for index in range(a.shape[0]):
+        delta = error[index]
+        mismatch = delta > .01 + .01 * a[index].abs()
+        # Probability differences supplement the unchanged raw-logit gate.
+        pa, pb = a[index].softmax(dim=-1), b[index].softmax(dim=-1)
+        per_step.append({
+            "step": index + 1,
+            "mismatches": int(mismatch.sum().item()),
+            "max_abs_error": delta.max().item(),
+            "mean_abs_error": delta.mean().item(),
+            "probability_total_variation_max": (.5 * (pa - pb).abs().sum(dim=-1)).max().item(),
+        })
     return {"logit_mismatches": mismatches, "logit_elements": a.numel(),
             "max_abs_logit_error": error.max().item(),
+            "mean_abs_logit_error": error.mean().item(),
+            "mismatch_fraction": mismatches / a.numel(),
+            "per_step": per_step,
             "identical_greedy_tokens": same_tokens,
             "baseline_token_ids": baseline["tokens"],
             "candidate_token_ids": candidate["tokens"],
             "passed": same_tokens and mismatches == 0}
+
+
+def projection_diagnostics(candidate, weight):
+    """Compare GEMV with PyTorch on the same actual input at every step."""
+    import torch.nn.functional as F
+
+    rows = []
+    with torch.inference_mode():
+        weight32 = weight.float()
+        for index, (x, actual) in enumerate(candidate["projections"]):
+            pytorch = F.linear(x, weight)
+            reference = F.linear(x.float(), weight32)
+            require_finite(reference, "projection_fp32_reference")
+            values = {}
+            for name, output in (("pytorch", pytorch), ("gemv", actual)):
+                require_finite(output, name + ".projection")
+                error = (output.float() - reference).abs()
+                values[name] = {
+                    "fp32_mismatches": int((error > .01 + .01 * reference.abs()).sum().item()),
+                    "max_abs_fp32_error": error.max().item(),
+                }
+            difference = (actual.float() - pytorch.float()).abs()
+            rows.append({"step": index + 1, "accuracy": values,
+                         "pytorch_gemv_max_abs_difference": difference.max().item(),
+                         "pytorch_gemv_different_elements": int((difference != 0).sum().item())})
+    return rows
 
 
 def main():
@@ -95,6 +144,8 @@ def main():
     parser.add_argument("--steps", type=int, default=16)
     parser.add_argument("--repetitions", type=int, default=10)
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--diagnose", action="store_true",
+                        help="compare a baseline repeat and per-step projections; skip timing")
     args = parser.parse_args()
     if args.steps < 1 or args.repetitions < 2:
         parser.error("steps >= 1 and repetitions >= 2 required")
@@ -121,6 +172,7 @@ def main():
         "projection": "model.layers.0.mlp.up_proj",
         "gemv": {"block_rows": 1, "num_warps": 4},
         "allow_fp16_reduced_precision_reduction": True,
+        "diagnostic_mode": args.diagnose,
         "steps": args.steps, "repetitions": args.repetitions,
         "warmup_trajectories_per_implementation": 2,
         "order": "alternating_baseline_candidate_per_round",
@@ -145,16 +197,34 @@ def main():
             print(f"\nPrompt: {prompt!r}", flush=True)
             encoded = tokenizer(prompt, return_tensors="pt").to("cuda")
             baseline = decode_trial(model, encoded, args.steps, custom=False, validate=True)
-            candidate = decode_trial(model, encoded, args.steps, custom=True, validate=True)
+            candidate = decode_trial(model, encoded, args.steps, custom=True, validate=True,
+                                     capture_projection=args.diagnose)
             accuracy = compare_outputs(baseline, candidate)
             case = {"prompt": prompt, "accuracy": accuracy,
                     "validation_dispatch": candidate["dispatch"]}
             report["cases"].append(case)
+            if args.diagnose:
+                repeat = decode_trial(model, encoded, args.steps, custom=False, validate=True)
+                case["baseline_repeat_accuracy"] = compare_outputs(baseline, repeat)
+                case["projection_diagnostics"] = projection_diagnostics(
+                    candidate, model.model.layers[0].mlp.up_proj.weight
+                )
+                repeat_accuracy = case["baseline_repeat_accuracy"]
+                print(f"  Baseline repeat: {repeat_accuracy['logit_mismatches']} mismatches | "
+                      f"max error {repeat_accuracy['max_abs_logit_error']:.6f}", flush=True)
+                for row, projection in zip(accuracy["per_step"], case["projection_diagnostics"]):
+                    print(f"  Step {row['step']:2}: logits max/mean error "
+                          f"{row['max_abs_error']:.6f}/{row['mean_abs_error']:.6f} | "
+                          f"mismatches {row['mismatches']} | "
+                          f"projection PT/GEMV FP32 mismatches "
+                          f"{projection['accuracy']['pytorch']['fp32_mismatches']}/"
+                          f"{projection['accuracy']['gemv']['fp32_mismatches']}", flush=True)
+                del repeat
             del baseline, candidate
             save()
             print(f"  Logit mismatches: {accuracy['logit_mismatches']} | "
                   f"identical tokens: {accuracy['identical_greedy_tokens']}", flush=True)
-            if not accuracy["passed"]:
+            if args.diagnose or not accuracy["passed"]:
                 case["timing_skipped"] = True
                 save()
                 continue
