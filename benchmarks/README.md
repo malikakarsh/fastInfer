@@ -320,3 +320,29 @@ ZIP integrity passed and its manifest reports no missing timing evidence. Consol
 summaries are labeled separately and are not the original raw samples. This is
 confirmation on the same GPU session and small curated suite, not a universal
 equivalence guarantee or fully compiled model comparison.
+
+
+## Initial stable softmax correctness
+
+`kernels/softmax.py` is the readable FP32-calculation reference, with FP16 or
+FP32 output. `kernels/triton_softmax.py` implements one program per matrix row,
+four warps, and a block rounded to the next power of two. Padded positions load
+as negative infinity, so they do not affect the maximum or exponential sum.
+The initial wrapper accepts finite contiguous CUDA FP16/FP32 matrices with
+row widths1..8192, and has no backward implementation.
+
+Run `python -m unittest discover -s tests -p '*softmax*.py' -v` in the pinned
+Kaggle interpreter. Four reference tests pass locally; three GPU tests are
+pending. GPU comparisons cover both native `torch.softmax` and the readable
+reference, plus a double-precision oracle on the same input values. FP16
+comparison tolerance is rtol0.002/atol0.000002; FP32 is rtol0.00001/atol0.0000001.
+Check finite nonnegative outputs and row sums separately. Include width1,
+non-power-of-two widths3/65, multiple rows, widths128/1536/8192, two seeds,
+constant negative rows, large positive scores, and invalid input rejection.
+
+The arithmetic follows the basic row calculation in the
+[Triton3.1 softmax tutorial](https://github.com/triton-lang/triton/blob/v3.1.0/python/tutorials/02-fused-softmax.py),
+without its persistent-program scheduling. Triton's exponential is approximate;
+bitwise agreement is not promised. No GPU correctness or performance claim is
+made before results. The subsequent benchmark must include native
+`torch.softmax`, which is already optimized, alongside the readable reference.
