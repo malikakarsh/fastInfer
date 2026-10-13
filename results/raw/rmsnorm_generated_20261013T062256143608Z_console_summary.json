@@ -1,0 +1,31 @@
+{
+  "provenance": "User-supplied console inspection; full generated source and summary remain on Kaggle",
+  "raw_directory_on_kaggle": "/kaggle/working/fastinfer/results/raw/rmsnorm_generated_20261013T062256143608Z",
+  "shape": [
+    128,
+    1536
+  ],
+  "generated_triton_definitions": 1,
+  "compiled_source_observations": [
+    "One fused wrapper launch",
+    "First loop loads input to accumulate squares",
+    "Second loop reloads input and loads weight to normalize/store",
+    "No explicit normalized FP16 intermediate cast shown before weight multiplication"
+  ],
+  "unknowns": [
+    "Selected XBLOCK",
+    "Selected RBLOCK",
+    "Selected num_warps",
+    "Compiled registers/spills/shared",
+    "Causal performance contribution of each source difference"
+  ],
+  "manual_resources": {
+    "programs": 128,
+    "num_warps": 4,
+    "block": 2048,
+    "registers_per_thread": 36,
+    "spills": 0,
+    "shared_bytes": 16
+  },
+  "scope": "Source differences and manual resource metadata only; not a causal performance experiment"
+}

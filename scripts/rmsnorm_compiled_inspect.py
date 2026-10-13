@@ -4,6 +4,7 @@ import argparse
 import ast
 from datetime import datetime, timezone
 import hashlib
+import importlib.util
 import json
 from pathlib import Path
 import sys
@@ -32,6 +33,33 @@ def extract_kernels(source):
                         and call.func.attr == "run"):
                     launches.append(ast.get_source_segment(source, call))
     return {"kernel_definitions": definitions, "wrapper_launches": launches}
+
+
+def selected_launchers(namespace, tokens):
+    """Inspect the single launcher retained after a generated wrapper executes."""
+    records = []
+    for name, value in namespace.items():
+        launchers = getattr(value, "launchers", None)
+        if not isinstance(launchers, list):
+            continue
+        if len(launchers) != 1:
+            records.append({"name": name, "status": "no_unique_selected_launcher",
+                            "launcher_count": len(launchers)})
+            continue
+        launcher = launchers[0]
+        config = launcher.config
+        xblock = config.kwargs.get("XBLOCK")
+        records.append({
+            "name": name, "status": "selected_after_execution",
+            "block_parameters": dict(config.kwargs),
+            "num_warps": config.num_warps, "num_stages": config.num_stages,
+            "registers_per_thread": getattr(launcher, "n_regs", None),
+            "spills": getattr(launcher, "n_spills", None),
+            "shared_bytes": getattr(launcher, "shared", None),
+            "programs_from_xblock": ((tokens + xblock - 1) // xblock
+                                     if isinstance(xblock, int) and xblock > 0 else None),
+        })
+    return records
 
 
 def main():
@@ -105,12 +133,26 @@ def main():
         path = destination / f"compiled_{index}.py"
         path.write_text(source)
         extracted = extract_kernels(source)
+        # Load only the trusted source just produced by this compiler run.
+        # Execute its wrapper so autotuning retains the actual selected launcher.
+        spec = importlib.util.spec_from_file_location(f"fastinfer_generated_norm_{index}", path)
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[spec.name] = module
+        spec.loader.exec_module(module)
+        with torch.inference_mode():
+            replay = module.call([x, weight])
+            torch.cuda.synchronize()
+            torch.testing.assert_close(replay[0], expected, rtol=.002, atol=.002)
+        extracted["selected_runtime_launchers"] = selected_launchers(vars(module), args.tokens)
         summary["sources"].append({"path": str(path),
                                    "sha256": hashlib.sha256(source.encode()).hexdigest(),
                                    **extracted})
         print(f"\nGenerated Triton definitions: {len(extracted['kernel_definitions'])}", flush=True)
         for kernel in extracted["kernel_definitions"]:
             print(f"\nKernel: {kernel['name']}\n{kernel['source']}", flush=True)
+        print("Selected runtime launchers:", flush=True)
+        for launcher in extracted["selected_runtime_launchers"]:
+            print(json.dumps(launcher, indent=2), flush=True)
         print("Wrapper launches:", flush=True)
         for launch in extracted["wrapper_launches"]:
             print(launch, flush=True)
