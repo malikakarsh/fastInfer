@@ -55,6 +55,26 @@ class DecodeCaptureTest(unittest.TestCase):
         self.assertEqual(model.calls[1][1].tolist(), [[1, 1, 1]])
         self.assertEqual(len(model.projection._forward_hooks), 0)
 
+    def test_math_sdpa_handles_scores_that_overflow_fp16(self):
+        from torch.nn.attention import SDPBackend, sdpa_kernel
+        from torch.nn.functional import scaled_dot_product_attention
+
+        # Finite Q/K values, but their unscaled dot product exceeds 65,504.
+        q = torch.full((1, 1, 2, 128), 100.0, dtype=torch.float16)
+        k = q.clone()
+        v = torch.arange(256, dtype=torch.float16).reshape(1, 1, 2, 128) / 256
+        scores = (q @ k.transpose(-2, -1)) / (128 ** 0.5)
+        self.assertTrue(torch.isinf(scores).all().item())
+        self.assertTrue(torch.isnan(scores.float().softmax(dim=-1)).any().item())
+        with sdpa_kernel(SDPBackend.MATH):
+            output = scaled_dot_product_attention(q, k, v, is_causal=True)
+            reference = scaled_dot_product_attention(
+                q.float(), k.float(), v.float(), is_causal=True
+            )
+        self.assertEqual(output.dtype, torch.float16)
+        self.assertTrue(torch.isfinite(output).all().item())
+        torch.testing.assert_close(output.float(), reference, rtol=1e-3, atol=1e-3)
+
     def test_nonfinite_projection_stops_prefill_and_removes_hooks(self):
         model = TinyModel()
         with torch.no_grad():

@@ -80,12 +80,16 @@ def capture_decode_projection(model, projection, encoded):
     """Run prefill, then capture this layer's input/output for one decoded token."""
     import torch
 
+    from torch.nn.attention import SDPBackend, sdpa_kernel
+
     captured = []
 
     def capture(module, inputs, output):
         captured.append((inputs[0].detach().clone(), output.detach().clone()))
 
-    with torch.inference_mode():
+    # Math SDPA keeps attention intermediates in FP32 for FP16 inputs.
+    # This context ends before the isolated FP16 linear benchmark.
+    with torch.inference_mode(), sdpa_kernel(SDPBackend.MATH):
         with trace_finite_modules(model, "prefill"):
             prefill = model(**encoded, use_cache=True, return_dict=True)
         require_finite(prefill.logits, "prefill.logits")
@@ -179,7 +183,8 @@ def main():
         low_cpu_mem_usage=True,
         use_safetensors=True,
         trust_remote_code=False,
-        attn_implementation="eager",
+        attn_implementation="sdpa",
+        output_attentions=False,
     ).to("cuda").eval()
     projection = model.model.layers[0].mlp.up_proj
     weight = projection.weight.detach()
@@ -198,7 +203,9 @@ def main():
         "projection": "model.layers.0.mlp.up_proj",
         "model_dtype": "float16",
         "checkpoint_config_dtype": str(config.torch_dtype),
-        "attention_implementation": "eager",
+        "attention_implementation": "sdpa",
+        "attention_backend_during_capture": "math",
+        "attention_intermediate_dtype": "float32",
         "shape": {"m": 1, "k": 1536, "n": 8960},
         "weight_stride": list(weight.stride()),
         "tile": {"block_rows": 1, "num_warps": 4},
