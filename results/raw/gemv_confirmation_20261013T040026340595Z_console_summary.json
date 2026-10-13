@@ -1,0 +1,148 @@
+{
+  "provenance": "User-shared rounded console medians and printed ratios; user identifies session as fresh. Original raw-sample JSON remains on Kaggle. Ratios were computed by runner from unrounded timings.",
+  "original_kaggle_file": "results/raw/gemv_confirmation_20261013T040026340595Z.json",
+  "shape_m": 1,
+  "shape_k": 1536,
+  "configuration": {
+    "block_rows": 1,
+    "num_warps": 4
+  },
+  "reduced_precision_allowed": true,
+  "rounds": [
+    {
+      "n": 8960,
+      "seed": 2,
+      "pytorch_median_us": 117.5,
+      "gemv_median_us": 99.49,
+      "reported_speedup": 1.181,
+      "pytorch_mismatches": 0,
+      "gemv_mismatches": 0
+    },
+    {
+      "n": 8960,
+      "seed": 3,
+      "pytorch_median_us": 117.58,
+      "gemv_median_us": 99.9,
+      "reported_speedup": 1.177,
+      "pytorch_mismatches": 0,
+      "gemv_mismatches": 0
+    },
+    {
+      "n": 8960,
+      "seed": 4,
+      "pytorch_median_us": 117.71,
+      "gemv_median_us": 99.94,
+      "reported_speedup": 1.178,
+      "pytorch_mismatches": 0,
+      "gemv_mismatches": 0
+    },
+    {
+      "n": 8192,
+      "seed": 2,
+      "pytorch_median_us": 108.07,
+      "gemv_median_us": 91.41,
+      "reported_speedup": 1.182,
+      "pytorch_mismatches": 0,
+      "gemv_mismatches": 0
+    },
+    {
+      "n": 8192,
+      "seed": 3,
+      "pytorch_median_us": 107.92,
+      "gemv_median_us": 91.59,
+      "reported_speedup": 1.178,
+      "pytorch_mismatches": 0,
+      "gemv_mismatches": 0
+    },
+    {
+      "n": 8192,
+      "seed": 4,
+      "pytorch_median_us": 108.15,
+      "gemv_median_us": 91.71,
+      "reported_speedup": 1.179,
+      "pytorch_mismatches": 0,
+      "gemv_mismatches": 0
+    },
+    {
+      "n": 9216,
+      "seed": 2,
+      "pytorch_median_us": 120.51,
+      "gemv_median_us": 102.27,
+      "reported_speedup": 1.178,
+      "pytorch_mismatches": 0,
+      "gemv_mismatches": 0
+    },
+    {
+      "n": 9216,
+      "seed": 3,
+      "pytorch_median_us": 120.55,
+      "gemv_median_us": 102.46,
+      "reported_speedup": 1.176,
+      "pytorch_mismatches": 0,
+      "gemv_mismatches": 0
+    },
+    {
+      "n": 9216,
+      "seed": 4,
+      "pytorch_median_us": 120.86,
+      "gemv_median_us": 102.7,
+      "reported_speedup": 1.177,
+      "pytorch_mismatches": 0,
+      "gemv_mismatches": 0
+    },
+    {
+      "n": 1536,
+      "seed": 2,
+      "pytorch_median_us": 22.26,
+      "gemv_median_us": 20.13,
+      "reported_speedup": 1.105,
+      "pytorch_mismatches": 0,
+      "gemv_mismatches": 0
+    },
+    {
+      "n": 1536,
+      "seed": 3,
+      "pytorch_median_us": 22.61,
+      "gemv_median_us": 20.09,
+      "reported_speedup": 1.125,
+      "pytorch_mismatches": 0,
+      "gemv_mismatches": 0
+    },
+    {
+      "n": 1536,
+      "seed": 4,
+      "pytorch_median_us": 22.61,
+      "gemv_median_us": 20.23,
+      "reported_speedup": 1.118,
+      "pytorch_mismatches": 0,
+      "gemv_mismatches": 0
+    },
+    {
+      "n": 256,
+      "seed": 2,
+      "pytorch_median_us": 4.12,
+      "gemv_median_us": 3.43,
+      "reported_speedup": 1.201,
+      "pytorch_mismatches": 0,
+      "gemv_mismatches": 0
+    },
+    {
+      "n": 256,
+      "seed": 3,
+      "pytorch_median_us": 4.07,
+      "gemv_median_us": 3.38,
+      "reported_speedup": 1.203,
+      "pytorch_mismatches": 0,
+      "gemv_mismatches": 0
+    },
+    {
+      "n": 256,
+      "seed": 4,
+      "pytorch_median_us": 4.13,
+      "gemv_median_us": 3.44,
+      "reported_speedup": 1.199,
+      "pytorch_mismatches": 0,
+      "gemv_mismatches": 0
+    }
+  ]
+}

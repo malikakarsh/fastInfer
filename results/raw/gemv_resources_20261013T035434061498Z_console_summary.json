@@ -1,0 +1,37 @@
+{
+  "provenance": "User-shared console report; original diagnostic JSON remains on Kaggle.",
+  "original_kaggle_file": "results/raw/gemv_resources_20261013T035434061498Z.json",
+  "gpu": "Tesla T4",
+  "sm_count": 40,
+  "k": 1536,
+  "pad_k": 2048,
+  "variants": [
+    {
+      "block_rows": 1,
+      "programs": 8960,
+      "threads_per_program": 128,
+      "registers_per_thread": 29,
+      "spills": 0,
+      "shared_memory_bytes_per_program": 2048,
+      "fp32_check": "PASS"
+    },
+    {
+      "block_rows": 4,
+      "programs": 2240,
+      "threads_per_program": 128,
+      "registers_per_thread": 53,
+      "spills": 0,
+      "shared_memory_bytes_per_program": 2048,
+      "fp32_check": "PASS"
+    },
+    {
+      "block_rows": 8,
+      "programs": 1120,
+      "threads_per_program": 128,
+      "registers_per_thread": 64,
+      "spills": 0,
+      "shared_memory_bytes_per_program": 2048,
+      "fp32_check": "PASS"
+    }
+  ]
+}

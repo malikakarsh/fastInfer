@@ -1,0 +1,48 @@
+{
+  "provenance": "User-shared rounded console medians; user identifies GPU session as fresh. Original JSON remains on Kaggle.",
+  "original_kaggle_file": "results/raw/mlp_expand_gemv_20261013T035828714648Z.json",
+  "scope": "Original-shape candidate sweep; --confirm appears in command but output uses old runner behavior, not five-width confirmation.",
+  "shape": {
+    "m": 1,
+    "k": 1536,
+    "n": 8960
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "seed": 0,
+      "median_us": {
+        "pytorch": 117.0,
+        "triton_tiled": 143.17,
+        "gemv_rows1": 99.53,
+        "gemv_rows4": 107.31,
+        "gemv_rows8": 107.55
+      },
+      "all_mismatches_zero": true
+    },
+    {
+      "round": 2,
+      "seed": 0,
+      "median_us": {
+        "pytorch": 117.12,
+        "triton_tiled": 144.18,
+        "gemv_rows1": 99.57,
+        "gemv_rows4": 107.25,
+        "gemv_rows8": 107.61
+      },
+      "all_mismatches_zero": true
+    },
+    {
+      "round": 3,
+      "seed": 1,
+      "median_us": {
+        "pytorch": 117.15,
+        "triton_tiled": 144.23,
+        "gemv_rows1": 99.59,
+        "gemv_rows4": 107.33,
+        "gemv_rows8": 107.61
+      },
+      "all_mismatches_zero": true
+    }
+  ]
+}

@@ -12,6 +12,7 @@ FastInfer is an experimental LLM inference runtime centered on custom Triton GPU
 
 - A PyTorch reference for two-dimensional matrix multiplication.
 - A tiled float16 Triton matrix multiplication with K-block accumulation, validated against PyTorch on tested CUDA shapes.
+- A specialized single-row FP16 matrix–vector kernel with FP32 reductions for contiguous stored linear weights.
 - CPU correctness tests for the reference and environment reporter.
 - CUDA correctness tests for the Triton kernel, including partial tiles and multiple K blocks.
 - A CUDA-event benchmark for the PyTorch matmul baseline.
@@ -19,6 +20,26 @@ FastInfer is an experimental LLM inference runtime centered on custom Triton GPU
 - An environment reporter that records hardware and software versions.
 
 Measured results cover the [PyTorch matmul baseline](notes/matmul_baseline_analysis.md) and an initial [paired PyTorch–Triton comparison](notes/matmul_triton_comparison.md).
+
+## Specialized matrix–vector result
+
+Implemented a specialized FP16 matrix–vector kernel achieving approximately 1.11–1.20× speedup over PyTorch 2.5.1 across five tested widths on a T4, using CUDA-graph timing and passing FP32-reference accuracy checks.
+
+The frozen configuration processes one stored weight row per Triton program with four warps. Inputs and outputs are FP16; products and reductions use FP32. It computes `a @ weight.T` for `a[1, 1536]` and contiguous `weight[N, 1536]`. Confirmation covered `N = 256, 1536, 8192, 8960, 9216`, with three new random seeds (2, 3, 4) and no retuning. PyTorch's `allow_fp16_reduced_precision_reduction` remained enabled. Both implementations had zero mismatches under `rtol=0.01, atol=0.01` against an FP32 reference in all 15 paired comparisons.
+
+| Output width N | PyTorch median range (µs) | GEMV median range (µs) | Paired speedup range |
+| ---: | ---: | ---: | ---: |
+| 256 | 4.10–4.13 | 3.41–3.44 | 1.201× |
+| 1536 | 22.16–22.24 | 19.99–20.04 | 1.106–1.112× |
+| 8192 | 107.58–107.80 | 91.17–91.42 | 1.177–1.181× |
+| 8960 | 117.14–117.30 | 99.24–99.54 | 1.178–1.180× |
+| 9216 | 120.10–120.51 | 102.04–102.26 | 1.177–1.179× |
+
+Ranges span three round medians, not confidence intervals. Measurements used one Tesla T4, Python 3.12.15, PyTorch 2.5.1+cu121, and Triton 3.1.0, with 100 operations per graph replay and 30 alternating timing samples per implementation per round. These are synthetic FP16, single-row, fixed-input graph benchmarks; a second confirmation in a fresh GPU session also won all 15 paired comparisons with zero accuracy mismatches. They do not establish an eager-call, batched-matmul, or end-to-end model speedup. Widths 8192 and 9216 are neighboring synthetic checks; 256, 1536 and 8960 match selected Qwen2.5-1.5B projection dimensions. The model's actual weights and native BF16 execution were not tested.
+
+The [console-summary data](results/raw/gemv_confirmation_20261012T230940025682Z_console_summary.json) records the supplied rounded medians. The full raw-sample JSON remains on Kaggle and has not yet been archived here. The [fresh-session console summary](results/raw/gemv_confirmation_20261013T040026340595Z_console_summary.json) records speedups of 1.105–1.203× across the same five widths and seeds, using the frozen configuration. Original full raw samples from both sessions still need to be archived here. Model integration remains pending.
+
+Reproduce with the [confirmation notebook](benchmarks/matmul_gemv_confirm.ipynb), or run `python benchmarks/matmul_gemv_compare.py --confirm` in the configured GPU environment. See the [benchmark instructions](benchmarks/README.md#frozen-gemv-confirmation).
 
 ## Setup and tests
 

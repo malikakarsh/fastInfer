@@ -1,0 +1,134 @@
+{
+  "provenance": "User-shared console summaries; rounded medians only, not original raw samples.",
+  "original_kaggle_file": "results/raw/gemv_confirmation_20261012T230940025682Z.json",
+  "shape_m": 1,
+  "shape_k": 1536,
+  "configuration": {
+    "block_rows": 1,
+    "num_warps": 4
+  },
+  "reduced_precision_allowed": true,
+  "gpu_tests_passed": 2,
+  "rounds": [
+    {
+      "n": 8960,
+      "seed": 2,
+      "pytorch_median_us": 117.14,
+      "gemv_median_us": 99.24,
+      "pytorch_mismatches": 0,
+      "gemv_mismatches": 0
+    },
+    {
+      "n": 8960,
+      "seed": 3,
+      "pytorch_median_us": 117.19,
+      "gemv_median_us": 99.47,
+      "pytorch_mismatches": 0,
+      "gemv_mismatches": 0
+    },
+    {
+      "n": 8960,
+      "seed": 4,
+      "pytorch_median_us": 117.3,
+      "gemv_median_us": 99.54,
+      "pytorch_mismatches": 0,
+      "gemv_mismatches": 0
+    },
+    {
+      "n": 8192,
+      "seed": 2,
+      "pytorch_median_us": 107.69,
+      "gemv_median_us": 91.17,
+      "pytorch_mismatches": 0,
+      "gemv_mismatches": 0
+    },
+    {
+      "n": 8192,
+      "seed": 3,
+      "pytorch_median_us": 107.58,
+      "gemv_median_us": 91.42,
+      "pytorch_mismatches": 0,
+      "gemv_mismatches": 0
+    },
+    {
+      "n": 8192,
+      "seed": 4,
+      "pytorch_median_us": 107.8,
+      "gemv_median_us": 91.34,
+      "pytorch_mismatches": 0,
+      "gemv_mismatches": 0
+    },
+    {
+      "n": 9216,
+      "seed": 2,
+      "pytorch_median_us": 120.1,
+      "gemv_median_us": 102.04,
+      "pytorch_mismatches": 0,
+      "gemv_mismatches": 0
+    },
+    {
+      "n": 9216,
+      "seed": 3,
+      "pytorch_median_us": 120.23,
+      "gemv_median_us": 102.16,
+      "pytorch_mismatches": 0,
+      "gemv_mismatches": 0
+    },
+    {
+      "n": 9216,
+      "seed": 4,
+      "pytorch_median_us": 120.51,
+      "gemv_median_us": 102.26,
+      "pytorch_mismatches": 0,
+      "gemv_mismatches": 0
+    },
+    {
+      "n": 1536,
+      "seed": 2,
+      "pytorch_median_us": 22.24,
+      "gemv_median_us": 19.99,
+      "pytorch_mismatches": 0,
+      "gemv_mismatches": 0
+    },
+    {
+      "n": 1536,
+      "seed": 3,
+      "pytorch_median_us": 22.16,
+      "gemv_median_us": 20.03,
+      "pytorch_mismatches": 0,
+      "gemv_mismatches": 0
+    },
+    {
+      "n": 1536,
+      "seed": 4,
+      "pytorch_median_us": 22.18,
+      "gemv_median_us": 20.04,
+      "pytorch_mismatches": 0,
+      "gemv_mismatches": 0
+    },
+    {
+      "n": 256,
+      "seed": 2,
+      "pytorch_median_us": 4.13,
+      "gemv_median_us": 3.44,
+      "pytorch_mismatches": 0,
+      "gemv_mismatches": 0
+    },
+    {
+      "n": 256,
+      "seed": 3,
+      "pytorch_median_us": 4.1,
+      "gemv_median_us": 3.41,
+      "pytorch_mismatches": 0,
+      "gemv_mismatches": 0
+    },
+    {
+      "n": 256,
+      "seed": 4,
+      "pytorch_median_us": 4.1,
+      "gemv_median_us": 3.42,
+      "pytorch_mismatches": 0,
+      "gemv_mismatches": 0
+    }
+  ]
+}
