@@ -226,3 +226,29 @@ not a timing experiment or proof of the cause of a particular generated-token
 flip. Each selected input, weight, and intermediate is saved in a CPU tensor
 snapshot alongside the JSON. GPU execution is pending; three local CPU tests
 pass and one GPU cross-check test is skipped locally.
+
+### Experimental mean reduction candidate
+
+Run `python benchmarks/rmsnorm_mean_candidate_check.py` in the same Kaggle
+session after the stage diagnosis. It replays the three saved CPU tensor
+snapshots and five new synthetic seeds (6 through 10), without loading Qwen.
+Use `--input-report PATH` to select an older complete stage JSON explicitly.
+
+The separate `kernels/rmsnorm_mean_candidate.py` models the single-output,
+contiguous FP32 mean path in PyTorch 2.5.1: 256 logical lanes, four accumulator
+columns, block-half combination followed by warp shuffle offsets 1,2,4,8,16,
+then multiplication by an FP32 reciprocal of1536. These are logical arithmetic
+groups; the Triton launch still uses four physical warps. The candidate only
+accepts one FP16 token of width1536 and preserves Qwen's FP16 rounding before
+weight scaling. Production kernel and model dispatch remain unchanged.
+
+Source basis: [Reduce.cuh](https://github.com/pytorch/pytorch/blob/v2.5.1/aten/src/ATen/native/cuda/Reduce.cuh),
+[MeanOps](https://github.com/pytorch/pytorch/blob/v2.5.1/aten/src/ATen/native/SharedReduceOps.h),
+and [mean kernel](https://github.com/pytorch/pytorch/blob/v2.5.1/aten/src/ATen/native/cuda/ReduceMomentKernel.cu).
+Following the source grouping is a hypothesis, not a promise of bitwise runtime
+agreement. Exact mean/output differences and the unchanged .002 accuracy checks
+are reported. Candidate outputs with and without a diagnostic mean store must
+match exactly before timing. Alternating paired CUDA-graph timings use30samples
+of100operations each, after warmup. This does not validate full-generation
+behavior or speed. Two CPU statistics tests pass locally; two GPU arithmetic
+and eligibility tests require Kaggle execution.
