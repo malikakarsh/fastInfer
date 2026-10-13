@@ -15,13 +15,15 @@ import torch
 from torch.nn.attention import SDPBackend, sdpa_kernel
 
 from fastinfer.decode_linear import use_decode_gemv
+from fastinfer.decode_rmsnorm import use_decode_rmsnorm
 from qwen_linear_check import MODEL, PROMPTS, require_finite
 
 ROOT = Path(__file__).resolve().parents[1]
 REVISION = "8faed761d45a263340a0528343f099c05c9a4323"
 
 
-def decode_trial(model, encoded, steps, *, custom, validate=False, capture_projection=False):
+def decode_trial(model, encoded, steps, *, custom, validate=False, capture_projection=False,
+                 replacement="gemv", norms=None):
     """Fresh prefill/cache per trial; time only the cached greedy decode loop.
 
     Fixed length, including tokens after EOS, so paired workloads have equal
@@ -30,6 +32,10 @@ def decode_trial(model, encoded, steps, *, custom, validate=False, capture_proje
     """
     from transformers import DynamicCache
 
+    if replacement not in ("gemv", "rmsnorm"):
+        raise ValueError("replacement must be gemv or rmsnorm")
+    if custom and replacement == "rmsnorm" and not norms:
+        raise ValueError("normalization modules required")
     projection = model.model.layers[0].mlp.up_proj
     with torch.inference_mode(), sdpa_kernel(SDPBackend.MATH):
         # Prefill always uses the original projection, even for a one-token prompt.
@@ -42,7 +48,12 @@ def decode_trial(model, encoded, steps, *, custom, validate=False, capture_proje
         mask = encoded["attention_mask"]
         del prefill
         logits, tokens, projections = [], [], []
-        context = use_decode_gemv(projection) if custom else nullcontext(None)
+        if not custom:
+            context = nullcontext(None)
+        elif replacement == "gemv":
+            context = use_decode_gemv(projection)
+        else:
+            context = use_decode_rmsnorm(norms)
         with context as counts, ExitStack() as cleanup:
             if capture_projection:
                 def capture(module, inputs, output):
@@ -68,8 +79,14 @@ def decode_trial(model, encoded, steps, *, custom, validate=False, capture_proje
             end.synchronize()
             wall_ms = (time.perf_counter() - wall_start) * 1000
             event_ms = start.elapsed_time(end)
-        if custom and counts != {"gemv_calls": steps, "fallback_calls": 0}:
-            raise RuntimeError(f"Expected one GEMV dispatch per decode step: {counts}")
+        if custom and replacement == "gemv":
+            if counts != {"gemv_calls": steps, "fallback_calls": 0}:
+                raise RuntimeError(f"Expected one GEMV dispatch per decode step: {counts}")
+        elif custom:
+            if (counts["rmsnorm_calls"] != steps * len(norms) or counts["fallback_calls"] != 0
+                    or any(row != {"rmsnorm_calls": steps, "fallback_calls": 0}
+                           for row in counts["modules"].values())):
+                raise RuntimeError(f"Expected every normalization to use the kernel each step: {counts}")
         result = {"wall_ms_per_step": wall_ms / steps,
                   "cuda_event_ms_per_step": event_ms / steps,
                   "dispatch": counts}

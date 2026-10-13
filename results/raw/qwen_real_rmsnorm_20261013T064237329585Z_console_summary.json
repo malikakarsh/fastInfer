@@ -1,0 +1,28 @@
+{
+  "provenance": "User-supplied rounded Kaggle console output; full per-module data remains on Kaggle",
+  "raw_file_on_kaggle": "/kaggle/working/fastinfer/results/raw/qwen_real_rmsnorm_20261013T064237329585Z.json",
+  "model": "Qwen/Qwen2.5-1.5B",
+  "dtype": "float16",
+  "attention": "math SDPA",
+  "scope": "Original model captures; isolated replay of each normalization, not model replacement or timing",
+  "cases": [
+    {
+      "prompt": "The capital of France is",
+      "passed_modules": 57,
+      "total_modules": 57,
+      "reported_largest_triton_model_difference": 0.0
+    },
+    {
+      "prompt": "Explain why the sky appears blue in one sentence.",
+      "passed_modules": 57,
+      "total_modules": 57,
+      "reported_largest_triton_model_difference": 0.0
+    },
+    {
+      "prompt": "def add(a, b):\n    return",
+      "passed_modules": 57,
+      "total_modules": 57,
+      "reported_largest_triton_model_difference": 0.000488
+    }
+  ]
+}
