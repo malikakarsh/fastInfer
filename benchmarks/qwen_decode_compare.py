@@ -139,14 +139,40 @@ def projection_diagnostics(candidate, weight):
     return rows
 
 
+def timing_decision(case, *, diagnose, exploratory, steps):
+    """Keep strict accuracy separate from explicitly requested exploratory timing."""
+    if diagnose:
+        return False, "diagnostic_only"
+    if case["accuracy"]["passed"]:
+        return True, "strict_accuracy_passed"
+    if not exploratory:
+        return False, "strict_accuracy_failed"
+    if not case["accuracy"]["identical_greedy_tokens"]:
+        return False, "greedy_tokens_differ"
+    if not case.get("baseline_repeat_accuracy", {}).get("passed", False):
+        return False, "baseline_repeat_failed"
+    projections = case.get("projection_diagnostics", [])
+    if len(projections) != steps or any(
+        row["accuracy"][name]["fp32_mismatches"] != 0
+        for row in projections for name in ("pytorch", "gemv")
+    ):
+        return False, "projection_accuracy_failed_or_missing"
+    return True, "exploratory_strict_logits_failed"
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--steps", type=int, default=16)
     parser.add_argument("--repetitions", type=int, default=10)
     parser.add_argument("--output", type=Path)
-    parser.add_argument("--diagnose", action="store_true",
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--diagnose", action="store_true",
                         help="compare a baseline repeat and per-step projections; skip timing")
+    mode.add_argument("--exploratory-timing", action="store_true",
+                      help="allow labeled timing despite failed strict logits, only after "
+                           "matching tokens, baseline repeat and projection checks")
     args = parser.parse_args()
+    inspect_projection = args.diagnose or args.exploratory_timing
     if args.steps < 1 or args.repetitions < 2:
         parser.error("steps >= 1 and repetitions >= 2 required")
     if not torch.cuda.is_available():
@@ -173,6 +199,7 @@ def main():
         "gemv": {"block_rows": 1, "num_warps": 4},
         "allow_fp16_reduced_precision_reduction": True,
         "diagnostic_mode": args.diagnose,
+        "exploratory_timing_requested": args.exploratory_timing,
         "steps": args.steps, "repetitions": args.repetitions,
         "warmup_trajectories_per_implementation": 2,
         "order": "alternating_baseline_candidate_per_round",
@@ -198,12 +225,15 @@ def main():
             encoded = tokenizer(prompt, return_tensors="pt").to("cuda")
             baseline = decode_trial(model, encoded, args.steps, custom=False, validate=True)
             candidate = decode_trial(model, encoded, args.steps, custom=True, validate=True,
-                                     capture_projection=args.diagnose)
+                                     capture_projection=inspect_projection)
             accuracy = compare_outputs(baseline, candidate)
             case = {"prompt": prompt, "accuracy": accuracy,
                     "validation_dispatch": candidate["dispatch"]}
             report["cases"].append(case)
-            if args.diagnose:
+            dispatch = case["validation_dispatch"]
+            print(f"  Candidate decode calls: GEMV {dispatch['gemv_calls']} | "
+                  f"original fallback {dispatch['fallback_calls']}", flush=True)
+            if inspect_projection:
                 repeat = decode_trial(model, encoded, args.steps, custom=False, validate=True)
                 case["baseline_repeat_accuracy"] = compare_outputs(baseline, repeat)
                 case["projection_diagnostics"] = projection_diagnostics(
@@ -224,7 +254,13 @@ def main():
             save()
             print(f"  Logit mismatches: {accuracy['logit_mismatches']} | "
                   f"identical tokens: {accuracy['identical_greedy_tokens']}", flush=True)
-            if args.diagnose or not accuracy["passed"]:
+            allowed, status = timing_decision(
+                case, diagnose=args.diagnose, exploratory=args.exploratory_timing,
+                steps=args.steps,
+            )
+            case["timing_status"] = status
+            print(f"  Timing status: {status}", flush=True)
+            if not allowed:
                 case["timing_skipped"] = True
                 save()
                 continue
@@ -238,6 +274,21 @@ def main():
                     name = "one_gemv" if custom else "pytorch"
                     samples[name].append(decode_trial(model, encoded, args.steps, custom=custom))
             case["samples"] = samples
+            case["timed_candidate_dispatch_total"] = {
+                field: sum(row["dispatch"][field] for row in samples["one_gemv"])
+                for field in ("gemv_calls", "fallback_calls")
+            }
+            deltas_us = [
+                (pt["wall_ms_per_step"] - custom["wall_ms_per_step"]) * 1000
+                for pt, custom in zip(samples["pytorch"], samples["one_gemv"])
+            ]
+            case["paired_wall_delta_us_per_step"] = {
+                "samples": deltas_us,
+                "median": statistics.median(deltas_us),
+                "min": min(deltas_us), "max": max(deltas_us),
+                "candidate_faster_rounds": sum(delta > 0 for delta in deltas_us),
+                "rounds": args.repetitions,
+            }
             case["medians"] = {
                 name: {metric: statistics.median(row[metric] for row in rows)
                        for metric in ("wall_ms_per_step", "cuda_event_ms_per_step")}
@@ -248,6 +299,12 @@ def main():
             case["wall_speedup"] = pt / tt
             print(f"  Full decode wall time: PyTorch {pt:.3f} ms/step | "
                   f"one GEMV {tt:.3f} ms/step | PT/custom {pt / tt:.3f}x", flush=True)
+            paired = case["paired_wall_delta_us_per_step"]
+            calls = case["timed_candidate_dispatch_total"]
+            print(f"  Paired median saving {paired['median']:.2f} us/step | "
+                  f"custom faster in {paired['candidate_faster_rounds']}/{args.repetitions} rounds", flush=True)
+            print(f"  Timed candidate calls: GEMV {calls['gemv_calls']} | "
+                  f"original fallback {calls['fallback_calls']}", flush=True)
             save()
     except Exception as error:
         report["failure"] = {"type": type(error).__name__, "message": str(error)}

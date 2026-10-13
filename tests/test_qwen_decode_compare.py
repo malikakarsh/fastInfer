@@ -48,6 +48,39 @@ class DecodeComparisonTest(unittest.TestCase):
         self.assertEqual(row["accuracy"]["gemv"]["fp32_mismatches"], 2)
         self.assertEqual(row["accuracy"]["pytorch"]["fp32_mismatches"], 0)
 
+    def test_exploratory_timing_requires_explicit_mode_and_checks(self):
+        import copy
+
+        case = {
+            "accuracy": {"passed": False, "identical_greedy_tokens": True},
+            "baseline_repeat_accuracy": {"passed": True},
+            "projection_diagnostics": [
+                {"accuracy": {"pytorch": {"fp32_mismatches": 0},
+                              "gemv": {"fp32_mismatches": 0}}}
+                for _ in range(2)
+            ],
+        }
+        def decision(value, **kwargs):
+            return benchmark.timing_decision(value, steps=2, **kwargs)
+        self.assertEqual(decision(case, diagnose=False, exploratory=False),
+                         (False, "strict_accuracy_failed"))
+        self.assertEqual(decision(case, diagnose=False, exploratory=True),
+                         (True, "exploratory_strict_logits_failed"))
+        self.assertFalse(case["accuracy"]["passed"])
+        self.assertFalse(decision(case, diagnose=True, exploratory=True)[0])
+        for failure in ("tokens", "repeat", "projection", "missing"):
+            invalid = copy.deepcopy(case)
+            if failure == "tokens":
+                invalid["accuracy"]["identical_greedy_tokens"] = False
+            elif failure == "repeat":
+                invalid["baseline_repeat_accuracy"]["passed"] = False
+            elif failure == "projection":
+                invalid["projection_diagnostics"][0]["accuracy"]["gemv"]["fp32_mismatches"] = 1
+            else:
+                invalid["projection_diagnostics"].pop()
+            with self.subTest(failure=failure):
+                self.assertFalse(decision(invalid, diagnose=False, exploratory=True)[0])
+
     def test_nonfinite_logits_rejected(self):
         baseline = {"logits": torch.ones(1, 1, 2), "tokens": [[1, 2]]}
         candidate = {"logits": torch.full((1, 1, 2), float("nan")), "tokens": [[1, 2]]}
