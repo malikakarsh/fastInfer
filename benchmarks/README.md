@@ -331,8 +331,15 @@ as negative infinity, so they do not affect the maximum or exponential sum.
 The initial wrapper accepts finite contiguous CUDA FP16/FP32 matrices with
 row widths1..8192, and has no backward implementation.
 
-Run `python -m unittest discover -s tests -p '*softmax*.py' -v` in the pinned
-Kaggle interpreter. Four reference tests pass locally; three GPU tests are
+For a fresh Kaggle session, run `scripts/kaggle_softmax_check.py` with the
+notebook's Python. This runner installs NumPy1.26.4 and the editable repository
+into the existing `/kaggle/working/fastinfer-t4-py312/bin/python` environment
+using `uv --no-deps`, verifies imports/pinned versions/CUDA, and then runs the
+softmax tests. It does not create the GPU environment or replace PyTorch/Triton.
+This prevents the repeated missing-package errors after session changes.
+
+Once installed, run `python -m unittest discover -s tests -p '*softmax*.py' -v`
+in the pinned Kaggle interpreter. Four reference tests pass locally; three GPU tests are
 pending. GPU comparisons cover both native `torch.softmax` and the readable
 reference, plus a double-precision oracle on the same input values. FP16
 comparison tolerance is rtol0.002/atol0.000002; FP32 is rtol0.00001/atol0.0000001.
@@ -343,6 +350,24 @@ constant negative rows, large positive scores, and invalid input rejection.
 The arithmetic follows the basic row calculation in the
 [Triton3.1 softmax tutorial](https://github.com/triton-lang/triton/blob/v3.1.0/python/tutorials/02-fused-softmax.py),
 without its persistent-program scheduling. Triton's exponential is approximate;
-bitwise agreement is not promised. No GPU correctness or performance claim is
-made before results. The subsequent benchmark must include native
-`torch.softmax`, which is already optimized, alongside the readable reference.
+bitwise agreement is not promised. All seven initial reference/GPU tests passed
+on the pinned Kaggle setup in4.162seconds. These are tolerance checks, not a
+performance result or an exact-agreement claim.
+
+Run `python benchmarks/softmax_compare.py` for the first FP16 comparison,
+or add `--dtype float32` for a separate FP32 run. The frozen seed2 shapes are
+(rows,columns): (1,65), (1,128), (16,128), (128,128), (16,1024),
+(128,1024), (1,1536), (128,1536), and (1,8192). Compare the readable reference,
+native `torch.softmax`, and the unchanged four-warp Triton kernel. The native
+operation is the optimized baseline; beating the readable reference alone
+does not establish a native-PyTorch speedup.
+
+Compilation, accuracy checks and warmup are outside timing. Each timed sample
+replays100operations in a CUDA graph. Thirty rounds cycle all six measurement
+orders five times. Save all raw timings, separate medians, native-minus-Triton
+paired savings and winning round counts. Accuracy uses the existing GPU-test
+tolerances, a double-precision oracle, and independent probability/row-sum
+checks before each shape is timed. Resource metadata is recorded but is not
+a measured occupancy or bottleneck diagnosis. Two CPU statistical checks pass;
+GPU timing is pending. The correctness runner now also discovers these two
+benchmark checks, so it runs nine tests in total.
