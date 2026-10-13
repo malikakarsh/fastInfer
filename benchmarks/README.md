@@ -199,4 +199,30 @@ Run `python benchmarks/qwen_rmsnorm_quality.py --max-new-tokens 64 --archive`. S
 
 For each prompt, run original greedy generation twice and custom-normalization generation once, with fresh original prefill/caches. Stop at the configured EOS token or the cap of64newtokens, including the first token predicted by original prefill. That first token does not exercise the replacement. Record baseline-repeat stability, full token sequences/text, first divergence position and actual per-module kernel counts. If greedy histories match, compare their distributions directly. If they diverge, rerun custom normalization while feeding the baseline's chosen tokens, so the distributions are evaluated on the same histories. Tokens selected by the custom model on that shared history are recorded separately from the tokens fed to it. Arbitrary distributions from different histories are never compared as if their inputs were equal.
 
-Reports retain the existing strict logits tolerance, probability total variation, per-position score gaps and argmax agreement, with no newly chosen acceptance threshold. Baseline-instability cases are flagged and excluded from summary comparisons. Cases where EOS is predicted during prefill are reported separately as not exercising custom decode. No timing is measured. Optional evidence ZIP includes this JSON and both available original raw normalization timing JSONs; a manifest reports missing evidence rather than inventing it. Download the ZIP from Kaggle to preserve the raw evidence beyond the session. Seven local tests cover stopping, token caps, dispatch, shared histories, divergence and archival. GPU broader evaluation is pending.
+Reports retain the existing strict logits tolerance, probability total variation, per-position score gaps and argmax agreement, with no newly chosen acceptance threshold. Baseline-instability cases are flagged and excluded from summary comparisons. Cases where EOS is predicted during prefill are reported separately as not exercising custom decode. No timing is measured. Optional evidence ZIP includes this JSON and both available original raw normalization timing JSONs; a manifest reports missing evidence rather than inventing it. Download the ZIP from Kaggle to preserve the raw evidence beyond the session. Seven local tests cover stopping, token caps, dispatch, shared histories, divergence and archival. GPU broader evaluation completed; results follow.
+
+Broader check result:16/16baseline repeatsstable,allcasesexercisedcustomdecode,15/16greedy sequencesidentical. Sciencecasefirstdiverged at token21. Zero casespassedstrictlogittolerance. Worst shared-historyTV0.0051970710046589375. Scores for the divergent case were compared using baseline-fed histories, not mismatched free-generation histories. Identical sequence fraction is not language-task accuracy, and token divergence alone does not determine which continuation is better. Need inspect original/custom texts and baseline top-two gap at the divergence before explaining the specific flip. Full JSON and both original timing files were packed into the emitted ZIP on Kaggle; preserve it outside the session. No further timing experiment is justified by this accuracy result alone.
+
+At the science divergence (token21),the baseline top-two score gap was0.015625 and shared-historyTV0.0038997011724859476. The subsequent continuations differed in content,not merely formatting. A close ranking is consistent with sensitivity to small numerical changes; we have not isolated the exact layer/arithmetic contribution or scored the scientific correctness of either text. Retain the optimized normalization as opt-in experimental behavior and scope any performance claim accordingly.
+
+## RMSNorm arithmetic diagnosis
+
+Run `python benchmarks/qwen_rmsnorm_stages.py` with the pinned Kaggle environment.
+The original model runs prefill and one cached decode for each of the three
+original prompts. Screen all normalization modules and select the one with the
+largest production Triton/model output difference per prompt. Compare squared
+values, mean square, mean plus epsilon, inverse RMS, FP32 normalized values,
+FP16 normalized values, and the weighted FP16 output on the same captured input.
+Reports count exact differences; no accuracy tolerance is changed.
+
+The diagnostic kernel adds intermediate stores and is separate from the normal
+kernel. Require its output to exactly match the production kernel and the
+PyTorch reconstruction to exactly match the captured model output before
+interpreting the stage comparison. Even matching final outputs does not prove
+every instrumented intermediate is identical to the production intermediate.
+Hybrid calculations use Triton's mean or inverse RMS with the remaining PyTorch
+operations to investigate how the difference reaches the final output. This is
+not a timing experiment or proof of the cause of a particular generated-token
+flip. Each selected input, weight, and intermediate is saved in a CPU tensor
+snapshot alongside the JSON. GPU execution is pending; three local CPU tests
+pass and one GPU cross-check test is skipped locally.
