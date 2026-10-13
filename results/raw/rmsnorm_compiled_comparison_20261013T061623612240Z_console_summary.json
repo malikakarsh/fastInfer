@@ -1,0 +1,70 @@
+{
+  "provenance": "User-supplied rounded Kaggle console output; not original timing samples",
+  "raw_file_on_kaggle": "/kaggle/working/fastinfer/results/raw/rmsnorm_compiled_comparison_20261013T061623612240Z.json",
+  "scope": "Second same-seed three-way synthetic FP16 CUDA-graph run",
+  "cases": [
+    {
+      "tokens": 1,
+      "hidden": 1536,
+      "pytorch_median_us": 39.92,
+      "compiled_median_us": 4.67,
+      "triton_median_us": 4.21,
+      "reported_compiled_over_triton": 1.11,
+      "fp32_and_pytorch_comparisons": "PASS"
+    },
+    {
+      "tokens": 16,
+      "hidden": 1536,
+      "pytorch_median_us": 25.34,
+      "compiled_median_us": 2.74,
+      "triton_median_us": 2.56,
+      "reported_compiled_over_triton": 1.071,
+      "fp32_and_pytorch_comparisons": "PASS"
+    },
+    {
+      "tokens": 128,
+      "hidden": 1536,
+      "pytorch_median_us": 32.27,
+      "compiled_median_us": 4.21,
+      "triton_median_us": 3.12,
+      "reported_compiled_over_triton": 1.351,
+      "fp32_and_pytorch_comparisons": "PASS"
+    },
+    {
+      "tokens": 1,
+      "hidden": 65,
+      "pytorch_median_us": 14.28,
+      "compiled_median_us": 1.76,
+      "triton_median_us": 1.8,
+      "reported_compiled_over_triton": 0.977,
+      "fp32_and_pytorch_comparisons": "PASS"
+    },
+    {
+      "tokens": 1,
+      "hidden": 1024,
+      "pytorch_median_us": 17.06,
+      "compiled_median_us": 1.88,
+      "triton_median_us": 1.87,
+      "reported_compiled_over_triton": 1.005,
+      "fp32_and_pytorch_comparisons": "PASS"
+    },
+    {
+      "tokens": 1,
+      "hidden": 4096,
+      "pytorch_median_us": 27.8,
+      "compiled_median_us": 3.87,
+      "triton_median_us": 3.55,
+      "reported_compiled_over_triton": 1.089,
+      "fp32_and_pytorch_comparisons": "PASS"
+    },
+    {
+      "tokens": 1,
+      "hidden": 8192,
+      "pytorch_median_us": 31.87,
+      "compiled_median_us": 5.51,
+      "triton_median_us": 5.67,
+      "reported_compiled_over_triton": 0.971,
+      "fp32_and_pytorch_comparisons": "PASS"
+    }
+  ]
+}

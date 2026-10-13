@@ -1,0 +1,70 @@
+{
+  "provenance": "User-supplied rounded Kaggle console output; not original timing samples",
+  "raw_file_on_kaggle": "/kaggle/working/fastinfer/results/raw/rmsnorm_compiled_comparison_20261013T061150230668Z.json",
+  "scope": "First three-way synthetic FP16 CUDA-graph comparison; no generated-code diagnosis or repeat yet",
+  "cases": [
+    {
+      "tokens": 1,
+      "hidden": 1536,
+      "pytorch_median_us": 39.89,
+      "compiled_median_us": 4.64,
+      "triton_median_us": 4.2,
+      "reported_compiled_over_triton": 1.103,
+      "fp32_and_pytorch_comparisons": "PASS"
+    },
+    {
+      "tokens": 16,
+      "hidden": 1536,
+      "pytorch_median_us": 27.39,
+      "compiled_median_us": 2.86,
+      "triton_median_us": 2.63,
+      "reported_compiled_over_triton": 1.089,
+      "fp32_and_pytorch_comparisons": "PASS"
+    },
+    {
+      "tokens": 128,
+      "hidden": 1536,
+      "pytorch_median_us": 35.26,
+      "compiled_median_us": 4.56,
+      "triton_median_us": 3.36,
+      "reported_compiled_over_triton": 1.357,
+      "fp32_and_pytorch_comparisons": "PASS"
+    },
+    {
+      "tokens": 1,
+      "hidden": 65,
+      "pytorch_median_us": 14.27,
+      "compiled_median_us": 1.76,
+      "triton_median_us": 1.8,
+      "reported_compiled_over_triton": 0.976,
+      "fp32_and_pytorch_comparisons": "PASS"
+    },
+    {
+      "tokens": 1,
+      "hidden": 1024,
+      "pytorch_median_us": 17.05,
+      "compiled_median_us": 1.88,
+      "triton_median_us": 1.86,
+      "reported_compiled_over_triton": 1.011,
+      "fp32_and_pytorch_comparisons": "PASS"
+    },
+    {
+      "tokens": 1,
+      "hidden": 4096,
+      "pytorch_median_us": 17.39,
+      "compiled_median_us": 2.58,
+      "triton_median_us": 2.3,
+      "reported_compiled_over_triton": 1.121,
+      "fp32_and_pytorch_comparisons": "PASS"
+    },
+    {
+      "tokens": 1,
+      "hidden": 8192,
+      "pytorch_median_us": 25.4,
+      "compiled_median_us": 4.32,
+      "triton_median_us": 4.51,
+      "reported_compiled_over_triton": 0.959,
+      "fp32_and_pytorch_comparisons": "PASS"
+    }
+  ]
+}
