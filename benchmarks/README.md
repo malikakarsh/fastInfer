@@ -493,3 +493,22 @@ selection as the timed wrapper and hashes the policy source.
 After GPU tests, run `python benchmarks/softmax_compare.py --include-compiled`
 for the final native/compiled/default-selected comparison. This is still
 an isolated kernel benchmark, not model integration.
+
+
+The selected implementation passed15tests on Kaggle. Selected runs
+`softmax_compiled_comparison_float16_20261014T011348444789Z.json` and
+`softmax_compiled_comparison_float16_20261014T011645627219Z.json` both passed
+all nine accuracy checks and beat native30/30 rounds on every shape.
+Native speedups span1.13–3.37x across the two runs. Compiled comparisons
+repeat substantial gains at1x65/1x1536/128x1536/1x8192, while128-column
+cases remain near ties. Console summaries are stored here; full samples
+were packaged into `/kaggle/working/softmax_evidence_20261014T011658Z.zip`
+with11JSONreports. Local archive import/integrity checks remain pending.
+
+
+The downloaded softmax evidence archive is now verified and seven full raw
+reports imported locally. The adjacent `.manifest.json` preserves member
+SHA256 hashes and verification checks. Both final selected-run source hashes
+match local code, all selected resources report zero spills, and saved
+medians and paired statistics agree with their raw samples. Earlier mentions
+of softmax reports remaining only on Kaggle are superseded by this archive.

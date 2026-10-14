@@ -1,0 +1,89 @@
+{
+  "archive": "softmax_evidence_20261014T011658Z.zip",
+  "archive_sha256": "f1de9ce9955d95806610545096f9723478aa7e99125ab1214c56c76e85385d29",
+  "members": [
+    {
+      "path": "results/raw/softmax_comparison_float16_20261013T235704423966Z.json",
+      "bytes": 55219,
+      "sha256": "9769de1bd6389ecf34652f246a18fda0f80f1d0e618e9655e347e025799b703f",
+      "console_summary": false,
+      "cases": 9
+    },
+    {
+      "path": "results/raw/softmax_comparison_float16_20261013T235704423966Z_console_summary.json",
+      "bytes": 4747,
+      "sha256": "97112cc35274f5761e8135200f0f24fce997485ebc3f6592cb36cedea4176597",
+      "console_summary": true
+    },
+    {
+      "path": "results/raw/softmax_comparison_float16_20261014T001552441939Z.json",
+      "bytes": 55269,
+      "sha256": "90e82aa017cf5e15e16a2985aa3e65ed4d0947227db8182833c4f658a4137ab0",
+      "console_summary": false,
+      "cases": 9
+    },
+    {
+      "path": "results/raw/softmax_comparison_float16_20261014T001552441939Z_console_summary.json",
+      "bytes": 2865,
+      "sha256": "cd66ddb649702da4be1f76c0fa385522334df9f91ddf845092049d33f08ecd18",
+      "console_summary": true
+    },
+    {
+      "path": "results/raw/softmax_compiled_comparison_float16_20261014T003126243894Z.json",
+      "bytes": 81735,
+      "sha256": "dbb17da1a048b4e24bcc710dc8dea3800563a70e88e9c9c0989022ad8eee35ae",
+      "console_summary": false,
+      "cases": 9
+    },
+    {
+      "path": "results/raw/softmax_compiled_comparison_float16_20261014T003126243894Z_console_summary.json",
+      "bytes": 4684,
+      "sha256": "4b249da140f426429d2c150c10d2d3c346265917f38cacf1eacc2aa7079de310",
+      "console_summary": true
+    },
+    {
+      "path": "results/raw/softmax_compiled_comparison_float16_20261014T011348444789Z.json",
+      "bytes": 81807,
+      "sha256": "3b6957fd881b343f0031e405093cec4e27b3583a57460d1ff47b502f6bfcb513",
+      "console_summary": false,
+      "cases": 9
+    },
+    {
+      "path": "results/raw/softmax_compiled_comparison_float16_20261014T011645627219Z.json",
+      "bytes": 81777,
+      "sha256": "5ad874023fe6843d7428f6b89a36f6f384b0e27fe096bf6ecc327c094251c407",
+      "console_summary": false,
+      "cases": 9
+    },
+    {
+      "path": "results/raw/softmax_warps_20261014T003718302698Z.json",
+      "bytes": 110759,
+      "sha256": "e068788966cb2e34e4a9680e7e7011089a1af4e3a08336602421a988d8558e93",
+      "console_summary": false,
+      "cases": 6
+    },
+    {
+      "path": "results/raw/softmax_warps_confirmation_20261014T010824111458Z.json",
+      "bytes": 112541,
+      "sha256": "59722e67a9fc9cc77ac6940bdd2a3751635cf923abc4dec9e70e16baf108d686",
+      "console_summary": false,
+      "cases": 9
+    },
+    {
+      "path": "results/raw/softmax_warps_confirmation_20261014T010824111458Z_console_summary.json",
+      "bytes": 3158,
+      "sha256": "bbb3428be0a4c1f029053d8973d10d43d503d506541156acef1d81d4f04e50f3",
+      "console_summary": true
+    }
+  ],
+  "checks": [
+    "ZIP CRC integrity",
+    "JSON parsing",
+    "raw reports have no failure",
+    "sample counts and positive finite timings",
+    "recomputed medians and paired summaries",
+    "selected run accuracy and warp resources",
+    "selected run source hashes match local source"
+  ],
+  "verified": true
+}

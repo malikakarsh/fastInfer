@@ -195,5 +195,25 @@ reported spills. Latency reductions from per-case medians were approximately
 9–11%,11–13%,and2–2.5%. These are isolated synthetic CUDA-graph results;
 absolute timing varied during the run. See the
 [console summary](results/raw/softmax_warps_confirmation_20261014T010824111458Z_console_summary.json).
-Raw samples remain on Kaggle. The final native/compiled comparison with
-this automatic selection is pending.
+The selected implementation passed all 15 CPU/GPU tests on Kaggle. Two
+frozen FP16 CUDA-graph runs across nine synthetic shapes passed all accuracy
+checks (`rtol=0.002, atol=0.000002` against native and an FP64 oracle).
+Triton beat native PyTorch in 30/30 paired rounds on every shape in both runs,
+with 1.13–3.37× speedups from implementation medians.
+
+Compared with `torch.compile(reference_softmax)`, the clearest repeated gains
+were 1.14–1.15× for 1×65, 1.14× for 1×1536, 1.65–1.66× for 128×1536,
+and 1.19× for 1×8192, each winning 30/30 rounds in both runs. The small
+128-column cases remain near ties (1.01–1.04×, 19–23/30 wins); do not infer
+universal superiority over compilation. Compilation and warmup were excluded.
+These results establish isolated kernel gains, not faster model attention.
+
+[First selected-run console summary](results/raw/softmax_compiled_comparison_float16_20261014T011348444789Z_console_summary.json)
+and [frozen-repeat console summary](results/raw/softmax_compiled_comparison_float16_20261014T011645627219Z_console_summary.json)
+preserve the supplied rounded results. The [evidence archive](results/raw/softmax_evidence_20261014T011658Z.zip)
+is downloaded and verified: 11 JSON members, including seven full raw reports
+now imported into `results/raw/`. The
+[verification manifest](results/raw/softmax_evidence_20261014T011658Z.manifest.json)
+records file hashes and checks. Final source hashes match local kernel and
+benchmark code; raw medians, paired comparisons, accuracy and selected warp
+resources were verified. See the [softmax findings](notes/softmax_results.md).

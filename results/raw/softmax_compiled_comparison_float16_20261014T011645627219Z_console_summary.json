@@ -1,0 +1,131 @@
+{
+  "source": "User-supplied rounded console results; not original raw latency samples.",
+  "original_report": "softmax_compiled_comparison_float16_20261014T011645627219Z.json",
+  "dtype": "float16",
+  "gpu": "Tesla T4",
+  "torch": "2.5.1+cu121",
+  "triton": "3.1.0",
+  "seed": 2,
+  "operations_per_sample": 100,
+  "repetitions": 30,
+  "accuracy_passed": true,
+  "cases": [
+    {
+      "shape": [
+        1,
+        65
+      ],
+      "native_us": 4.677,
+      "triton_us": 3.733,
+      "compiled_reference_us": 4.273,
+      "native_minus_triton_paired_median_us": 0.966,
+      "compiled_minus_triton_paired_median_us": 0.541,
+      "triton_faster_than_native_rounds": 30,
+      "triton_faster_than_compiled_rounds": 30
+    },
+    {
+      "shape": [
+        1,
+        128
+      ],
+      "native_us": 3.155,
+      "triton_us": 2.785,
+      "compiled_reference_us": 2.823,
+      "native_minus_triton_paired_median_us": 0.37,
+      "compiled_minus_triton_paired_median_us": 0.035,
+      "triton_faster_than_native_rounds": 30,
+      "triton_faster_than_compiled_rounds": 19
+    },
+    {
+      "shape": [
+        16,
+        128
+      ],
+      "native_us": 3.052,
+      "triton_us": 2.313,
+      "compiled_reference_us": 2.358,
+      "native_minus_triton_paired_median_us": 0.785,
+      "compiled_minus_triton_paired_median_us": 0.029,
+      "triton_faster_than_native_rounds": 30,
+      "triton_faster_than_compiled_rounds": 19
+    },
+    {
+      "shape": [
+        128,
+        128
+      ],
+      "native_us": 2.642,
+      "triton_us": 1.862,
+      "compiled_reference_us": 1.925,
+      "native_minus_triton_paired_median_us": 0.78,
+      "compiled_minus_triton_paired_median_us": 0.061,
+      "triton_faster_than_native_rounds": 30,
+      "triton_faster_than_compiled_rounds": 21
+    },
+    {
+      "shape": [
+        16,
+        1024
+      ],
+      "native_us": 5.592,
+      "triton_us": 2.11,
+      "compiled_reference_us": 2.227,
+      "native_minus_triton_paired_median_us": 3.477,
+      "compiled_minus_triton_paired_median_us": 0.104,
+      "triton_faster_than_native_rounds": 30,
+      "triton_faster_than_compiled_rounds": 26
+    },
+    {
+      "shape": [
+        128,
+        1024
+      ],
+      "native_us": 5.98,
+      "triton_us": 2.984,
+      "compiled_reference_us": 3.409,
+      "native_minus_triton_paired_median_us": 2.986,
+      "compiled_minus_triton_paired_median_us": 0.417,
+      "triton_faster_than_native_rounds": 30,
+      "triton_faster_than_compiled_rounds": 28
+    },
+    {
+      "shape": [
+        1,
+        1536
+      ],
+      "native_us": 3.566,
+      "triton_us": 2.265,
+      "compiled_reference_us": 2.58,
+      "native_minus_triton_paired_median_us": 1.311,
+      "compiled_minus_triton_paired_median_us": 0.331,
+      "triton_faster_than_native_rounds": 30,
+      "triton_faster_than_compiled_rounds": 30
+    },
+    {
+      "shape": [
+        128,
+        1536
+      ],
+      "native_us": 11.46,
+      "triton_us": 3.419,
+      "compiled_reference_us": 5.637,
+      "native_minus_triton_paired_median_us": 8.056,
+      "compiled_minus_triton_paired_median_us": 2.235,
+      "triton_faster_than_native_rounds": 30,
+      "triton_faster_than_compiled_rounds": 30
+    },
+    {
+      "shape": [
+        1,
+        8192
+      ],
+      "native_us": 5.521,
+      "triton_us": 3.412,
+      "compiled_reference_us": 4.057,
+      "native_minus_triton_paired_median_us": 2.092,
+      "compiled_minus_triton_paired_median_us": 0.674,
+      "triton_faster_than_native_rounds": 30,
+      "triton_faster_than_compiled_rounds": 30
+    }
+  ]
+}
