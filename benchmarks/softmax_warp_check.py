@@ -1,5 +1,6 @@
 """Compare one/two/four/eight softmax warps with accuracy and resource reports."""
 
+import argparse
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -14,6 +15,7 @@ from softmax_compare import native_triton_comparison
 ROOT = Path(__file__).resolve().parents[1]
 SHAPES = ((1, 4), (1, 65), (128, 128), (16, 1024), (128, 1536), (1, 8192))
 WARPS = (1, 2, 4, 8)
+CONFIRM_CASES = (((1, 65), 1), ((128, 128), 1), ((128, 1536), 2))
 
 
 def timing_orders(names):
@@ -27,7 +29,7 @@ def timing_orders(names):
     return orders
 
 
-def measure_case(x):
+def measure_case(x, warps_to_test=WARPS):
     import triton
     from fastinfer.kernels.softmax import reference_softmax
     from fastinfer.kernels.triton_softmax import softmax, _softmax
@@ -38,7 +40,7 @@ def measure_case(x):
     oracle = torch.softmax(x.double(), dim=-1).float()
     operations = {"pytorch_native": lambda a, unused: torch.softmax(a, dim=-1)}
     case = {"shape": list(x.shape), "variants": {}}
-    for warps in WARPS:
+    for warps in warps_to_test:
         name = f"warps{warps}"
         output = torch.empty_like(x)
         handle = _softmax[(x.shape[0],)](
@@ -99,21 +101,38 @@ def measure_case(x):
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--confirm", action="store_true",
+                        help="Compare frozen candidates against four warps at seeds 4, 5, 6")
+    args = parser.parse_args()
+    seeds = (4, 5, 6) if args.confirm else (3,)
+    trials = []
+    for index, seed in enumerate(seeds):
+        cases = CONFIRM_CASES if args.confirm else tuple((shape, None) for shape in SHAPES)
+        if index % 2:
+            cases = cases[::-1]
+        trials.extend((seed, shape, candidate) for shape, candidate in cases)
     if not torch.cuda.is_available():
         raise RuntimeError("CUDA required")
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
-    destination = ROOT / "results/raw" / f"softmax_warps_{stamp}.json"
+    destination = ROOT / "results/raw" / f"softmax_warps_{'confirmation_' if args.confirm else ''}{stamp}.json"
     destination.parent.mkdir(parents=True, exist_ok=True)
     report = {
         "benchmark": "controlled_softmax_warp_comparison", "dtype": "float16",
-        "seed": 3, "shapes": [list(shape) for shape in SHAPES], "warps": list(WARPS),
+        "mode": "confirmation" if args.confirm else "selection",
+        "seeds": list(seeds),
+        "trials": [{"seed": seed, "shape": list(shape), "candidate_warps": candidate}
+                   for seed, shape, candidate in trials],
+        "warps": [1, 2, 4] if args.confirm else list(WARPS),
         "rtol": .002, "atol": 2e-6, "enable_fp_fusion": False,
         "timing_mode": "cuda_graph_replay_amortized", "operations_per_sample": 100,
         "warmup": 10, "graph_warmup": 10, "repetitions": 30,
-        "order": "alternating_forward_reverse_rotations_of_five_providers",
+        "order": "alternating_forward_reverse_rotations_of_three_providers" if args.confirm
+                 else "alternating_forward_reverse_rotations_of_five_providers",
         "scope": "Only num_warps changes among manual variants on identical inputs per case. "
                  "Native baseline included; no compiler change or full-model claim. "
-                 "This sweep selects candidates; defaults remain four warps. "
+                 "Confirmation freezes shape-specific candidates at new seeds 4/5/6; "
+                 "selection uses seed 3. Defaults remain four warps. "
                  "Spills is Triton3.1 local-byte metadata divided by four, not runtime traffic.",
         "source_sha256": {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
                           for name in ("kernels/triton_softmax.py", "benchmarks/softmax_warp_check.py",
@@ -125,10 +144,16 @@ def main():
     try:
         with torch.inference_mode():
             torch.manual_seed(3)
-            for shape in SHAPES:
-                print(f"\nRows={shape[0]}, columns={shape[1]}", flush=True)
+            for seed, shape, candidate in trials:
+                if args.confirm:
+                    torch.manual_seed(seed)
+                print(f"\nSeed={seed}, rows={shape[0]}, columns={shape[1]}", flush=True)
                 x = torch.randn(shape, device="cuda", dtype=torch.float16)
-                case = measure_case(x)
+                warps = (4, candidate) if candidate is not None else WARPS
+                case = measure_case(x, warps)
+                case.update(seed=seed, candidate_warps=candidate,
+                            measurement_orders=timing_orders(
+                                ("pytorch_native", *(f"warps{w}" for w in warps))))
                 report["cases"].append(case)
                 native_us = case["implementations"]["pytorch_native"]["latency_us"]["median"]
                 print(f"  Native PyTorch: {native_us:.3f} us", flush=True)

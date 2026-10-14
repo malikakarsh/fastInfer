@@ -461,3 +461,21 @@ checks before timing. This sweep selects candidates for later confirmation,
 not a new default. GPU tests now cover all four warp settings on masked odd
 and wide8192rows in both FP16 and FP32. Nine CPU tests pass locally; four GPU
 tests are pending. This discovery pattern runs13tests in total.
+
+
+Run `python benchmarks/softmax_warp_check.py --confirm` to compare frozen
+candidates against four warps: one warp for 1x65 and 128x128, and two warps
+for 128x1536. Seeds 4, 5 and 6 are new relative to selection; the middle pass
+reverses shape order. Nine cases retain the same accuracy checks and
+30 graph-replay samples of 100 operations. Native PyTorch remains included;
+three providers each occupy every timing position ten times. Raw samples,
+paired savings, measurement orders and resources are saved in
+`softmax_warps_confirmation_<timestamp>.json`. Four remains the default.
+
+The initial seed-3 sweep passed all checks. One warp beat four in 30/30 rounds
+for 1x65 and 128x128; two warps won 24/30 for 128x1536. At width8192, one warp
+reported255 registers/thread and76 spill metadata units and took16.079us,
+versus3.504us for four warps with79 registers/thread and zero spills.
+These console observations select candidates, not confirmed defaults;
+original raw report remains on Kaggle as
+`softmax_warps_20261014T003718302698Z.json`.
