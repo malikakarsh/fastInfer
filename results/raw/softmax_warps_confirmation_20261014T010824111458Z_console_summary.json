@@ -1,0 +1,146 @@
+{
+  "source": "User-supplied rounded Kaggle console output; original raw samples remain on Kaggle.",
+  "raw_report": "softmax_warps_confirmation_20261014T010824111458Z.json",
+  "dtype": "float16",
+  "gpu": "Tesla T4",
+  "torch": "2.5.1+cu121",
+  "triton": "3.1.0",
+  "timing": "CUDA graph, 100 operations per sample, 30 rounds",
+  "cases": [
+    {
+      "seed": 4,
+      "shape": [
+        1,
+        65
+      ],
+      "candidate_warps": 1,
+      "native_us": 4.653,
+      "four_warps_us": 4.121,
+      "candidate_us": 3.687,
+      "paired_saving_us": 0.435,
+      "candidate_faster_rounds": 29,
+      "accuracy_passed": true,
+      "spills": 0
+    },
+    {
+      "seed": 4,
+      "shape": [
+        128,
+        128
+      ],
+      "candidate_warps": 1,
+      "native_us": 6.052,
+      "four_warps_us": 4.589,
+      "candidate_us": 4.0,
+      "paired_saving_us": 0.592,
+      "candidate_faster_rounds": 30,
+      "accuracy_passed": true,
+      "spills": 0
+    },
+    {
+      "seed": 4,
+      "shape": [
+        128,
+        1536
+      ],
+      "candidate_warps": 2,
+      "native_us": 25.747,
+      "four_warps_us": 6.596,
+      "candidate_us": 6.468,
+      "paired_saving_us": 0.185,
+      "candidate_faster_rounds": 30,
+      "accuracy_passed": true,
+      "spills": 0
+    },
+    {
+      "seed": 5,
+      "shape": [
+        128,
+        1536
+      ],
+      "candidate_warps": 2,
+      "native_us": 25.742,
+      "four_warps_us": 6.597,
+      "candidate_us": 6.433,
+      "paired_saving_us": 0.168,
+      "candidate_faster_rounds": 30,
+      "accuracy_passed": true,
+      "spills": 0
+    },
+    {
+      "seed": 5,
+      "shape": [
+        128,
+        128
+      ],
+      "candidate_warps": 1,
+      "native_us": 3.242,
+      "four_warps_us": 2.544,
+      "candidate_us": 2.275,
+      "paired_saving_us": 0.273,
+      "candidate_faster_rounds": 30,
+      "accuracy_passed": true,
+      "spills": 0
+    },
+    {
+      "seed": 5,
+      "shape": [
+        1,
+        65
+      ],
+      "candidate_warps": 1,
+      "native_us": 2.541,
+      "four_warps_us": 2.315,
+      "candidate_us": 2.096,
+      "paired_saving_us": 0.222,
+      "candidate_faster_rounds": 30,
+      "accuracy_passed": true,
+      "spills": 0
+    },
+    {
+      "seed": 6,
+      "shape": [
+        1,
+        65
+      ],
+      "candidate_warps": 1,
+      "native_us": 2.538,
+      "four_warps_us": 2.301,
+      "candidate_us": 2.087,
+      "paired_saving_us": 0.213,
+      "candidate_faster_rounds": 30,
+      "accuracy_passed": true,
+      "spills": 0
+    },
+    {
+      "seed": 6,
+      "shape": [
+        128,
+        128
+      ],
+      "candidate_warps": 1,
+      "native_us": 3.215,
+      "four_warps_us": 2.52,
+      "candidate_us": 2.244,
+      "paired_saving_us": 0.274,
+      "candidate_faster_rounds": 30,
+      "accuracy_passed": true,
+      "spills": 0
+    },
+    {
+      "seed": 6,
+      "shape": [
+        128,
+        1536
+      ],
+      "candidate_warps": 2,
+      "native_us": 13.735,
+      "four_warps_us": 3.809,
+      "candidate_us": 3.727,
+      "paired_saving_us": 0.092,
+      "candidate_faster_rounds": 27,
+      "accuracy_passed": true,
+      "spills": 0
+    }
+  ]
+}

@@ -11,7 +11,7 @@ FastInfer is an experimental LLM inference runtime centered on custom Triton GPU
 ## Implemented
 
 - A PyTorch reference for two-dimensional matrix multiplication.
-- A readable stable softmax reference and a one-program-per-row Triton kernel; initial reference/GPU checks passed on the pinned Kaggle setup. Two frozen FP16 runs measured1.10–3.25× speedups over native PyTorch softmax across nine synthetic shapes. A first compiled-reference comparison passed accuracy; results are below. Warp tuning is pending.
+- A readable stable softmax reference and a one-program-per-row Triton kernel; initial reference/GPU checks passed on the pinned Kaggle setup. Two frozen FP16 runs measured1.10–3.25× speedups over native PyTorch softmax across nine synthetic shapes. A first compiled-reference comparison passed accuracy; results are below. Three FP16 shape-specific warp choices passed confirmation across three new seeds; automatic selection is limited to the tested T4 software setup.
 - A tiled float16 Triton matrix multiplication with K-block accumulation, validated against PyTorch on tested CUDA shapes.
 - A specialized single-row FP16 matrix–vector kernel with FP32 reductions for contiguous stored linear weights.
 - A readable PyTorch RMSNorm reference and an initial fused Triton implementation preserving Qwen's rounding order; all seven CPU/GPU checks passed on the tested setup, with a first isolated performance comparison recorded below.
@@ -180,3 +180,20 @@ The environment report should be checked before installing optional GPU dependen
 | `scripts/` | Environment reporting and utilities |
 | `results/raw/` | Saved measurements with run metadata |
 | `notes/` | Technical findings tied to implementations and results |
+
+
+## Confirmed softmax warp selection
+
+On Tesla T4 with PyTorch2.5.1+cu121 and Triton3.1.0, default FP16 softmax
+now selects one warp for shapes1x65 and128x128, and two for128x1536.
+Other shapes, FP32, other GPUs or software versions use four warps.
+Explicit `num_warps=4` preserves the previous baseline.
+
+Across fresh seeds4/5/6, the candidates beat four warps in89/90,90/90,
+and87/90 paired rounds respectively. All accuracy checks passed with zero
+reported spills. Latency reductions from per-case medians were approximately
+9–11%,11–13%,and2–2.5%. These are isolated synthetic CUDA-graph results;
+absolute timing varied during the run. See the
+[console summary](results/raw/softmax_warps_confirmation_20261014T010824111458Z_console_summary.json).
+Raw samples remain on Kaggle. The final native/compiled comparison with
+this automatic selection is pending.

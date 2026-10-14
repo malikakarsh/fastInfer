@@ -61,7 +61,7 @@ def native_triton_comparison(native, triton):
 def measure_case(x, *, include_compiled=False):
     import triton
     from fastinfer.kernels.softmax import reference_softmax
-    from fastinfer.kernels.triton_softmax import softmax, _softmax
+    from fastinfer.kernels.triton_softmax import softmax, _softmax, default_softmax_warps
     from matmul_compare import capture_graph, summarize
 
     operations = {
@@ -99,14 +99,15 @@ def measure_case(x, *, include_compiled=False):
             "oracle_mismatches": int((error > atol + rtol * oracle.abs()).sum().item()),
         }
 
+    selected_warps = default_softmax_warps(x)
     resource_output = torch.empty_like(x)
     handle = _softmax[(x.shape[0],)](
         x, resource_output, x.shape[1], triton.next_power_of_2(x.shape[1]),
-        num_warps=4, enable_fp_fusion=False,
+        num_warps=selected_warps, enable_fp_fusion=False,
     )
     row["triton_resources"] = {
         "programs": x.shape[0], "block": triton.next_power_of_2(x.shape[1]),
-        "num_warps": 4, "registers_per_thread": handle.n_regs,
+        "num_warps": selected_warps, "registers_per_thread": handle.n_regs,
         "spills": handle.n_spills, "shared_bytes": handle.metadata.shared,
     }
 
@@ -166,15 +167,15 @@ def main():
                   else "all_six_implementation_orders_repeated_five_times"),
         "compiled_settings": COMPILED_SETTINGS if args.include_compiled else None,
         "compiler_reset_between_shapes": args.include_compiled,
-        "scope": "Fixed synthetic input per case, one program per row, four warps. "
+        "scope": "Fixed synthetic input per case, one program per row, confirmed shape-specific warp selection. "
                  "Compilation, accuracy checks, and warmup excluded. Native torch.softmax "
                  "is the optimized baseline; the readable reference is separate. "
                  "Optional compiled reference uses default Inductor settings, independently "
                  "of our kernel, with internal CUDA graphs disabled. Fullgraph errors stop "
-                 "the run; no eager fallback. Manual kernel stays at four warps. "
-                 "No model integration, tuning, or exact-output guarantee.",
+                 "the run; no eager fallback. Manual kernel selects 1/2 warps for three confirmed FP16 shapes on the pinned T4 stack; otherwise four. "
+                 "No model integration or exact-output guarantee.",
         "source_sha256": {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
-                          for name in ("kernels/softmax.py", "kernels/triton_softmax.py",
+                          for name in ("kernels/softmax.py", "kernels/triton_softmax.py", "kernels/softmax_config.py",
                                        "benchmarks/softmax_compare.py", "benchmarks/matmul_compare.py")},
         "environment": json.loads(subprocess.check_output(
             [sys.executable, str(ROOT / "scripts/environment_report.py")], cwd=ROOT, text=True)),

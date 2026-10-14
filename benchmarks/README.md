@@ -479,3 +479,17 @@ versus3.504us for four warps with79 registers/thread and zero spills.
 These console observations select candidates, not confirmed defaults;
 original raw report remains on Kaggle as
 `softmax_warps_20261014T003718302698Z.json`.
+
+
+Confirmation across seeds4/5/6 passed all nine cases with zero reported
+spills. One warp won89/90 rounds for1x65 and90/90 for128x128; two warps
+won87/90 for128x1536. Automatic selection now applies only to those exact
+FP16 shapes on Tesla T4, torch2.5.1+cu121 and Triton3.1.0; otherwise four.
+Explicit warp settings still override the policy. The policy does not change
+softmax arithmetic or tolerances. Earlier fixed-four results remain valid
+historical baselines. Resource reporting now follows the same automatic
+selection as the timed wrapper and hashes the policy source.
+
+After GPU tests, run `python benchmarks/softmax_compare.py --include-compiled`
+for the final native/compiled/default-selected comparison. This is still
+an isolated kernel benchmark, not model integration.

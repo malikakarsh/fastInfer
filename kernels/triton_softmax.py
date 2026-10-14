@@ -4,6 +4,8 @@ import torch
 import triton
 import triton.language as tl
 
+from .softmax_config import choose_softmax_warps
+
 
 @triton.jit
 def _softmax(X, Y, COLUMNS: tl.constexpr, BLOCK: tl.constexpr):
@@ -20,9 +22,20 @@ def _softmax(X, Y, COLUMNS: tl.constexpr, BLOCK: tl.constexpr):
     tl.store(Y + row * COLUMNS + columns, probabilities, mask=valid)
 
 
-def softmax(x, *, num_warps=4):
+def default_softmax_warps(x):
+    """Select a confirmed configuration; explicit settings bypass selection."""
+    return choose_softmax_warps(
+        x.shape, dtype=str(x.dtype).removeprefix("torch."),
+        gpu_name=torch.cuda.get_device_name(x.device),
+        torch_version=torch.__version__, triton_version=triton.__version__,
+    )
+
+
+def softmax(x, *, num_warps=None):
     """Forward-only softmax for finite contiguous CUDA FP16/FP32 matrices.
 
+    None selects confirmed T4 FP16 shapes; other cases use four warps.
+    Explicit num_warps=1/2/4/8 retains manual control.
     Normalize each row in FP32, then store in the input dtype. This first
     version supports row widths 1..8192; it does not promise bitwise agreement.
     """
@@ -36,6 +49,8 @@ def softmax(x, *, num_warps=4):
         raise ValueError("contiguous input required")
     if torch.is_grad_enabled() and x.requires_grad:
         raise RuntimeError("forward-only kernel; disable gradients for training tensors")
+    if num_warps is None:
+        num_warps = default_softmax_warps(x)
     if num_warps not in (1, 2, 4, 8):
         raise ValueError("num_warps must be 1, 2, 4 or 8")
 

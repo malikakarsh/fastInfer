@@ -12,7 +12,7 @@ except ImportError:
 
 @unittest.skipUnless(triton is not None and torch.cuda.is_available(), "CUDA Triton required")
 class TritonSoftmaxTest(unittest.TestCase):
-    def check_output(self, scores, *, num_warps=4):
+    def check_output(self, scores, *, num_warps=None):
         from fastinfer.kernels.softmax import reference_softmax
         from fastinfer.kernels.triton_softmax import softmax
 
@@ -59,6 +59,18 @@ class TritonSoftmaxTest(unittest.TestCase):
                 for warps in (1, 2, 4, 8):
                     with self.subTest(dtype=dtype, width=scores.shape[1], warps=warps):
                         self.check_output(scores, num_warps=warps)
+
+    def test_automatic_selection_matches_explicit_launch(self):
+        from fastinfer.kernels.triton_softmax import softmax, default_softmax_warps
+
+        torch.manual_seed(7)
+        for dtype in (torch.float16, torch.float32):
+            for shape in ((1, 65), (128, 128), (128, 1536), (1, 8192)):
+                with self.subTest(dtype=dtype, shape=shape):
+                    scores = torch.randn(shape, device="cuda", dtype=dtype)
+                    actual = self.check_output(scores)
+                    expected = softmax(scores, num_warps=default_softmax_warps(scores))
+                    torch.testing.assert_close(actual, expected, rtol=0, atol=0)
 
     def test_rejects_unsupported_inputs_and_training(self):
         from fastinfer.kernels.triton_softmax import softmax
