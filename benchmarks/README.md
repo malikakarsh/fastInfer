@@ -516,11 +516,13 @@ of softmax reports remaining only on Kaggle are superseded by this archive.
 
 ## Initial elementwise SwiGLU
 
-Run `python -m unittest discover -s tests -p '*swiglu*.py' -v` first (four
-reference tests and three GPU tests), then
+Run `python -m unittest discover -s tests -p '*swiglu*.py' -v` first (currently five
+CPU tests and four GPU tests), then
 `python benchmarks/swiglu_compare.py --include-compiled` in the existing
-pinned environment. Local syntax checks pass; numerical/GPU checks are
-pending. There is no speedup claim yet.
+pinned environment. The original seven tests passed on T4; new configuration/order tests are
+pending. The initial FP16 comparison passed accuracy on all five shapes,
+measured1.45–2.09x versus eager, and was slightly slower than compiled
+PyTorch. Full raw samples remain on Kaggle; the console summary is stored here.
 
 The native baseline is `F.silu(gate) * up`: one SiLU operation followed by
 multiplication. The compiled baseline uses Inductor/fullgraph on that same
@@ -546,3 +548,31 @@ and compiled resources. No learned projections or full-model timing are included
 
 Implementation references: [PyTorch2.5.1 SiLU](https://github.com/pytorch/pytorch/blob/v2.5.1/torch/nn/functional.py),
 [Triton3.1 masked elementwise indexing](https://github.com/triton-lang/triton/blob/v3.1.0/python/tutorials/01-vector-add.py).
+
+
+### Inspect and compare SwiGLU scheduling
+
+Run `python scripts/swiglu_compiled_inspect.py` for16x8960, or pass
+`--tokens 128` for the larger case. The pinned PyTorch2.5.1 inspector uses
+private compiler helpers already used in RMSNorm inspection. It saves generated
+source and inspects the unique runtime launcher after execution, including
+XBLOCK, warps, registers and spills. Decorator configurations alone are not
+assumed to be the selected setting. Generated and manual outputs must pass
+native and staged FP64 checks. This is not a timing or causal experiment;
+compiler caches are disabled during inspection and benchmark settings stay unchanged.
+
+Then `python benchmarks/swiglu_compare.py --config-sweep` compares six
+manual configurations: (block,warps)=(256,4),(256,1),(256,2),(512,4),
+(1024,4),(1024,8). Eager and compiled reference baselines are included.
+Three shapes1x8960/16x8960/128x8960 receive identical inputs across providers
+at new seed3. All arithmetic, rounding and accuracy tolerances remain fixed.
+Thirty rotations balance eight providers' positions to3/4occurrences;
+100operations per graph sample,10warmups and10graph warmups remain unchanged.
+The report stores samples, orders, resources and paired savings versus both
+original256/4 and compiled. Positive saving favors the variant. This selects
+candidates for independent confirmation; default256/4 remains unchanged.
+
+For fresh Kaggle sessions, run `scripts/kaggle_swiglu_check.py` with the
+notebook interpreter. Like the existing softmax setup, it installs NumPy and
+editable fastinfer into the pinned interpreter without replacing torch/Triton,
+checks imports/versions/CUDA, then runs the nine SwiGLU tests.

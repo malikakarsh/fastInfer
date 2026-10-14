@@ -27,11 +27,11 @@ def _swiglu(GATE, UP, OUTPUT, ELEMENTS: tl.constexpr, BLOCK: tl.constexpr):
     tl.store(OUTPUT + offsets, result, mask=valid)
 
 
-def swiglu(gate, up):
+def swiglu(gate, up, *, block_size=BLOCK_SIZE, num_warps=NUM_WARPS):
     """Process equal contiguous CUDA FP16/FP32 tensors, with no backward pass.
 
-    Fixed 256-element chunks and four warps are initial settings, not tuned
-    choices. Finite inputs are required; no bitwise-agreement promise.
+    Defaults are 256-element chunks and four warps. Explicit settings support
+    controlled scheduling experiments; defaults are not tuned choices. Finite inputs are required; no bitwise-agreement promise.
     """
     validate_pair(gate, up)
     if not gate.is_cuda:
@@ -41,10 +41,15 @@ def swiglu(gate, up):
     if torch.is_grad_enabled() and (gate.requires_grad or up.requires_grad):
         raise RuntimeError("forward-only kernel; disable gradients for training tensors")
 
+    if block_size not in (128, 256, 512, 1024):
+        raise ValueError("block_size must be 128, 256, 512 or 1024")
+    if num_warps not in (1, 2, 4, 8):
+        raise ValueError("num_warps must be 1, 2, 4 or 8")
+
     output = torch.empty_like(gate)
     elements = gate.numel()
-    _swiglu[(triton.cdiv(elements, BLOCK_SIZE),)](
-        gate, up, output, elements, BLOCK_SIZE,
-        num_warps=NUM_WARPS, enable_fp_fusion=False,
+    _swiglu[(triton.cdiv(elements, block_size),)](
+        gate, up, output, elements, block_size,
+        num_warps=num_warps, enable_fp_fusion=False,
     )
     return output

@@ -12,11 +12,11 @@ except ImportError:
 
 @unittest.skipUnless(triton is not None and torch.cuda.is_available(), "CUDA Triton required")
 class TritonSwigluTest(unittest.TestCase):
-    def check_output(self, gate, up):
+    def check_output(self, gate, up, **settings):
         from fastinfer.kernels.swiglu import reference_swiglu
         from fastinfer.kernels.triton_swiglu import swiglu
 
-        output = swiglu(gate, up)
+        output = swiglu(gate, up, **settings)
         activated = (gate.double() * torch.sigmoid(gate.double())).to(gate.dtype)
         oracle = (activated.double() * up.double()).to(gate.dtype)
         rtol, atol = (.002, 2e-4) if gate.dtype == torch.float16 else (1e-5, 2e-6)
@@ -47,6 +47,17 @@ class TritonSwigluTest(unittest.TestCase):
         up = torch.full_like(gate, 3.125)
         self.check_output(gate, up)
 
+    def test_sweep_variants_on_odd_and_model_widths(self):
+        torch.manual_seed(3)
+        configurations = ((256, 4), (256, 1), (256, 2), (512, 4), (1024, 4), (1024, 8))
+        for dtype in (torch.float16, torch.float32):
+            for shape in ((3, 65), (1, 8960)):
+                gate = 2 * torch.randn(shape, device="cuda", dtype=dtype)
+                up = torch.randn_like(gate)
+                for block, warps in configurations:
+                    with self.subTest(dtype=dtype, shape=shape, block=block, warps=warps):
+                        self.check_output(gate, up, block_size=block, num_warps=warps)
+
     def test_rejects_unsupported_layout_device_and_gradients(self):
         from fastinfer.kernels.triton_swiglu import swiglu
 
@@ -54,6 +65,10 @@ class TritonSwigluTest(unittest.TestCase):
             swiglu(torch.ones(3), torch.ones(3))
         with self.assertRaisesRegex(ValueError, "contiguous"):
             swiglu(torch.ones(2, 6, device="cuda")[:, ::2], torch.ones(2, 3, device="cuda"))
+        gate = torch.ones(3, device="cuda")
+        for settings in ({"block_size": 300}, {"num_warps": 3}):
+            with self.assertRaises(ValueError):
+                swiglu(gate, gate, **settings)
         for which in (0, 1):
             with torch.enable_grad():
                 pair = [torch.ones(3, device="cuda"), torch.ones(3, device="cuda")]

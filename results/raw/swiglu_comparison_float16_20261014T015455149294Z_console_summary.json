@@ -1,0 +1,98 @@
+{
+  "source": "User-supplied rounded console output, not raw samples.",
+  "original_report": "swiglu_comparison_float16_20261014T015455149294Z.json",
+  "dtype": "float16",
+  "gpu": "Tesla T4",
+  "torch": "2.5.1+cu121",
+  "triton": "3.1.0",
+  "tests_passed": 7,
+  "block_size": 256,
+  "num_warps": 4,
+  "cases": [
+    {
+      "shape": [
+        1,
+        65
+      ],
+      "native_us": 6.225,
+      "compiled_us": 3.013,
+      "triton_us": 3.096,
+      "native_paired_saving_us": 3.136,
+      "compiled_paired_saving_us": -0.078,
+      "triton_faster_than_native_rounds": 30,
+      "triton_faster_than_compiled_rounds": 3,
+      "accuracy_passed": true,
+      "registers_per_thread": 14,
+      "spills": 0,
+      "shared_bytes": 0
+    },
+    {
+      "shape": [
+        1,
+        1536
+      ],
+      "native_us": 6.124,
+      "compiled_us": 2.894,
+      "triton_us": 2.933,
+      "native_paired_saving_us": 3.191,
+      "compiled_paired_saving_us": -0.038,
+      "triton_faster_than_native_rounds": 30,
+      "triton_faster_than_compiled_rounds": 4,
+      "accuracy_passed": true,
+      "registers_per_thread": 14,
+      "spills": 0,
+      "shared_bytes": 0
+    },
+    {
+      "shape": [
+        1,
+        8960
+      ],
+      "native_us": 6.079,
+      "compiled_us": 2.919,
+      "triton_us": 2.957,
+      "native_paired_saving_us": 3.125,
+      "compiled_paired_saving_us": -0.023,
+      "triton_faster_than_native_rounds": 30,
+      "triton_faster_than_compiled_rounds": 8,
+      "accuracy_passed": true,
+      "registers_per_thread": 14,
+      "spills": 0,
+      "shared_bytes": 0
+    },
+    {
+      "shape": [
+        16,
+        8960
+      ],
+      "native_us": 8.565,
+      "compiled_us": 4.588,
+      "triton_us": 4.807,
+      "native_paired_saving_us": 3.784,
+      "compiled_paired_saving_us": -0.203,
+      "triton_faster_than_native_rounds": 30,
+      "triton_faster_than_compiled_rounds": 0,
+      "accuracy_passed": true,
+      "registers_per_thread": 14,
+      "spills": 0,
+      "shared_bytes": 0
+    },
+    {
+      "shape": [
+        128,
+        8960
+      ],
+      "native_us": 42.0,
+      "compiled_us": 28.772,
+      "triton_us": 28.972,
+      "native_paired_saving_us": 13.041,
+      "compiled_paired_saving_us": -0.205,
+      "triton_faster_than_native_rounds": 30,
+      "triton_faster_than_compiled_rounds": 3,
+      "accuracy_passed": true,
+      "registers_per_thread": 14,
+      "spills": 0,
+      "shared_bytes": 0
+    }
+  ]
+}

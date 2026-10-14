@@ -16,9 +16,16 @@ from matmul_compare import capture_graph, summarize
 
 ROOT = Path(__file__).resolve().parents[1]
 SHAPES = ((1, 65), (1, 1536), (1, 8960), (16, 8960), (128, 8960))
+SWEEP_CONFIGS = ((256, 4), (256, 1), (256, 2), (512, 4), (1024, 4), (1024, 8))
 
 
-def measure_case(gate, up, *, include_compiled):
+def sweep_orders(names):
+    """Rotate eight providers over thirty rounds; position counts differ by at most one."""
+    names = tuple(names)
+    return [names[i % len(names):] + names[:i % len(names)] for i in range(30)]
+
+
+def measure_case(gate, up, *, include_compiled, configurations=((256, 4),)):
     import triton
     from fastinfer.kernels.swiglu import reference_swiglu
     from fastinfer.kernels.triton_swiglu import swiglu, _swiglu, BLOCK_SIZE, NUM_WARPS
@@ -27,7 +34,13 @@ def measure_case(gate, up, *, include_compiled):
     if include_compiled:
         torch.compiler.reset()
         operations["pytorch_compiled"] = torch.compile(reference_swiglu, **COMPILED_SETTINGS)
-    operations["triton"] = swiglu
+    variants = {}
+    for block, warps in configurations:
+        name = "triton" if (block, warps) == (BLOCK_SIZE, NUM_WARPS) else f"triton_b{block}_w{warps}"
+        variants[name] = (block, warps)
+        operations[name] = lambda g, u, block=block, warps=warps: swiglu(
+            g, u, block_size=block, num_warps=warps,
+        )
     native = reference_swiglu(gate, up)
     # The oracle includes the SiLU intermediate's input-dtype rounding.
     activated = (gate.double() * torch.sigmoid(gate.double())).to(gate.dtype)
@@ -54,18 +67,21 @@ def measure_case(gate, up, *, include_compiled):
             "different_elements_from_native": int((output != native).sum().item()),
         }
 
-    resource_output = torch.empty_like(gate)
-    programs = triton.cdiv(gate.numel(), BLOCK_SIZE)
-    handle = _swiglu[(programs,)](
-        gate, up, resource_output, gate.numel(), BLOCK_SIZE,
-        num_warps=NUM_WARPS, enable_fp_fusion=False,
-    )
-    torch.testing.assert_close(resource_output, swiglu(gate, up), rtol=0, atol=0)
-    case["triton_resources"] = {
-        "programs": programs, "block_size": BLOCK_SIZE, "num_warps": NUM_WARPS,
-        "registers_per_thread": handle.n_regs, "spills": handle.n_spills,
-        "shared_bytes": handle.metadata.shared,
-    }
+    case["resources_by_implementation"] = {}
+    for name, (block, warps) in variants.items():
+        resource_output = torch.empty_like(gate)
+        programs = triton.cdiv(gate.numel(), block)
+        handle = _swiglu[(programs,)](
+            gate, up, resource_output, gate.numel(), block,
+            num_warps=warps, enable_fp_fusion=False,
+        )
+        torch.testing.assert_close(resource_output, operations[name](gate, up), rtol=0, atol=0)
+        case["resources_by_implementation"][name] = {
+            "programs": programs, "block_size": block, "num_warps": warps,
+            "registers_per_thread": handle.n_regs, "spills": handle.n_spills,
+            "shared_bytes": handle.metadata.shared,
+        }
+    case["triton_resources"] = case["resources_by_implementation"]["triton"]
     stream = torch.cuda.Stream()
     stream.wait_stream(torch.cuda.current_stream())
     with torch.cuda.stream(stream):
@@ -81,7 +97,7 @@ def measure_case(gate, up, *, include_compiled):
         for graph in graphs.values():
             graph.replay()
     torch.cuda.synchronize()
-    orders = measurement_orders(operations)
+    orders = sweep_orders(operations) if len(variants) > 1 else measurement_orders(operations)
     samples = {name: [] for name in operations}
     for order in orders:
         for name in order:
@@ -97,6 +113,13 @@ def measure_case(gate, up, *, include_compiled):
     case["native_vs_triton"] = native_triton_comparison(samples["pytorch_native"], samples["triton"])
     if include_compiled:
         case["compiled_vs_triton"] = native_triton_comparison(samples["pytorch_compiled"], samples["triton"])
+    case["configuration_comparisons"] = {}
+    for name in variants:
+        comparisons = {"native_vs_variant": native_triton_comparison(samples["pytorch_native"], samples[name]),
+                       "default_vs_variant": native_triton_comparison(samples["triton"], samples[name])}
+        if include_compiled:
+            comparisons["compiled_vs_variant"] = native_triton_comparison(samples["pytorch_compiled"], samples[name])
+        case["configuration_comparisons"][name] = comparisons
     return case
 
 
@@ -104,24 +127,30 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--include-compiled", action="store_true")
     parser.add_argument("--dtype", choices=("float16", "float32"), default="float16")
+    parser.add_argument("--config-sweep", action="store_true",
+                        help="compare six fixed configurations and eager/compiled baselines at seed3")
     args = parser.parse_args()
+    include_compiled = args.include_compiled or args.config_sweep
+    shapes = ((1, 8960), (16, 8960), (128, 8960)) if args.config_sweep else SHAPES
+    configurations = SWEEP_CONFIGS if args.config_sweep else ((256, 4),)
+    seed = 3 if args.config_sweep else 2
     if not torch.cuda.is_available():
         parser.error("CUDA required")
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
-    destination = ROOT / "results/raw" / f"swiglu_comparison_{args.dtype}_{stamp}.json"
+    destination = ROOT / "results/raw" / f"swiglu_{'config_sweep' if args.config_sweep else 'comparison'}_{args.dtype}_{stamp}.json"
     destination.parent.mkdir(parents=True, exist_ok=True)
     report = {
         "benchmark": "elementwise_swiglu_comparison", "dtype": args.dtype,
-        "seed": 2, "input_distribution": "gate=2*randn, up=randn",
-        "shapes": [list(shape) for shape in SHAPES],
+        "seed": seed, "configurations": [list(c) for c in configurations], "input_distribution": "gate=2*randn, up=randn",
+        "shapes": [list(shape) for shape in shapes],
         "timing_mode": "cuda_graph_replay_amortized", "operations_per_sample": 100,
         "warmup": 10, "graph_warmup": 10, "repetitions": 30,
-        "compiled_settings": COMPILED_SETTINGS if args.include_compiled else None,
+        "compiled_settings": COMPILED_SETTINGS if include_compiled else None,
         "scope": "Synthetic elementwise stage only; no learned projections or model integration. "
                  "Native means F.silu(gate)*up, not a built-in fused SwiGLU. "
                  "Compiled reference is independent of our Triton kernel. Setup/compilation excluded. "
                  "Accuracy against eager PyTorch and staged FP64 oracle precedes timing; no eager fallback. "
-                 "Fixed block256/warps4, no tuning or exact-output claim. "
+                 "Default block256/warps4 unchanged. Sweep selects candidates only; no exact-output claim. "
                  "Spills is compiler local-storage metadata, not runtime transaction count.",
         "source_sha256": {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
                           for name in ("kernels/swiglu.py", "kernels/triton_swiglu.py",
@@ -134,12 +163,12 @@ def main():
     shape = None
     try:
         with torch.inference_mode():
-            torch.manual_seed(2)
-            for shape in SHAPES:
+            torch.manual_seed(seed)
+            for shape in shapes:
                 print(f"Preparing shape={shape}...", flush=True)
                 gate = 2 * torch.randn(shape, device="cuda", dtype=getattr(torch, args.dtype))
                 up = torch.randn_like(gate)
-                case = measure_case(gate, up, include_compiled=args.include_compiled)
+                case = measure_case(gate, up, include_compiled=include_compiled, configurations=configurations)
                 report["cases"].append(case)
                 for name, values in case["implementations"].items():
                     print(f"  {name}: {values['latency_us']['median']:.3f} us", flush=True)
@@ -149,7 +178,14 @@ def main():
                         print(f"  {key}: {row['ratio_of_separate_medians']:.3f}x | paired saving "
                               f"{row['paired_median_saving_us']:+.3f} us | "
                               f"Triton faster {row['triton_faster_rounds']}/30", flush=True)
-                print(f"  Resources: {case['triton_resources']} | accuracy PASS", flush=True)
+                for name, resources in case["resources_by_implementation"].items():
+                    print(f"  {name} resources: {resources} | accuracy PASS", flush=True)
+                    if args.config_sweep:
+                        for baseline in ("default_vs_variant", "compiled_vs_variant"):
+                            comparison = case["configuration_comparisons"][name][baseline]
+                            print(f"    {baseline}: paired saving "
+                                  f"{comparison['paired_median_saving_us']:+.3f} us | "
+                                  f"variant faster {comparison['triton_faster_rounds']}/30", flush=True)
                 destination.write_text(json.dumps(report, indent=2) + "\n")
     except Exception as error:
         report["failure"] = {"shape": shape, "type": type(error).__name__, "message": str(error)}
