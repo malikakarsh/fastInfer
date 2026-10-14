@@ -253,7 +253,11 @@ three single-row shapes;16x8960 was only0.8%lower latency than compiled
 improvement over our original kernel is supported, but a substantial final
 advantage over compiled PyTorch is not established. See the
 [final console summary](results/raw/swiglu_comparison_float16_20261014T022339063468Z_console_summary.json).
-Full SwiGLU raw reports and generated code still need to be archived locally.
+The [SwiGLU archive](results/raw/swiglu_evidence_20261014T023525573754Z.zip)
+is downloaded and verified. Full raw reports and generated inspection evidence
+are imported locally; the [verification record](results/raw/swiglu_evidence_20261014T023525573754Z.verification.json)
+records integrity, source-hash and recomputed timing checks. See the
+[SwiGLU findings](notes/swiglu_results.md).
 
 
 ## Remaining model validation
@@ -264,8 +268,10 @@ speedups do not establish model-level attention gains. Tiled attention,
 which combines scores, normalization and value accumulation across tiles,
 is a separate later milestone.
 
-The real-input SwiGLU check is prepared: capture learned gate/up projection
-outputs and their actual product across allMLPs for16-token prefill and
-single-token decode, then benchmark one isolated stage against eager and
-compiled PyTorch. GPU execution is pending; no model replacement or
-full-model performance claim is made.
+The real-input SwiGLU check passed all28MLPs in each of four captures
+(112checks):16-token prefill and three single-token decode cases. Largest
+product difference was0.000488within rtol0.002/atol0.0002. Isolated layer0
+Triton timing was approximately1.88–2.05x faster than eager, winning30/30
+rounds per case. It essentially tied compiled in prefill and was slightly
+slower than compiled during decode. Qwen remained unchanged; full-model
+accuracy and performance with SwiGLU replacement remain untested.

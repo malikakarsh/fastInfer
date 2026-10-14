@@ -1,0 +1,19 @@
+{
+  "archive": "swiglu_evidence_20261014T023525573754Z.zip",
+  "archive_sha256": "fb502abd693967ee1f1cbaf42320b46b9055b91adb66d368b89bea974cd860ea",
+  "verified": true,
+  "member_count": 23,
+  "timed_cases": 26,
+  "model_module_checks": 112,
+  "imported_files": 7,
+  "checks": [
+    "archive SHA256 matches Kaggle output",
+    "ZIP CRC and manifest membership",
+    "all member bytes and SHA256",
+    "JSON parsing; no raw failure records",
+    "positive finite 30-sample arrays, recomputed medians, ratios and paired statistics",
+    "all recorded synthetic/model accuracy checks",
+    "final automatic and real-Qwen source hashes match local files"
+  ],
+  "limits": "Older reports refer to older source hashes. Generated source imported as evidence only, never executed. No full-model speedup or bitwise-equivalence claim."
+}

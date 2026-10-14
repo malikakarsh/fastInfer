@@ -673,3 +673,14 @@ checks. Standalone row softmax is separate from tiled attention. Tiled
 attention combines score computation, online normalization and value
 accumulation to avoid materializing full score/probability matrices, and
 belongs to the later attention milestone. Neither route is validated yet.
+
+
+Real-input execution subsequently passed all112MLP checks. Layer0 prefill
+was9.651us eager/5.159us compiled/5.140us Triton; three decode cases were
+approximately2x versus eager and slightly slower than compiled. No full-model
+replacement or speedup measured. Raw `qwen_real_swiglu_20261014T023516404117Z.json`
+is now imported locally alongside four synthetic full reports and generated
+inspection files. Archive SHA256 matches Kaggle, all23manifest-listed members
+passed integrity checks, all26timed-case statistics and112model checks were
+verified. See `notes/swiglu_results.md` and the adjacent archive verification
+record. This supersedes earlier SwiGLU notes saying evidence remains only on Kaggle.

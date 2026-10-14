@@ -1,0 +1,84 @@
+{
+  "shape": [
+    16,
+    8960
+  ],
+  "seed": 2,
+  "accuracy_passed": true,
+  "environment": {
+    "timestamp_utc": "2026-10-14T02:00:59.836075+00:00",
+    "os": "Linux-6.18.48+-x86_64-with-glibc2.39",
+    "python": "3.12.15",
+    "git_commit": "95012ac570ff5a5061f1641bab577df44bd0b0ae",
+    "torch_version": "2.5.1+cu121",
+    "triton_version": "3.1.0",
+    "transformers_version": null,
+    "cuda_version": "12.1",
+    "gpu_count": 2,
+    "gpus": [
+      {
+        "name": "Tesla T4",
+        "compute_capability": [
+          7,
+          5
+        ],
+        "memory_gib": 14.56
+      },
+      {
+        "name": "Tesla T4",
+        "compute_capability": [
+          7,
+          5
+        ],
+        "memory_gib": 14.56
+      }
+    ],
+    "nvidia_driver": "580.178.04\n580.178.04",
+    "scheduler": null
+  },
+  "scope": "Code/resource inspection, not timing or causal proof. Compiler caches disabled during inspection; benchmark settings unchanged. Read selected runtime launchers rather than decorator candidates.",
+  "source_sha256": {
+    "scripts/swiglu_compiled_inspect.py": "f43a097056734153319f85e1f45ec50c1ff580a3b6ef95c9d9ad46ecc2efa1dc",
+    "kernels/swiglu.py": "d44b08c825cf118ef3fdb2e0c0364e332bb7c75d49f87742e001593f04da2174",
+    "kernels/triton_swiglu.py": "e435b3261cd070d2857241696932f7d039d4f2bf16c8f2bd89a25fbff2769dd2",
+    "scripts/rmsnorm_compiled_inspect.py": "286d0ca907043ac7bea56936b51c3f3c97c9ebf1bc075d4c2b35f3a53d4074d1"
+  },
+  "manual_resources": {
+    "programs": 560,
+    "block_size": 256,
+    "num_warps": 4,
+    "registers_per_thread": 14,
+    "spills": 0,
+    "shared_bytes": 0
+  },
+  "sources": [
+    {
+      "path": "/kaggle/working/fastinfer/results/raw/swiglu_generated_20261014T020059767332Z/compiled_0.py",
+      "sha256": "de6bb689731d672eb110818a169081c0fad2d61c6c45df313af9b7accbb5a079",
+      "kernel_definitions": [
+        {
+          "name": "triton_",
+          "source": "\nimport triton\nimport triton.language as tl\nfrom triton.compiler.compiler import AttrsDescriptor\n\nfrom torch._inductor.runtime import triton_helpers, triton_heuristics\nfrom torch._inductor.runtime.triton_helpers import libdevice, math as tl_math\nfrom torch._inductor.runtime.hints import AutotuneHint, ReductionHint, TileHint, instance_descriptor, DeviceProperties\n\n@triton_heuristics.pointwise(\n    size_hints=[262144], \n    filename=__file__,\n    triton_meta={'signature': {0: '*fp16', 1: '*fp16', 2: '*fp16', 3: 'i32'}, 'device': DeviceProperties(type='cuda', index=0, cc=75, major=7, regs_per_multiprocessor=65536, max_threads_per_multi_processor=1024, multi_processor_count=40), 'constants': {}, 'configs': [AttrsDescriptor(divisible_by_16=(0, 1, 2, 3), equal_to_1=())]},\n    inductor_meta={'autotune_hints': set(), 'kernel_name': 'triton_poi_fused_mul_silu_0', 'mutated_arg_names': [], 'no_x_dim': False, 'num_load': 2, 'num_reduction': 0, 'backend_hash': '04E56688D9E779ECB61864DBFEC3378F5F26277847BD7D35639E76AC0CCEABFD', 'are_deterministic_algorithms_enabled': False, 'assert_indirect_indexing': True, 'autotune_local_cache': True, 'autotune_pointwise': True, 'autotune_remote_cache': None, 'force_disable_caches': True, 'dynamic_scale_rblock': True, 'max_autotune': False, 'max_autotune_pointwise': False, 'min_split_scan_rblock': 256, 'spill_threshold': 16, 'store_cubin': False},\n    min_elem_per_thread=0\n)\n@triton.jit\ndef triton_(in_ptr0, in_ptr1, out_ptr0, xnumel, XBLOCK : tl.constexpr):\n    xnumel = 143360\n    xoffset = tl.program_id(0) * XBLOCK\n    xindex = xoffset + tl.arange(0, XBLOCK)[:]\n    xmask = tl.full([XBLOCK], True, tl.int1)\n    x0 = xindex\n    tmp0 = tl.load(in_ptr0 + (x0), None).to(tl.float32)\n    tmp5 = tl.load(in_ptr1 + (x0), None).to(tl.float32)\n    tmp1 = tmp0.to(tl.float32)\n    tmp2 = tl.sigmoid(tmp1)\n    tmp3 = tmp1 * tmp2\n    tmp4 = tmp3.to(tl.float32)\n    tmp6 = tmp4 * tmp5\n    tl.store(out_ptr0 + (x0), tmp6, None)\n"
+        }
+      ],
+      "wrapper_launches": [
+        "triton_poi_fused_mul_silu_0.run(arg0_1, arg1_1, buf0, 143360, grid=grid(143360), stream=stream0)"
+      ],
+      "selected_runtime_launchers": [
+        {
+          "name": "triton_poi_fused_mul_silu_0",
+          "status": "selected_after_execution",
+          "block_parameters": {
+            "XBLOCK": 512
+          },
+          "num_warps": 8,
+          "num_stages": 1,
+          "registers_per_thread": 14,
+          "spills": 0,
+          "shared_bytes": 0,
+          "programs_from_flat_xblock": 280
+        }
+      ]
+    }
+  ]
+}

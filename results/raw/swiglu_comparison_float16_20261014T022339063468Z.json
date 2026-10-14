@@ -1,0 +1,2760 @@
+{
+  "benchmark": "elementwise_swiglu_comparison",
+  "dtype": "float16",
+  "seeds": [
+    2
+  ],
+  "mode": "comparison",
+  "configurations": "automatic",
+  "input_distribution": "gate=2*randn, up=randn",
+  "shapes": [
+    [
+      1,
+      65
+    ],
+    [
+      1,
+      1536
+    ],
+    [
+      1,
+      8960
+    ],
+    [
+      16,
+      8960
+    ],
+    [
+      128,
+      8960
+    ]
+  ],
+  "trials": [
+    {
+      "seed": 2,
+      "shape": [
+        1,
+        65
+      ]
+    },
+    {
+      "seed": 2,
+      "shape": [
+        1,
+        1536
+      ]
+    },
+    {
+      "seed": 2,
+      "shape": [
+        1,
+        8960
+      ]
+    },
+    {
+      "seed": 2,
+      "shape": [
+        16,
+        8960
+      ]
+    },
+    {
+      "seed": 2,
+      "shape": [
+        128,
+        8960
+      ]
+    }
+  ],
+  "confirmation_scope": "512/4 and1024/8 were selected at seed3;512/8 is newly added from generated launch inspection and remains exploratory.",
+  "timing_mode": "cuda_graph_replay_amortized",
+  "operations_per_sample": 100,
+  "warmup": 10,
+  "graph_warmup": 10,
+  "repetitions": 30,
+  "compiled_settings": {
+    "backend": "inductor",
+    "fullgraph": true,
+    "dynamic": false,
+    "options": {
+      "triton.cudagraphs": false
+    }
+  },
+  "scope": "Synthetic elementwise stage only; no learned projections or model integration. Native means F.silu(gate)*up, not a built-in fused SwiGLU. Compiled reference is independent of our Triton kernel. Setup/compilation excluded. Accuracy against eager PyTorch and staged FP64 oracle precedes timing; no eager fallback. Automatic512/4 only for confirmed T4FP16shape16x8960;otherwise256/4. Sweeps retain explicit256/4 original baseline. No exact-output claim. Spills is compiler local-storage metadata, not runtime transaction count.",
+  "source_sha256": {
+    "kernels/swiglu.py": "d44b08c825cf118ef3fdb2e0c0364e332bb7c75d49f87742e001593f04da2174",
+    "kernels/triton_swiglu.py": "0acd55b57365376960e17d3c1eb43eec081e236cf143dbb0cb77a2faa2431ee6",
+    "kernels/swiglu_config.py": "0fd2ba7c2ae152020ad8e96803a8ad1e4daa681020686dd896aeb04020a4f8f9",
+    "benchmarks/swiglu_compare.py": "b06c0f52af8af6b95c25f41e753cc9ebb648e9b922d6b39c46003c7817f8a307",
+    "benchmarks/softmax_compare.py": "e310700827cd23984acc56e4235fdc44f8ef8612dc671826488e6fd18375be64",
+    "benchmarks/matmul_compare.py": "dde42dfd8dfd1bc9164214b8cd77679a7329e0996f0a5afd1edf679ca8e85ef2"
+  },
+  "environment": {
+    "timestamp_utc": "2026-10-14T02:23:39.127737+00:00",
+    "os": "Linux-6.18.48+-x86_64-with-glibc2.39",
+    "python": "3.12.15",
+    "git_commit": "a4478b430ed46824b5c46b6d4ff6648a09642de0",
+    "torch_version": "2.5.1+cu121",
+    "triton_version": "3.1.0",
+    "transformers_version": null,
+    "cuda_version": "12.1",
+    "gpu_count": 2,
+    "gpus": [
+      {
+        "name": "Tesla T4",
+        "compute_capability": [
+          7,
+          5
+        ],
+        "memory_gib": 14.56
+      },
+      {
+        "name": "Tesla T4",
+        "compute_capability": [
+          7,
+          5
+        ],
+        "memory_gib": 14.56
+      }
+    ],
+    "nvidia_driver": "580.178.04\n580.178.04",
+    "scheduler": null
+  },
+  "cases": [
+    {
+      "shape": [
+        1,
+        65
+      ],
+      "elements": 65,
+      "selection_mode": "automatic",
+      "accuracy": {
+        "rtol": 0.002,
+        "atol": 0.0002,
+        "oracle": "float64 arithmetic with input-dtype rounding after SiLU and multiply",
+        "implementations": {
+          "pytorch_native": {
+            "passed": true,
+            "max_abs_oracle_error": 0.0,
+            "different_elements_from_native": 0
+          },
+          "pytorch_compiled": {
+            "passed": true,
+            "max_abs_oracle_error": 0.001953125,
+            "different_elements_from_native": 18
+          },
+          "triton": {
+            "passed": true,
+            "max_abs_oracle_error": 0.0,
+            "different_elements_from_native": 0
+          }
+        }
+      },
+      "first_call_setup_and_execution_seconds": {
+        "pytorch_native": 8.536299992556451e-05,
+        "pytorch_compiled": 2.7788185580000118,
+        "triton": 0.0960856369999874
+      },
+      "resources_by_implementation": {
+        "triton": {
+          "programs": 1,
+          "block_size": 256,
+          "num_warps": 4,
+          "registers_per_thread": 14,
+          "spills": 0,
+          "shared_bytes": 0
+        }
+      },
+      "triton_resources": {
+        "programs": 1,
+        "block_size": 256,
+        "num_warps": 4,
+        "registers_per_thread": 14,
+        "spills": 0,
+        "shared_bytes": 0
+      },
+      "measurement_orders": [
+        [
+          "pytorch_native",
+          "pytorch_compiled",
+          "triton"
+        ],
+        [
+          "pytorch_native",
+          "triton",
+          "pytorch_compiled"
+        ],
+        [
+          "pytorch_compiled",
+          "pytorch_native",
+          "triton"
+        ],
+        [
+          "pytorch_compiled",
+          "triton",
+          "pytorch_native"
+        ],
+        [
+          "triton",
+          "pytorch_native",
+          "pytorch_compiled"
+        ],
+        [
+          "triton",
+          "pytorch_compiled",
+          "pytorch_native"
+        ],
+        [
+          "pytorch_native",
+          "pytorch_compiled",
+          "triton"
+        ],
+        [
+          "pytorch_native",
+          "triton",
+          "pytorch_compiled"
+        ],
+        [
+          "pytorch_compiled",
+          "pytorch_native",
+          "triton"
+        ],
+        [
+          "pytorch_compiled",
+          "triton",
+          "pytorch_native"
+        ],
+        [
+          "triton",
+          "pytorch_native",
+          "pytorch_compiled"
+        ],
+        [
+          "triton",
+          "pytorch_compiled",
+          "pytorch_native"
+        ],
+        [
+          "pytorch_native",
+          "pytorch_compiled",
+          "triton"
+        ],
+        [
+          "pytorch_native",
+          "triton",
+          "pytorch_compiled"
+        ],
+        [
+          "pytorch_compiled",
+          "pytorch_native",
+          "triton"
+        ],
+        [
+          "pytorch_compiled",
+          "triton",
+          "pytorch_native"
+        ],
+        [
+          "triton",
+          "pytorch_native",
+          "pytorch_compiled"
+        ],
+        [
+          "triton",
+          "pytorch_compiled",
+          "pytorch_native"
+        ],
+        [
+          "pytorch_native",
+          "pytorch_compiled",
+          "triton"
+        ],
+        [
+          "pytorch_native",
+          "triton",
+          "pytorch_compiled"
+        ],
+        [
+          "pytorch_compiled",
+          "pytorch_native",
+          "triton"
+        ],
+        [
+          "pytorch_compiled",
+          "triton",
+          "pytorch_native"
+        ],
+        [
+          "triton",
+          "pytorch_native",
+          "pytorch_compiled"
+        ],
+        [
+          "triton",
+          "pytorch_compiled",
+          "pytorch_native"
+        ],
+        [
+          "pytorch_native",
+          "pytorch_compiled",
+          "triton"
+        ],
+        [
+          "pytorch_native",
+          "triton",
+          "pytorch_compiled"
+        ],
+        [
+          "pytorch_compiled",
+          "pytorch_native",
+          "triton"
+        ],
+        [
+          "pytorch_compiled",
+          "triton",
+          "pytorch_native"
+        ],
+        [
+          "triton",
+          "pytorch_native",
+          "pytorch_compiled"
+        ],
+        [
+          "triton",
+          "pytorch_compiled",
+          "pytorch_native"
+        ]
+      ],
+      "implementations": {
+        "pytorch_native": {
+          "latency_us": {
+            "median": 6.202079951763153,
+            "p95": 6.451200246810913,
+            "min": 6.183040142059326,
+            "max": 6.676480174064636
+          },
+          "samples_us": [
+            6.410239934921265,
+            6.190720200538635,
+            6.2169599533081055,
+            6.186879873275757,
+            6.189119815826416,
+            6.1849600076675415,
+            6.2806397676467896,
+            6.1849600076675415,
+            6.20959997177124,
+            6.229119896888733,
+            6.204479932785034,
+            6.184639930725098,
+            6.451200246810913,
+            6.199679970741272,
+            6.225919723510742,
+            6.197119951248169,
+            6.184639930725098,
+            6.393600106239319,
+            6.32095992565155,
+            6.1849600076675415,
+            6.2246400117874146,
+            6.199359893798828,
+            6.189759969711304,
+            6.1849600076675415,
+            6.676480174064636,
+            6.20576024055481,
+            6.22655987739563,
+            6.194559931755066,
+            6.183040142059326,
+            6.205440163612366
+          ]
+        },
+        "pytorch_compiled": {
+          "latency_us": {
+            "median": 3.030240088701248,
+            "p95": 3.1331199407577515,
+            "min": 2.8352001309394836,
+            "max": 3.3983999490737915
+          },
+          "samples_us": [
+            3.0531200766563416,
+            3.0105599761009216,
+            2.8470399975776672,
+            3.0752000212669373,
+            3.0956798791885376,
+            3.0233600735664368,
+            3.0083200335502625,
+            2.9846400022506714,
+            2.8496000170707703,
+            3.086079955101013,
+            3.075520098209381,
+            3.0592000484466553,
+            3.0105599761009216,
+            2.9900801181793213,
+            2.852799892425537,
+            3.068479895591736,
+            3.0924800038337708,
+            3.059839904308319,
+            2.98335999250412,
+            2.9919999837875366,
+            2.8352001309394836,
+            3.070720136165619,
+            3.0831998586654663,
+            3.049919903278351,
+            3.0105599761009216,
+            2.9900801181793213,
+            3.0371201038360596,
+            3.3983999490737915,
+            3.1331199407577515,
+            3.0208000540733337
+          ]
+        },
+        "triton": {
+          "latency_us": {
+            "median": 3.0979199707508087,
+            "p95": 3.176639974117279,
+            "min": 3.051519989967346,
+            "max": 3.2684800028800964
+          },
+          "samples_us": [
+            3.1353598833084106,
+            3.176639974117279,
+            3.075839877128601,
+            3.073599934577942,
+            3.1088000535964966,
+            3.0924800038337708,
+            3.112959861755371,
+            3.1465598940849304,
+            3.1036800146102905,
+            3.052479922771454,
+            3.1379199028015137,
+            3.086720108985901,
+            3.099519908428192,
+            3.1334400177001953,
+            3.091840147972107,
+            3.087039887905121,
+            3.0963200330734253,
+            3.0716800689697266,
+            3.094080090522766,
+            3.1334400177001953,
+            3.0959999561309814,
+            3.051519989967346,
+            3.0924800038337708,
+            3.0720001459121704,
+            3.2684800028800964,
+            3.149760067462921,
+            3.112959861755371,
+            3.1587201356887817,
+            3.112640082836151,
+            3.088639974594116
+          ]
+        }
+      },
+      "native_vs_triton": {
+        "ratio_of_separate_medians": 2.0020142580571645,
+        "paired_saving_us_samples": [
+          3.274880051612854,
+          3.014080226421356,
+          3.1411200761795044,
+          3.113279938697815,
+          3.0803197622299194,
+          3.0924800038337708,
+          3.1676799058914185,
+          3.038400113582611,
+          3.1059199571609497,
+          3.176639974117279,
+          3.0665600299835205,
+          3.0979198217391968,
+          3.351680338382721,
+          3.0662399530410767,
+          3.1340795755386353,
+          3.110080063343048,
+          3.0883198976516724,
+          3.3219200372695923,
+          3.226879835128784,
+          3.051519989967346,
+          3.128640055656433,
+          3.147839903831482,
+          3.097279965877533,
+          3.112959861755371,
+          3.40800017118454,
+          3.0560001730918884,
+          3.113600015640259,
+          3.035839796066284,
+          3.070400059223175,
+          3.1168001890182495
+        ],
+        "paired_median_saving_us": 3.1115199625492096,
+        "triton_faster_rounds": 30,
+        "tied_rounds": 0,
+        "rounds": 30
+      },
+      "compiled_vs_triton": {
+        "ratio_of_separate_medians": 0.9781531212269639,
+        "paired_saving_us_samples": [
+          -0.08223980665206909,
+          -0.16607999801635742,
+          -0.22879987955093384,
+          0.0016000866889953613,
+          -0.013120174407958984,
+          -0.06911993026733398,
+          -0.10463982820510864,
+          -0.16191989183425903,
+          -0.25407999753952026,
+          0.033600032329559326,
+          -0.06239980459213257,
+          -0.027520060539245605,
+          -0.08895993232727051,
+          -0.14335989952087402,
+          -0.23904025554656982,
+          -0.01855999231338501,
+          -0.003840029239654541,
+          -0.01184016466140747,
+          -0.11072009801864624,
+          -0.1414400339126587,
+          -0.2607998251914978,
+          0.019200146198272705,
+          -0.009280145168304443,
+          -0.02208024263381958,
+          -0.2579200267791748,
+          -0.15967994928359985,
+          -0.07583975791931152,
+          0.23967981338500977,
+          0.020479857921600342,
+          -0.06783992052078247
+        ],
+        "paired_median_saving_us": -0.07247984409332275,
+        "triton_faster_rounds": 5,
+        "tied_rounds": 0,
+        "rounds": 30
+      },
+      "configuration_comparisons": {
+        "triton": {
+          "native_vs_variant": {
+            "ratio_of_separate_medians": 2.0020142580571645,
+            "paired_saving_us_samples": [
+              3.274880051612854,
+              3.014080226421356,
+              3.1411200761795044,
+              3.113279938697815,
+              3.0803197622299194,
+              3.0924800038337708,
+              3.1676799058914185,
+              3.038400113582611,
+              3.1059199571609497,
+              3.176639974117279,
+              3.0665600299835205,
+              3.0979198217391968,
+              3.351680338382721,
+              3.0662399530410767,
+              3.1340795755386353,
+              3.110080063343048,
+              3.0883198976516724,
+              3.3219200372695923,
+              3.226879835128784,
+              3.051519989967346,
+              3.128640055656433,
+              3.147839903831482,
+              3.097279965877533,
+              3.112959861755371,
+              3.40800017118454,
+              3.0560001730918884,
+              3.113600015640259,
+              3.035839796066284,
+              3.070400059223175,
+              3.1168001890182495
+            ],
+            "paired_median_saving_us": 3.1115199625492096,
+            "triton_faster_rounds": 30,
+            "tied_rounds": 0,
+            "rounds": 30
+          },
+          "default_vs_variant": {
+            "ratio_of_separate_medians": 1.0,
+            "paired_saving_us_samples": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "paired_median_saving_us": 0.0,
+            "triton_faster_rounds": 0,
+            "tied_rounds": 30,
+            "rounds": 30
+          },
+          "compiled_vs_variant": {
+            "ratio_of_separate_medians": 0.9781531212269639,
+            "paired_saving_us_samples": [
+              -0.08223980665206909,
+              -0.16607999801635742,
+              -0.22879987955093384,
+              0.0016000866889953613,
+              -0.013120174407958984,
+              -0.06911993026733398,
+              -0.10463982820510864,
+              -0.16191989183425903,
+              -0.25407999753952026,
+              0.033600032329559326,
+              -0.06239980459213257,
+              -0.027520060539245605,
+              -0.08895993232727051,
+              -0.14335989952087402,
+              -0.23904025554656982,
+              -0.01855999231338501,
+              -0.003840029239654541,
+              -0.01184016466140747,
+              -0.11072009801864624,
+              -0.1414400339126587,
+              -0.2607998251914978,
+              0.019200146198272705,
+              -0.009280145168304443,
+              -0.02208024263381958,
+              -0.2579200267791748,
+              -0.15967994928359985,
+              -0.07583975791931152,
+              0.23967981338500977,
+              0.020479857921600342,
+              -0.06783992052078247
+            ],
+            "paired_median_saving_us": -0.07247984409332275,
+            "triton_faster_rounds": 5,
+            "tied_rounds": 0,
+            "rounds": 30
+          }
+        }
+      },
+      "seed": 2
+    },
+    {
+      "shape": [
+        1,
+        1536
+      ],
+      "elements": 1536,
+      "selection_mode": "automatic",
+      "accuracy": {
+        "rtol": 0.002,
+        "atol": 0.0002,
+        "oracle": "float64 arithmetic with input-dtype rounding after SiLU and multiply",
+        "implementations": {
+          "pytorch_native": {
+            "passed": true,
+            "max_abs_oracle_error": 0.0,
+            "different_elements_from_native": 0
+          },
+          "pytorch_compiled": {
+            "passed": true,
+            "max_abs_oracle_error": 0.00390625,
+            "different_elements_from_native": 396
+          },
+          "triton": {
+            "passed": true,
+            "max_abs_oracle_error": 0.0,
+            "different_elements_from_native": 0
+          }
+        }
+      },
+      "first_call_setup_and_execution_seconds": {
+        "pytorch_native": 4.830600005334418e-05,
+        "pytorch_compiled": 0.059571602999994866,
+        "triton": 0.10303073199997925
+      },
+      "resources_by_implementation": {
+        "triton": {
+          "programs": 6,
+          "block_size": 256,
+          "num_warps": 4,
+          "registers_per_thread": 14,
+          "spills": 0,
+          "shared_bytes": 0
+        }
+      },
+      "triton_resources": {
+        "programs": 6,
+        "block_size": 256,
+        "num_warps": 4,
+        "registers_per_thread": 14,
+        "spills": 0,
+        "shared_bytes": 0
+      },
+      "measurement_orders": [
+        [
+          "pytorch_native",
+          "pytorch_compiled",
+          "triton"
+        ],
+        [
+          "pytorch_native",
+          "triton",
+          "pytorch_compiled"
+        ],
+        [
+          "pytorch_compiled",
+          "pytorch_native",
+          "triton"
+        ],
+        [
+          "pytorch_compiled",
+          "triton",
+          "pytorch_native"
+        ],
+        [
+          "triton",
+          "pytorch_native",
+          "pytorch_compiled"
+        ],
+        [
+          "triton",
+          "pytorch_compiled",
+          "pytorch_native"
+        ],
+        [
+          "pytorch_native",
+          "pytorch_compiled",
+          "triton"
+        ],
+        [
+          "pytorch_native",
+          "triton",
+          "pytorch_compiled"
+        ],
+        [
+          "pytorch_compiled",
+          "pytorch_native",
+          "triton"
+        ],
+        [
+          "pytorch_compiled",
+          "triton",
+          "pytorch_native"
+        ],
+        [
+          "triton",
+          "pytorch_native",
+          "pytorch_compiled"
+        ],
+        [
+          "triton",
+          "pytorch_compiled",
+          "pytorch_native"
+        ],
+        [
+          "pytorch_native",
+          "pytorch_compiled",
+          "triton"
+        ],
+        [
+          "pytorch_native",
+          "triton",
+          "pytorch_compiled"
+        ],
+        [
+          "pytorch_compiled",
+          "pytorch_native",
+          "triton"
+        ],
+        [
+          "pytorch_compiled",
+          "triton",
+          "pytorch_native"
+        ],
+        [
+          "triton",
+          "pytorch_native",
+          "pytorch_compiled"
+        ],
+        [
+          "triton",
+          "pytorch_compiled",
+          "pytorch_native"
+        ],
+        [
+          "pytorch_native",
+          "pytorch_compiled",
+          "triton"
+        ],
+        [
+          "pytorch_native",
+          "triton",
+          "pytorch_compiled"
+        ],
+        [
+          "pytorch_compiled",
+          "pytorch_native",
+          "triton"
+        ],
+        [
+          "pytorch_compiled",
+          "triton",
+          "pytorch_native"
+        ],
+        [
+          "triton",
+          "pytorch_native",
+          "pytorch_compiled"
+        ],
+        [
+          "triton",
+          "pytorch_compiled",
+          "pytorch_native"
+        ],
+        [
+          "pytorch_native",
+          "pytorch_compiled",
+          "triton"
+        ],
+        [
+          "pytorch_native",
+          "triton",
+          "pytorch_compiled"
+        ],
+        [
+          "pytorch_compiled",
+          "pytorch_native",
+          "triton"
+        ],
+        [
+          "pytorch_compiled",
+          "triton",
+          "pytorch_native"
+        ],
+        [
+          "triton",
+          "pytorch_native",
+          "pytorch_compiled"
+        ],
+        [
+          "triton",
+          "pytorch_compiled",
+          "pytorch_native"
+        ]
+      ],
+      "implementations": {
+        "pytorch_native": {
+          "latency_us": {
+            "median": 6.615359783172607,
+            "p95": 6.79967999458313,
+            "min": 6.587200164794922,
+            "max": 6.886079907417297
+          },
+          "samples_us": [
+            6.79967999458313,
+            6.605759859085083,
+            6.615359783172607,
+            6.615359783172607,
+            6.733760237693787,
+            6.594240069389343,
+            6.693440079689026,
+            6.7449599504470825,
+            6.596800088882446,
+            6.605119705200195,
+            6.599680185317993,
+            6.67680025100708,
+            6.6147202253341675,
+            6.886079907417297,
+            6.696320176124573,
+            6.594240069389343,
+            6.598079800605774,
+            6.5990400314331055,
+            6.637759804725647,
+            6.6147202253341675,
+            6.666880249977112,
+            6.587200164794922,
+            6.761919856071472,
+            6.594240069389343,
+            6.6179198026657104,
+            6.703360080718994,
+            6.596800088882446,
+            6.669759750366211,
+            6.615359783172607,
+            6.596480011940002
+          ]
+        },
+        "pytorch_compiled": {
+          "latency_us": {
+            "median": 3.0875200033187866,
+            "p95": 3.1859201192855835,
+            "min": 2.9555198550224304,
+            "max": 3.2153600454330444
+          },
+          "samples_us": [
+            3.17440003156662,
+            3.0774399638175964,
+            2.9862400889396667,
+            3.0902400612831116,
+            3.118079900741577,
+            3.087039887905121,
+            3.1411200761795044,
+            3.2153600454330444,
+            2.964800000190735,
+            3.0720001459121704,
+            3.133760094642639,
+            3.067519962787628,
+            3.112959861755371,
+            3.108159899711609,
+            2.96671986579895,
+            3.1676799058914185,
+            3.1356799602508545,
+            3.142719864845276,
+            3.0803200602531433,
+            3.0880001187324524,
+            2.9555198550224304,
+            3.103039860725403,
+            3.097279965877533,
+            3.051519989967346,
+            3.1859201192855835,
+            3.0774399638175964,
+            3.0345600843429565,
+            3.0745598673820496,
+            3.081279993057251,
+            3.0720001459121704
+          ]
+        },
+        "triton": {
+          "latency_us": {
+            "median": 3.152959942817688,
+            "p95": 3.293760120868683,
+            "min": 3.0720001459121704,
+            "max": 3.603839874267578
+          },
+          "samples_us": [
+            3.1334400177001953,
+            3.2150399684906006,
+            3.2207998633384705,
+            3.0720001459121704,
+            3.147200047969818,
+            3.19487988948822,
+            3.603839874267578,
+            3.152959942817688,
+            3.227519989013672,
+            3.139840066432953,
+            3.1964799761772156,
+            3.1148800253868103,
+            3.1139200925827026,
+            3.293760120868683,
+            3.2358399033546448,
+            3.1382399797439575,
+            3.2153600454330444,
+            3.12032014131546,
+            3.19487988948822,
+            3.152959942817688,
+            3.1331199407577515,
+            3.0953601002693176,
+            3.1916800141334534,
+            3.2051199674606323,
+            3.1139200925827026,
+            3.1731200218200684,
+            3.152639865875244,
+            3.0924800038337708,
+            3.131200075149536,
+            3.19487988948822
+          ]
+        }
+      },
+      "native_vs_triton": {
+        "ratio_of_separate_medians": 2.098142666938133,
+        "paired_saving_us_samples": [
+          3.6662399768829346,
+          3.3907198905944824,
+          3.394559919834137,
+          3.543359637260437,
+          3.5865601897239685,
+          3.399360179901123,
+          3.0896002054214478,
+          3.5920000076293945,
+          3.3692800998687744,
+          3.4652796387672424,
+          3.4032002091407776,
+          3.5619202256202698,
+          3.500800132751465,
+          3.5923197865486145,
+          3.460480272769928,
+          3.4560000896453857,
+          3.3827197551727295,
+          3.4787198901176453,
+          3.4428799152374268,
+          3.4617602825164795,
+          3.5337603092193604,
+          3.4918400645256042,
+          3.570239841938019,
+          3.389120101928711,
+          3.503999710083008,
+          3.530240058898926,
+          3.444160223007202,
+          3.57727974653244,
+          3.4841597080230713,
+          3.4016001224517822
+        ],
+        "paired_median_saving_us": 3.471999764442444,
+        "triton_faster_rounds": 30,
+        "tied_rounds": 0,
+        "rounds": 30
+      },
+      "compiled_vs_triton": {
+        "ratio_of_separate_medians": 0.9792449188426986,
+        "paired_saving_us_samples": [
+          0.04096001386642456,
+          -0.13760000467300415,
+          -0.2345597743988037,
+          0.018239915370941162,
+          -0.029120147228240967,
+          -0.10784000158309937,
+          -0.46271979808807373,
+          0.062400102615356445,
+          -0.262719988822937,
+          -0.06783992052078247,
+          -0.06271988153457642,
+          -0.04736006259918213,
+          -0.000960230827331543,
+          -0.18560022115707397,
+          -0.2691200375556946,
+          0.029439926147460938,
+          -0.07968008518218994,
+          0.022399723529815674,
+          -0.1145598292350769,
+          -0.0649598240852356,
+          -0.17760008573532104,
+          0.007679760456085205,
+          -0.09440004825592041,
+          -0.15359997749328613,
+          0.07200002670288086,
+          -0.09568005800247192,
+          -0.1180797815322876,
+          -0.01792013645172119,
+          -0.049920082092285156,
+          -0.1228797435760498
+        ],
+        "paired_median_saving_us": -0.0737600028514862,
+        "triton_faster_rounds": 7,
+        "tied_rounds": 0,
+        "rounds": 30
+      },
+      "configuration_comparisons": {
+        "triton": {
+          "native_vs_variant": {
+            "ratio_of_separate_medians": 2.098142666938133,
+            "paired_saving_us_samples": [
+              3.6662399768829346,
+              3.3907198905944824,
+              3.394559919834137,
+              3.543359637260437,
+              3.5865601897239685,
+              3.399360179901123,
+              3.0896002054214478,
+              3.5920000076293945,
+              3.3692800998687744,
+              3.4652796387672424,
+              3.4032002091407776,
+              3.5619202256202698,
+              3.500800132751465,
+              3.5923197865486145,
+              3.460480272769928,
+              3.4560000896453857,
+              3.3827197551727295,
+              3.4787198901176453,
+              3.4428799152374268,
+              3.4617602825164795,
+              3.5337603092193604,
+              3.4918400645256042,
+              3.570239841938019,
+              3.389120101928711,
+              3.503999710083008,
+              3.530240058898926,
+              3.444160223007202,
+              3.57727974653244,
+              3.4841597080230713,
+              3.4016001224517822
+            ],
+            "paired_median_saving_us": 3.471999764442444,
+            "triton_faster_rounds": 30,
+            "tied_rounds": 0,
+            "rounds": 30
+          },
+          "default_vs_variant": {
+            "ratio_of_separate_medians": 1.0,
+            "paired_saving_us_samples": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "paired_median_saving_us": 0.0,
+            "triton_faster_rounds": 0,
+            "tied_rounds": 30,
+            "rounds": 30
+          },
+          "compiled_vs_variant": {
+            "ratio_of_separate_medians": 0.9792449188426986,
+            "paired_saving_us_samples": [
+              0.04096001386642456,
+              -0.13760000467300415,
+              -0.2345597743988037,
+              0.018239915370941162,
+              -0.029120147228240967,
+              -0.10784000158309937,
+              -0.46271979808807373,
+              0.062400102615356445,
+              -0.262719988822937,
+              -0.06783992052078247,
+              -0.06271988153457642,
+              -0.04736006259918213,
+              -0.000960230827331543,
+              -0.18560022115707397,
+              -0.2691200375556946,
+              0.029439926147460938,
+              -0.07968008518218994,
+              0.022399723529815674,
+              -0.1145598292350769,
+              -0.0649598240852356,
+              -0.17760008573532104,
+              0.007679760456085205,
+              -0.09440004825592041,
+              -0.15359997749328613,
+              0.07200002670288086,
+              -0.09568005800247192,
+              -0.1180797815322876,
+              -0.01792013645172119,
+              -0.049920082092285156,
+              -0.1228797435760498
+            ],
+            "paired_median_saving_us": -0.0737600028514862,
+            "triton_faster_rounds": 7,
+            "tied_rounds": 0,
+            "rounds": 30
+          }
+        }
+      },
+      "seed": 2
+    },
+    {
+      "shape": [
+        1,
+        8960
+      ],
+      "elements": 8960,
+      "selection_mode": "automatic",
+      "accuracy": {
+        "rtol": 0.002,
+        "atol": 0.0002,
+        "oracle": "float64 arithmetic with input-dtype rounding after SiLU and multiply",
+        "implementations": {
+          "pytorch_native": {
+            "passed": true,
+            "max_abs_oracle_error": 0.0001220703125,
+            "different_elements_from_native": 0
+          },
+          "pytorch_compiled": {
+            "passed": true,
+            "max_abs_oracle_error": 0.0078125,
+            "different_elements_from_native": 2351
+          },
+          "triton": {
+            "passed": true,
+            "max_abs_oracle_error": 0.0,
+            "different_elements_from_native": 1
+          }
+        }
+      },
+      "first_call_setup_and_execution_seconds": {
+        "pytorch_native": 7.868600005167536e-05,
+        "pytorch_compiled": 0.05878808400007074,
+        "triton": 0.09471623800004636
+      },
+      "resources_by_implementation": {
+        "triton": {
+          "programs": 35,
+          "block_size": 256,
+          "num_warps": 4,
+          "registers_per_thread": 14,
+          "spills": 0,
+          "shared_bytes": 0
+        }
+      },
+      "triton_resources": {
+        "programs": 35,
+        "block_size": 256,
+        "num_warps": 4,
+        "registers_per_thread": 14,
+        "spills": 0,
+        "shared_bytes": 0
+      },
+      "measurement_orders": [
+        [
+          "pytorch_native",
+          "pytorch_compiled",
+          "triton"
+        ],
+        [
+          "pytorch_native",
+          "triton",
+          "pytorch_compiled"
+        ],
+        [
+          "pytorch_compiled",
+          "pytorch_native",
+          "triton"
+        ],
+        [
+          "pytorch_compiled",
+          "triton",
+          "pytorch_native"
+        ],
+        [
+          "triton",
+          "pytorch_native",
+          "pytorch_compiled"
+        ],
+        [
+          "triton",
+          "pytorch_compiled",
+          "pytorch_native"
+        ],
+        [
+          "pytorch_native",
+          "pytorch_compiled",
+          "triton"
+        ],
+        [
+          "pytorch_native",
+          "triton",
+          "pytorch_compiled"
+        ],
+        [
+          "pytorch_compiled",
+          "pytorch_native",
+          "triton"
+        ],
+        [
+          "pytorch_compiled",
+          "triton",
+          "pytorch_native"
+        ],
+        [
+          "triton",
+          "pytorch_native",
+          "pytorch_compiled"
+        ],
+        [
+          "triton",
+          "pytorch_compiled",
+          "pytorch_native"
+        ],
+        [
+          "pytorch_native",
+          "pytorch_compiled",
+          "triton"
+        ],
+        [
+          "pytorch_native",
+          "triton",
+          "pytorch_compiled"
+        ],
+        [
+          "pytorch_compiled",
+          "pytorch_native",
+          "triton"
+        ],
+        [
+          "pytorch_compiled",
+          "triton",
+          "pytorch_native"
+        ],
+        [
+          "triton",
+          "pytorch_native",
+          "pytorch_compiled"
+        ],
+        [
+          "triton",
+          "pytorch_compiled",
+          "pytorch_native"
+        ],
+        [
+          "pytorch_native",
+          "pytorch_compiled",
+          "triton"
+        ],
+        [
+          "pytorch_native",
+          "triton",
+          "pytorch_compiled"
+        ],
+        [
+          "pytorch_compiled",
+          "pytorch_native",
+          "triton"
+        ],
+        [
+          "pytorch_compiled",
+          "triton",
+          "pytorch_native"
+        ],
+        [
+          "triton",
+          "pytorch_native",
+          "pytorch_compiled"
+        ],
+        [
+          "triton",
+          "pytorch_compiled",
+          "pytorch_native"
+        ],
+        [
+          "pytorch_native",
+          "pytorch_compiled",
+          "triton"
+        ],
+        [
+          "pytorch_native",
+          "triton",
+          "pytorch_compiled"
+        ],
+        [
+          "pytorch_compiled",
+          "pytorch_native",
+          "triton"
+        ],
+        [
+          "pytorch_compiled",
+          "triton",
+          "pytorch_native"
+        ],
+        [
+          "triton",
+          "pytorch_native",
+          "pytorch_compiled"
+        ],
+        [
+          "triton",
+          "pytorch_compiled",
+          "pytorch_native"
+        ]
+      ],
+      "implementations": {
+        "pytorch_native": {
+          "latency_us": {
+            "median": 6.7105600237846375,
+            "p95": 6.758400201797485,
+            "min": 6.679040193557739,
+            "max": 6.98527991771698
+          },
+          "samples_us": [
+            6.98527991771698,
+            6.751999855041504,
+            6.714879870414734,
+            6.682559847831726,
+            6.716480255126953,
+            6.717439889907837,
+            6.758400201797485,
+            6.696640253067017,
+            6.717439889907837,
+            6.715520024299622,
+            6.716160178184509,
+            6.712319850921631,
+            6.737920045852661,
+            6.697919964790344,
+            6.685439944267273,
+            6.710079908370972,
+            6.716799736022949,
+            6.696959733963013,
+            6.713280081748962,
+            6.70304000377655,
+            6.679040193557739,
+            6.699519753456116,
+            6.69983983039856,
+            6.692799925804138,
+            6.747199892997742,
+            6.695359945297241,
+            6.709120273590088,
+            6.711040139198303,
+            6.681920289993286,
+            6.702079772949219
+          ]
+        },
+        "pytorch_compiled": {
+          "latency_us": {
+            "median": 3.189920037984848,
+            "p95": 3.296000063419342,
+            "min": 3.0511999130249023,
+            "max": 3.5231998562812805
+          },
+          "samples_us": [
+            3.277440071105957,
+            3.2153600454330444,
+            3.0608001351356506,
+            3.184959888458252,
+            3.2361599802970886,
+            3.2767999172210693,
+            3.17440003156662,
+            3.192000091075897,
+            3.0511999130249023,
+            3.5231998562812805,
+            3.2150399684906006,
+            3.160640001296997,
+            3.17440003156662,
+            3.179199993610382,
+            3.0720001459121704,
+            3.19487988948822,
+            3.2473599910736084,
+            3.1760001182556152,
+            3.187839984893799,
+            3.2124799489974976,
+            3.051519989967346,
+            3.17440003156662,
+            3.2156801223754883,
+            3.296000063419342,
+            3.1785601377487183,
+            3.2207998633384705,
+            3.0720001459121704,
+            3.2092800736427307,
+            3.2150399684906006,
+            3.1747201085090637
+          ]
+        },
+        "triton": {
+          "latency_us": {
+            "median": 3.2345598936080933,
+            "p95": 3.290880024433136,
+            "min": 3.19487988948822,
+            "max": 3.324800133705139
+          },
+          "samples_us": [
+            3.2207998633384705,
+            3.2345598936080933,
+            3.27455997467041,
+            3.2396799325942993,
+            3.258560001850128,
+            3.2207998633384705,
+            3.2572799921035767,
+            3.2153600454330444,
+            3.2419198751449585,
+            3.256320059299469,
+            3.256320059299469,
+            3.2345598936080933,
+            3.290880024433136,
+            3.2227200269699097,
+            3.256320059299469,
+            3.19487988948822,
+            3.2278400659561157,
+            3.2201600074768066,
+            3.2332798838615417,
+            3.200640082359314,
+            3.256320059299469,
+            3.2358399033546448,
+            3.2233598828315735,
+            3.214080035686493,
+            3.235520124435425,
+            3.2153600454330444,
+            3.2329601049423218,
+            3.324800133705139,
+            3.235520124435425,
+            3.197759985923767
+          ]
+        }
+      },
+      "native_vs_triton": {
+        "ratio_of_separate_medians": 2.0746439220512096,
+        "paired_saving_us_samples": [
+          3.7644800543785095,
+          3.5174399614334106,
+          3.4403198957443237,
+          3.4428799152374268,
+          3.457920253276825,
+          3.4966400265693665,
+          3.5011202096939087,
+          3.481280207633972,
+          3.4755200147628784,
+          3.4591999650001526,
+          3.4598401188850403,
+          3.4777599573135376,
+          3.447040021419525,
+          3.4751999378204346,
+          3.429119884967804,
+          3.5152000188827515,
+          3.4889596700668335,
+          3.476799726486206,
+          3.4800001978874207,
+          3.5023999214172363,
+          3.4227201342582703,
+          3.463679850101471,
+          3.476479947566986,
+          3.4787198901176453,
+          3.511679768562317,
+          3.4799998998641968,
+          3.476160168647766,
+          3.386240005493164,
+          3.4464001655578613,
+          3.5043197870254517
+        ],
+        "paired_median_saving_us": 3.476639837026596,
+        "triton_faster_rounds": 30,
+        "tied_rounds": 0,
+        "rounds": 30
+      },
+      "compiled_vs_triton": {
+        "ratio_of_separate_medians": 0.98619909443895,
+        "paired_saving_us_samples": [
+          0.05664020776748657,
+          -0.019199848175048828,
+          -0.21375983953475952,
+          -0.05472004413604736,
+          -0.02240002155303955,
+          0.05600005388259888,
+          -0.08287996053695679,
+          -0.023359954357147217,
+          -0.19071996212005615,
+          0.2668797969818115,
+          -0.04128009080886841,
+          -0.07391989231109619,
+          -0.11647999286651611,
+          -0.04352003335952759,
+          -0.18431991338729858,
+          0.0,
+          0.019519925117492676,
+          -0.044159889221191406,
+          -0.04543989896774292,
+          0.011839866638183594,
+          -0.2048000693321228,
+          -0.0614398717880249,
+          -0.007679760456085205,
+          0.08192002773284912,
+          -0.05695998668670654,
+          0.005439817905426025,
+          -0.16095995903015137,
+          -0.11552006006240845,
+          -0.02048015594482422,
+          -0.02303987741470337
+        ],
+        "paired_median_saving_us": -0.042400062084198,
+        "triton_faster_rounds": 7,
+        "tied_rounds": 1,
+        "rounds": 30
+      },
+      "configuration_comparisons": {
+        "triton": {
+          "native_vs_variant": {
+            "ratio_of_separate_medians": 2.0746439220512096,
+            "paired_saving_us_samples": [
+              3.7644800543785095,
+              3.5174399614334106,
+              3.4403198957443237,
+              3.4428799152374268,
+              3.457920253276825,
+              3.4966400265693665,
+              3.5011202096939087,
+              3.481280207633972,
+              3.4755200147628784,
+              3.4591999650001526,
+              3.4598401188850403,
+              3.4777599573135376,
+              3.447040021419525,
+              3.4751999378204346,
+              3.429119884967804,
+              3.5152000188827515,
+              3.4889596700668335,
+              3.476799726486206,
+              3.4800001978874207,
+              3.5023999214172363,
+              3.4227201342582703,
+              3.463679850101471,
+              3.476479947566986,
+              3.4787198901176453,
+              3.511679768562317,
+              3.4799998998641968,
+              3.476160168647766,
+              3.386240005493164,
+              3.4464001655578613,
+              3.5043197870254517
+            ],
+            "paired_median_saving_us": 3.476639837026596,
+            "triton_faster_rounds": 30,
+            "tied_rounds": 0,
+            "rounds": 30
+          },
+          "default_vs_variant": {
+            "ratio_of_separate_medians": 1.0,
+            "paired_saving_us_samples": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "paired_median_saving_us": 0.0,
+            "triton_faster_rounds": 0,
+            "tied_rounds": 30,
+            "rounds": 30
+          },
+          "compiled_vs_variant": {
+            "ratio_of_separate_medians": 0.98619909443895,
+            "paired_saving_us_samples": [
+              0.05664020776748657,
+              -0.019199848175048828,
+              -0.21375983953475952,
+              -0.05472004413604736,
+              -0.02240002155303955,
+              0.05600005388259888,
+              -0.08287996053695679,
+              -0.023359954357147217,
+              -0.19071996212005615,
+              0.2668797969818115,
+              -0.04128009080886841,
+              -0.07391989231109619,
+              -0.11647999286651611,
+              -0.04352003335952759,
+              -0.18431991338729858,
+              0.0,
+              0.019519925117492676,
+              -0.044159889221191406,
+              -0.04543989896774292,
+              0.011839866638183594,
+              -0.2048000693321228,
+              -0.0614398717880249,
+              -0.007679760456085205,
+              0.08192002773284912,
+              -0.05695998668670654,
+              0.005439817905426025,
+              -0.16095995903015137,
+              -0.11552006006240845,
+              -0.02048015594482422,
+              -0.02303987741470337
+            ],
+            "paired_median_saving_us": -0.042400062084198,
+            "triton_faster_rounds": 7,
+            "tied_rounds": 1,
+            "rounds": 30
+          }
+        }
+      },
+      "seed": 2
+    },
+    {
+      "shape": [
+        16,
+        8960
+      ],
+      "elements": 143360,
+      "selection_mode": "automatic",
+      "accuracy": {
+        "rtol": 0.002,
+        "atol": 0.0002,
+        "oracle": "float64 arithmetic with input-dtype rounding after SiLU and multiply",
+        "implementations": {
+          "pytorch_native": {
+            "passed": true,
+            "max_abs_oracle_error": 0.000244140625,
+            "different_elements_from_native": 0
+          },
+          "pytorch_compiled": {
+            "passed": true,
+            "max_abs_oracle_error": 0.0078125,
+            "different_elements_from_native": 38269
+          },
+          "triton": {
+            "passed": true,
+            "max_abs_oracle_error": 3.0517578125e-05,
+            "different_elements_from_native": 36
+          }
+        }
+      },
+      "first_call_setup_and_execution_seconds": {
+        "pytorch_native": 0.00010233900002276641,
+        "pytorch_compiled": 0.10100944200007689,
+        "triton": 0.09035634199995002
+      },
+      "resources_by_implementation": {
+        "triton": {
+          "programs": 280,
+          "block_size": 512,
+          "num_warps": 4,
+          "registers_per_thread": 20,
+          "spills": 0,
+          "shared_bytes": 0
+        }
+      },
+      "triton_resources": {
+        "programs": 280,
+        "block_size": 512,
+        "num_warps": 4,
+        "registers_per_thread": 20,
+        "spills": 0,
+        "shared_bytes": 0
+      },
+      "measurement_orders": [
+        [
+          "pytorch_native",
+          "pytorch_compiled",
+          "triton"
+        ],
+        [
+          "pytorch_native",
+          "triton",
+          "pytorch_compiled"
+        ],
+        [
+          "pytorch_compiled",
+          "pytorch_native",
+          "triton"
+        ],
+        [
+          "pytorch_compiled",
+          "triton",
+          "pytorch_native"
+        ],
+        [
+          "triton",
+          "pytorch_native",
+          "pytorch_compiled"
+        ],
+        [
+          "triton",
+          "pytorch_compiled",
+          "pytorch_native"
+        ],
+        [
+          "pytorch_native",
+          "pytorch_compiled",
+          "triton"
+        ],
+        [
+          "pytorch_native",
+          "triton",
+          "pytorch_compiled"
+        ],
+        [
+          "pytorch_compiled",
+          "pytorch_native",
+          "triton"
+        ],
+        [
+          "pytorch_compiled",
+          "triton",
+          "pytorch_native"
+        ],
+        [
+          "triton",
+          "pytorch_native",
+          "pytorch_compiled"
+        ],
+        [
+          "triton",
+          "pytorch_compiled",
+          "pytorch_native"
+        ],
+        [
+          "pytorch_native",
+          "pytorch_compiled",
+          "triton"
+        ],
+        [
+          "pytorch_native",
+          "triton",
+          "pytorch_compiled"
+        ],
+        [
+          "pytorch_compiled",
+          "pytorch_native",
+          "triton"
+        ],
+        [
+          "pytorch_compiled",
+          "triton",
+          "pytorch_native"
+        ],
+        [
+          "triton",
+          "pytorch_native",
+          "pytorch_compiled"
+        ],
+        [
+          "triton",
+          "pytorch_compiled",
+          "pytorch_native"
+        ],
+        [
+          "pytorch_native",
+          "pytorch_compiled",
+          "triton"
+        ],
+        [
+          "pytorch_native",
+          "triton",
+          "pytorch_compiled"
+        ],
+        [
+          "pytorch_compiled",
+          "pytorch_native",
+          "triton"
+        ],
+        [
+          "pytorch_compiled",
+          "triton",
+          "pytorch_native"
+        ],
+        [
+          "triton",
+          "pytorch_native",
+          "pytorch_compiled"
+        ],
+        [
+          "triton",
+          "pytorch_compiled",
+          "pytorch_native"
+        ],
+        [
+          "pytorch_native",
+          "pytorch_compiled",
+          "triton"
+        ],
+        [
+          "pytorch_native",
+          "triton",
+          "pytorch_compiled"
+        ],
+        [
+          "pytorch_compiled",
+          "pytorch_native",
+          "triton"
+        ],
+        [
+          "pytorch_compiled",
+          "triton",
+          "pytorch_native"
+        ],
+        [
+          "triton",
+          "pytorch_native",
+          "pytorch_compiled"
+        ],
+        [
+          "triton",
+          "pytorch_compiled",
+          "pytorch_native"
+        ]
+      ],
+      "implementations": {
+        "pytorch_native": {
+          "latency_us": {
+            "median": 9.64816004037857,
+            "p95": 9.793599843978882,
+            "min": 9.607999920845032,
+            "max": 9.851199984550476
+          },
+          "samples_us": [
+            9.851199984550476,
+            9.672319889068604,
+            9.667199850082397,
+            9.637759923934937,
+            9.640960097312927,
+            9.7324800491333,
+            9.728000164031982,
+            9.642239809036255,
+            9.622719883918762,
+            9.649919867515564,
+            9.625279903411865,
+            9.654080271720886,
+            9.687359929084778,
+            9.764479994773865,
+            9.793599843978882,
+            9.643200039863586,
+            9.665279984474182,
+            9.635199904441833,
+            9.665279984474182,
+            9.630399942398071,
+            9.637119770050049,
+            9.64576005935669,
+            9.645439982414246,
+            9.646400213241577,
+            9.669119715690613,
+            9.649919867515564,
+            9.62656021118164,
+            9.632319808006287,
+            9.607999920845032,
+            9.657920002937317
+          ]
+        },
+        "pytorch_compiled": {
+          "latency_us": {
+            "median": 5.140959918498993,
+            "p95": 5.247039794921875,
+            "min": 4.976640045642853,
+            "max": 5.303360223770142
+          },
+          "samples_us": [
+            5.199040174484253,
+            5.23967981338501,
+            4.989120066165924,
+            5.127360224723816,
+            5.303360223770142,
+            5.1606398820877075,
+            5.17408013343811,
+            5.124480128288269,
+            5.012480020523071,
+            5.145279765129089,
+            5.247039794921875,
+            5.120000243186951,
+            5.144640207290649,
+            5.132160186767578,
+            5.0329601764678955,
+            5.216000080108643,
+            5.173119902610779,
+            5.1580798625946045,
+            5.140479803085327,
+            5.140479803085327,
+            4.976640045642853,
+            5.113919973373413,
+            5.172479748725891,
+            5.1046401262283325,
+            5.150719881057739,
+            5.132480263710022,
+            5.01695990562439,
+            5.141440033912659,
+            5.160959959030151,
+            5.095040202140808
+          ]
+        },
+        "triton": {
+          "latency_us": {
+            "median": 5.101760029792786,
+            "p95": 5.19648015499115,
+            "min": 5.04800021648407,
+            "max": 5.283839702606201
+          },
+          "samples_us": [
+            5.058559775352478,
+            5.160959959030151,
+            5.120000243186951,
+            5.093759894371033,
+            5.113279819488525,
+            5.103999972343445,
+            5.119040012359619,
+            5.1340800523757935,
+            5.118719935417175,
+            5.05728006362915,
+            5.0995200872421265,
+            5.160959959030151,
+            5.0783997774124146,
+            5.19648015499115,
+            5.283839702606201,
+            5.141119956970215,
+            5.120000243186951,
+            5.095360279083252,
+            5.079039931297302,
+            5.141119956970215,
+            5.079039931297302,
+            5.079039931297302,
+            5.120319724082947,
+            5.081599950790405,
+            5.04800021648407,
+            5.120000243186951,
+            5.0995200872421265,
+            5.058879852294922,
+            5.099200010299683,
+            5.079039931297302
+          ]
+        }
+      },
+      "native_vs_triton": {
+        "ratio_of_separate_medians": 1.8911434454063185,
+        "paired_saving_us_samples": [
+          4.792640209197998,
+          4.511359930038452,
+          4.547199606895447,
+          4.544000029563904,
+          4.527680277824402,
+          4.628480076789856,
+          4.608960151672363,
+          4.508159756660461,
+          4.503999948501587,
+          4.592639803886414,
+          4.525759816169739,
+          4.493120312690735,
+          4.608960151672363,
+          4.567999839782715,
+          4.509760141372681,
+          4.502080082893372,
+          4.5452797412872314,
+          4.5398396253585815,
+          4.58624005317688,
+          4.4892799854278564,
+          4.558079838752747,
+          4.566720128059387,
+          4.525120258331299,
+          4.564800262451172,
+          4.621119499206543,
+          4.529919624328613,
+          4.527040123939514,
+          4.573439955711365,
+          4.508799910545349,
+          4.578880071640015
+        ],
+        "paired_median_saving_us": 4.544639885425568,
+        "triton_faster_rounds": 30,
+        "tied_rounds": 0,
+        "rounds": 30
+      },
+      "compiled_vs_triton": {
+        "ratio_of_separate_medians": 1.0076836010469508,
+        "paired_saving_us_samples": [
+          0.1404803991317749,
+          0.0787198543548584,
+          -0.1308801770210266,
+          0.0336003303527832,
+          0.1900804042816162,
+          0.056639909744262695,
+          0.05504012107849121,
+          -0.009599924087524414,
+          -0.106239914894104,
+          0.08799970149993896,
+          0.14751970767974854,
+          -0.040959715843200684,
+          0.06624042987823486,
+          -0.06431996822357178,
+          -0.25087952613830566,
+          0.07488012313842773,
+          0.053119659423828125,
+          0.06271958351135254,
+          0.0614398717880249,
+          -0.0006401538848876953,
+          -0.10239988565444946,
+          0.03488004207611084,
+          0.052160024642944336,
+          0.023040175437927246,
+          0.10271966457366943,
+          0.012480020523071289,
+          -0.08256018161773682,
+          0.08256018161773682,
+          0.06175994873046875,
+          0.01600027084350586
+        ],
+        "paired_median_saving_us": 0.05263984203338623,
+        "triton_faster_rounds": 21,
+        "tied_rounds": 0,
+        "rounds": 30
+      },
+      "configuration_comparisons": {
+        "triton": {
+          "native_vs_variant": {
+            "ratio_of_separate_medians": 1.8911434454063185,
+            "paired_saving_us_samples": [
+              4.792640209197998,
+              4.511359930038452,
+              4.547199606895447,
+              4.544000029563904,
+              4.527680277824402,
+              4.628480076789856,
+              4.608960151672363,
+              4.508159756660461,
+              4.503999948501587,
+              4.592639803886414,
+              4.525759816169739,
+              4.493120312690735,
+              4.608960151672363,
+              4.567999839782715,
+              4.509760141372681,
+              4.502080082893372,
+              4.5452797412872314,
+              4.5398396253585815,
+              4.58624005317688,
+              4.4892799854278564,
+              4.558079838752747,
+              4.566720128059387,
+              4.525120258331299,
+              4.564800262451172,
+              4.621119499206543,
+              4.529919624328613,
+              4.527040123939514,
+              4.573439955711365,
+              4.508799910545349,
+              4.578880071640015
+            ],
+            "paired_median_saving_us": 4.544639885425568,
+            "triton_faster_rounds": 30,
+            "tied_rounds": 0,
+            "rounds": 30
+          },
+          "default_vs_variant": {
+            "ratio_of_separate_medians": 1.0,
+            "paired_saving_us_samples": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "paired_median_saving_us": 0.0,
+            "triton_faster_rounds": 0,
+            "tied_rounds": 30,
+            "rounds": 30
+          },
+          "compiled_vs_variant": {
+            "ratio_of_separate_medians": 1.0076836010469508,
+            "paired_saving_us_samples": [
+              0.1404803991317749,
+              0.0787198543548584,
+              -0.1308801770210266,
+              0.0336003303527832,
+              0.1900804042816162,
+              0.056639909744262695,
+              0.05504012107849121,
+              -0.009599924087524414,
+              -0.106239914894104,
+              0.08799970149993896,
+              0.14751970767974854,
+              -0.040959715843200684,
+              0.06624042987823486,
+              -0.06431996822357178,
+              -0.25087952613830566,
+              0.07488012313842773,
+              0.053119659423828125,
+              0.06271958351135254,
+              0.0614398717880249,
+              -0.0006401538848876953,
+              -0.10239988565444946,
+              0.03488004207611084,
+              0.052160024642944336,
+              0.023040175437927246,
+              0.10271966457366943,
+              0.012480020523071289,
+              -0.08256018161773682,
+              0.08256018161773682,
+              0.06175994873046875,
+              0.01600027084350586
+            ],
+            "paired_median_saving_us": 0.05263984203338623,
+            "triton_faster_rounds": 21,
+            "tied_rounds": 0,
+            "rounds": 30
+          }
+        }
+      },
+      "seed": 2
+    },
+    {
+      "shape": [
+        128,
+        8960
+      ],
+      "elements": 1146880,
+      "selection_mode": "automatic",
+      "accuracy": {
+        "rtol": 0.002,
+        "atol": 0.0002,
+        "oracle": "float64 arithmetic with input-dtype rounding after SiLU and multiply",
+        "implementations": {
+          "pytorch_native": {
+            "passed": true,
+            "max_abs_oracle_error": 0.00048828125,
+            "different_elements_from_native": 0
+          },
+          "pytorch_compiled": {
+            "passed": true,
+            "max_abs_oracle_error": 0.015625,
+            "different_elements_from_native": 304920
+          },
+          "triton": {
+            "passed": true,
+            "max_abs_oracle_error": 6.103515625e-05,
+            "different_elements_from_native": 195
+          }
+        }
+      },
+      "first_call_setup_and_execution_seconds": {
+        "pytorch_native": 8.914900013223814e-05,
+        "pytorch_compiled": 0.09919199099999787,
+        "triton": 0.08711971400020957
+      },
+      "resources_by_implementation": {
+        "triton": {
+          "programs": 4480,
+          "block_size": 256,
+          "num_warps": 4,
+          "registers_per_thread": 14,
+          "spills": 0,
+          "shared_bytes": 0
+        }
+      },
+      "triton_resources": {
+        "programs": 4480,
+        "block_size": 256,
+        "num_warps": 4,
+        "registers_per_thread": 14,
+        "spills": 0,
+        "shared_bytes": 0
+      },
+      "measurement_orders": [
+        [
+          "pytorch_native",
+          "pytorch_compiled",
+          "triton"
+        ],
+        [
+          "pytorch_native",
+          "triton",
+          "pytorch_compiled"
+        ],
+        [
+          "pytorch_compiled",
+          "pytorch_native",
+          "triton"
+        ],
+        [
+          "pytorch_compiled",
+          "triton",
+          "pytorch_native"
+        ],
+        [
+          "triton",
+          "pytorch_native",
+          "pytorch_compiled"
+        ],
+        [
+          "triton",
+          "pytorch_compiled",
+          "pytorch_native"
+        ],
+        [
+          "pytorch_native",
+          "pytorch_compiled",
+          "triton"
+        ],
+        [
+          "pytorch_native",
+          "triton",
+          "pytorch_compiled"
+        ],
+        [
+          "pytorch_compiled",
+          "pytorch_native",
+          "triton"
+        ],
+        [
+          "pytorch_compiled",
+          "triton",
+          "pytorch_native"
+        ],
+        [
+          "triton",
+          "pytorch_native",
+          "pytorch_compiled"
+        ],
+        [
+          "triton",
+          "pytorch_compiled",
+          "pytorch_native"
+        ],
+        [
+          "pytorch_native",
+          "pytorch_compiled",
+          "triton"
+        ],
+        [
+          "pytorch_native",
+          "triton",
+          "pytorch_compiled"
+        ],
+        [
+          "pytorch_compiled",
+          "pytorch_native",
+          "triton"
+        ],
+        [
+          "pytorch_compiled",
+          "triton",
+          "pytorch_native"
+        ],
+        [
+          "triton",
+          "pytorch_native",
+          "pytorch_compiled"
+        ],
+        [
+          "triton",
+          "pytorch_compiled",
+          "pytorch_native"
+        ],
+        [
+          "pytorch_native",
+          "pytorch_compiled",
+          "triton"
+        ],
+        [
+          "pytorch_native",
+          "triton",
+          "pytorch_compiled"
+        ],
+        [
+          "pytorch_compiled",
+          "pytorch_native",
+          "triton"
+        ],
+        [
+          "pytorch_compiled",
+          "triton",
+          "pytorch_native"
+        ],
+        [
+          "triton",
+          "pytorch_native",
+          "pytorch_compiled"
+        ],
+        [
+          "triton",
+          "pytorch_compiled",
+          "pytorch_native"
+        ],
+        [
+          "pytorch_native",
+          "pytorch_compiled",
+          "triton"
+        ],
+        [
+          "pytorch_native",
+          "triton",
+          "pytorch_compiled"
+        ],
+        [
+          "pytorch_compiled",
+          "pytorch_native",
+          "triton"
+        ],
+        [
+          "pytorch_compiled",
+          "triton",
+          "pytorch_native"
+        ],
+        [
+          "triton",
+          "pytorch_native",
+          "pytorch_compiled"
+        ],
+        [
+          "triton",
+          "pytorch_compiled",
+          "pytorch_native"
+        ]
+      ],
+      "implementations": {
+        "pytorch_native": {
+          "latency_us": {
+            "median": 42.54976034164429,
+            "p95": 47.2489595413208,
+            "min": 41.96352005004883,
+            "max": 47.39168167114258
+          },
+          "samples_us": [
+            47.39168167114258,
+            47.105278968811035,
+            47.145280838012695,
+            47.0633602142334,
+            47.1395206451416,
+            47.180800437927246,
+            47.10432052612305,
+            47.06463813781738,
+            47.1884822845459,
+            47.103681564331055,
+            47.2489595413208,
+            47.145280838012695,
+            47.14655876159668,
+            42.9804801940918,
+            42.66496181488037,
+            42.4345588684082,
+            42.319679260253906,
+            42.16256141662598,
+            42.19071865081787,
+            42.117438316345215,
+            42.075839042663574,
+            42.03551769256592,
+            42.069759368896484,
+            42.045440673828125,
+            42.0249605178833,
+            42.00448036193848,
+            41.96352005004883,
+            41.96479797363281,
+            41.96671962738037,
+            42.04991817474365
+          ]
+        },
+        "pytorch_compiled": {
+          "latency_us": {
+            "median": 29.15104031562805,
+            "p95": 30.744640827178955,
+            "min": 28.69407892227173,
+            "max": 31.008000373840332
+          },
+          "samples_us": [
+            30.68608045578003,
+            30.59040069580078,
+            30.466880798339844,
+            30.64703941345215,
+            31.008000373840332,
+            30.709118843078613,
+            30.61311960220337,
+            30.608959197998047,
+            30.28575897216797,
+            30.617918968200684,
+            30.678400993347168,
+            30.744640827178955,
+            30.61568021774292,
+            29.163520336151123,
+            28.866560459136963,
+            29.13856029510498,
+            29.023680686950684,
+            29.00320053100586,
+            28.945600986480713,
+            28.95103931427002,
+            28.807039260864258,
+            29.368319511413574,
+            28.972160816192627,
+            28.951680660247803,
+            28.900480270385742,
+            28.950719833374023,
+            28.69407892227173,
+            28.92159938812256,
+            28.942720890045166,
+            28.938241004943848
+          ]
+        },
+        "triton": {
+          "latency_us": {
+            "median": 29.117120504379272,
+            "p95": 30.736958980560303,
+            "min": 28.831360340118408,
+            "max": 30.76256036758423
+          },
+          "samples_us": [
+            30.594561100006104,
+            30.53567886352539,
+            30.60447931289673,
+            30.496959686279297,
+            30.53152084350586,
+            30.736958980560303,
+            30.582079887390137,
+            30.555520057678223,
+            30.60863971710205,
+            30.509119033813477,
+            30.76256036758423,
+            30.597119331359863,
+            30.412800312042236,
+            29.12480115890503,
+            29.109439849853516,
+            29.141759872436523,
+            28.958721160888672,
+            28.984320163726807,
+            28.930881023406982,
+            28.915839195251465,
+            28.95359992980957,
+            28.89280080795288,
+            28.855679035186768,
+            28.938241004943848,
+            28.876800537109375,
+            28.850560188293457,
+            28.902719020843506,
+            28.831360340118408,
+            28.90752077102661,
+            28.938241004943848
+          ]
+        }
+      },
+      "native_vs_triton": {
+        "ratio_of_separate_medians": 1.4613313268818844,
+        "paired_saving_us_samples": [
+          16.797120571136475,
+          16.569600105285645,
+          16.540801525115967,
+          16.5664005279541,
+          16.607999801635742,
+          16.443841457366943,
+          16.52224063873291,
+          16.50911808013916,
+          16.579842567443848,
+          16.594562530517578,
+          16.486399173736572,
+          16.548161506652832,
+          16.733758449554443,
+          13.855679035186768,
+          13.555521965026855,
+          13.29279899597168,
+          13.360958099365234,
+          13.17824125289917,
+          13.259837627410889,
+          13.20159912109375,
+          13.122239112854004,
+          13.142716884613037,
+          13.214080333709717,
+          13.107199668884277,
+          13.148159980773926,
+          13.15392017364502,
+          13.060801029205322,
+          13.133437633514404,
+          13.05919885635376,
+          13.111677169799805
+        ],
+        "paired_median_saving_us": 13.458240032196045,
+        "triton_faster_rounds": 30,
+        "tied_rounds": 0,
+        "rounds": 30
+      },
+      "compiled_vs_triton": {
+        "ratio_of_separate_medians": 1.0011649438770458,
+        "paired_saving_us_samples": [
+          0.09151935577392578,
+          0.054721832275390625,
+          -0.13759851455688477,
+          0.15007972717285156,
+          0.47647953033447266,
+          -0.027840137481689453,
+          0.031039714813232422,
+          0.05343914031982422,
+          -0.32288074493408203,
+          0.10879993438720703,
+          -0.08415937423706055,
+          0.1475214958190918,
+          0.2028799057006836,
+          0.03871917724609375,
+          -0.24287939071655273,
+          -0.0031995773315429688,
+          0.06495952606201172,
+          0.018880367279052734,
+          0.014719963073730469,
+          0.03520011901855469,
+          -0.1465606689453125,
+          0.47551870346069336,
+          0.11648178100585938,
+          0.013439655303955078,
+          0.023679733276367188,
+          0.1001596450805664,
+          -0.20864009857177734,
+          0.09023904800415039,
+          0.03520011901855469,
+          0.0
+        ],
+        "paired_median_saving_us": 0.03520011901855469,
+        "triton_faster_rounds": 21,
+        "tied_rounds": 1,
+        "rounds": 30
+      },
+      "configuration_comparisons": {
+        "triton": {
+          "native_vs_variant": {
+            "ratio_of_separate_medians": 1.4613313268818844,
+            "paired_saving_us_samples": [
+              16.797120571136475,
+              16.569600105285645,
+              16.540801525115967,
+              16.5664005279541,
+              16.607999801635742,
+              16.443841457366943,
+              16.52224063873291,
+              16.50911808013916,
+              16.579842567443848,
+              16.594562530517578,
+              16.486399173736572,
+              16.548161506652832,
+              16.733758449554443,
+              13.855679035186768,
+              13.555521965026855,
+              13.29279899597168,
+              13.360958099365234,
+              13.17824125289917,
+              13.259837627410889,
+              13.20159912109375,
+              13.122239112854004,
+              13.142716884613037,
+              13.214080333709717,
+              13.107199668884277,
+              13.148159980773926,
+              13.15392017364502,
+              13.060801029205322,
+              13.133437633514404,
+              13.05919885635376,
+              13.111677169799805
+            ],
+            "paired_median_saving_us": 13.458240032196045,
+            "triton_faster_rounds": 30,
+            "tied_rounds": 0,
+            "rounds": 30
+          },
+          "default_vs_variant": {
+            "ratio_of_separate_medians": 1.0,
+            "paired_saving_us_samples": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "paired_median_saving_us": 0.0,
+            "triton_faster_rounds": 0,
+            "tied_rounds": 30,
+            "rounds": 30
+          },
+          "compiled_vs_variant": {
+            "ratio_of_separate_medians": 1.0011649438770458,
+            "paired_saving_us_samples": [
+              0.09151935577392578,
+              0.054721832275390625,
+              -0.13759851455688477,
+              0.15007972717285156,
+              0.47647953033447266,
+              -0.027840137481689453,
+              0.031039714813232422,
+              0.05343914031982422,
+              -0.32288074493408203,
+              0.10879993438720703,
+              -0.08415937423706055,
+              0.1475214958190918,
+              0.2028799057006836,
+              0.03871917724609375,
+              -0.24287939071655273,
+              -0.0031995773315429688,
+              0.06495952606201172,
+              0.018880367279052734,
+              0.014719963073730469,
+              0.03520011901855469,
+              -0.1465606689453125,
+              0.47551870346069336,
+              0.11648178100585938,
+              0.013439655303955078,
+              0.023679733276367188,
+              0.1001596450805664,
+              -0.20864009857177734,
+              0.09023904800415039,
+              0.03520011901855469,
+              0.0
+            ],
+            "paired_median_saving_us": 0.03520011901855469,
+            "triton_faster_rounds": 21,
+            "tied_rounds": 1,
+            "rounds": 30
+          }
+        }
+      },
+      "seed": 2
+    }
+  ]
+}
