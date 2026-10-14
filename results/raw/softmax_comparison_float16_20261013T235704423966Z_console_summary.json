@@ -1,0 +1,179 @@
+{
+  "record_type": "user_supplied_console_summary",
+  "contains_original_raw_samples": false,
+  "remote_raw_file": "/kaggle/working/fastinfer/results/raw/softmax_comparison_float16_20261013T235704423966Z.json",
+  "dtype": "float16",
+  "timing_mode": "cuda_graph_replay_amortized",
+  "operations_per_sample": 100,
+  "repetitions": 30,
+  "seed": 2,
+  "native_baseline": "torch.softmax(x, dim=-1)",
+  "compiled_pytorch_measured": false,
+  "all_accuracy_checks_passed": true,
+  "scope": "First fixed-input synthetic GPU run; frozen confirmation and compiled-reference baseline pending. This is not a full-model result.",
+  "cases": [
+    {
+      "rows": 1,
+      "columns": 65,
+      "reference_us": 34.543,
+      "native_pytorch_us": 4.31,
+      "triton_us": 3.914,
+      "native_over_triton": 1.101,
+      "paired_median_saving_us": 0.394,
+      "triton_faster_rounds": 29,
+      "triton_resources": {
+        "programs": 1,
+        "block": 128,
+        "num_warps": 4,
+        "registers_per_thread": 20,
+        "spills": 0,
+        "shared_bytes": 16
+      }
+    },
+    {
+      "rows": 1,
+      "columns": 128,
+      "reference_us": 32.474,
+      "native_pytorch_us": 4.078,
+      "triton_us": 3.645,
+      "native_over_triton": 1.119,
+      "paired_median_saving_us": 0.513,
+      "triton_faster_rounds": 30,
+      "triton_resources": {
+        "programs": 1,
+        "block": 128,
+        "num_warps": 4,
+        "registers_per_thread": 20,
+        "spills": 0,
+        "shared_bytes": 16
+      }
+    },
+    {
+      "rows": 16,
+      "columns": 128,
+      "reference_us": 21.311,
+      "native_pytorch_us": 2.731,
+      "triton_us": 2.046,
+      "native_over_triton": 1.335,
+      "paired_median_saving_us": 0.712,
+      "triton_faster_rounds": 30,
+      "triton_resources": {
+        "programs": 16,
+        "block": 128,
+        "num_warps": 4,
+        "registers_per_thread": 20,
+        "spills": 0,
+        "shared_bytes": 16
+      }
+    },
+    {
+      "rows": 128,
+      "columns": 128,
+      "reference_us": 20.849,
+      "native_pytorch_us": 2.649,
+      "triton_us": 2.171,
+      "native_over_triton": 1.22,
+      "paired_median_saving_us": 0.548,
+      "triton_faster_rounds": 30,
+      "triton_resources": {
+        "programs": 128,
+        "block": 128,
+        "num_warps": 4,
+        "registers_per_thread": 20,
+        "spills": 0,
+        "shared_bytes": 16
+      }
+    },
+    {
+      "rows": 16,
+      "columns": 1024,
+      "reference_us": 24.748,
+      "native_pytorch_us": 5.651,
+      "triton_us": 2.194,
+      "native_over_triton": 2.576,
+      "paired_median_saving_us": 3.504,
+      "triton_faster_rounds": 30,
+      "triton_resources": {
+        "programs": 16,
+        "block": 1024,
+        "num_warps": 4,
+        "registers_per_thread": 24,
+        "spills": 0,
+        "shared_bytes": 16
+      }
+    },
+    {
+      "rows": 128,
+      "columns": 1024,
+      "reference_us": 32.008,
+      "native_pytorch_us": 5.993,
+      "triton_us": 3.049,
+      "native_over_triton": 1.966,
+      "paired_median_saving_us": 2.975,
+      "triton_faster_rounds": 30,
+      "triton_resources": {
+        "programs": 128,
+        "block": 1024,
+        "num_warps": 4,
+        "registers_per_thread": 24,
+        "spills": 0,
+        "shared_bytes": 16
+      }
+    },
+    {
+      "rows": 1,
+      "columns": 1536,
+      "reference_us": 19.747,
+      "native_pytorch_us": 3.684,
+      "triton_us": 2.35,
+      "native_over_triton": 1.568,
+      "paired_median_saving_us": 1.336,
+      "triton_faster_rounds": 30,
+      "triton_resources": {
+        "programs": 1,
+        "block": 2048,
+        "num_warps": 4,
+        "registers_per_thread": 34,
+        "spills": 0,
+        "shared_bytes": 16
+      }
+    },
+    {
+      "rows": 128,
+      "columns": 1536,
+      "reference_us": 41.248,
+      "native_pytorch_us": 11.46,
+      "triton_us": 3.525,
+      "native_over_triton": 3.251,
+      "paired_median_saving_us": 7.918,
+      "triton_faster_rounds": 30,
+      "triton_resources": {
+        "programs": 128,
+        "block": 2048,
+        "num_warps": 4,
+        "registers_per_thread": 34,
+        "spills": 0,
+        "shared_bytes": 16
+      }
+    },
+    {
+      "rows": 1,
+      "columns": 8192,
+      "reference_us": 22.314,
+      "native_pytorch_us": 5.487,
+      "triton_us": 3.479,
+      "native_over_triton": 1.577,
+      "paired_median_saving_us": 2.068,
+      "triton_faster_rounds": 30,
+      "triton_resources": {
+        "programs": 1,
+        "block": 8192,
+        "num_warps": 4,
+        "registers_per_thread": 79,
+        "spills": 0,
+        "shared_bytes": 16
+      }
+    }
+  ],
+  "resource_provenance": "User supplied table read from the original benchmark JSON; compiled metadata, not measured occupancy."
+}

@@ -1,0 +1,105 @@
+{
+  "record_type": "user_supplied_console_summary",
+  "contains_original_raw_samples": false,
+  "remote_raw_file": "/kaggle/working/fastinfer/results/raw/softmax_comparison_float16_20261014T001552441939Z.json",
+  "dtype": "float16",
+  "seed": 2,
+  "timing_mode": "cuda_graph_replay_amortized",
+  "operations_per_sample": 100,
+  "repetitions": 30,
+  "compiled_pytorch_measured": false,
+  "all_accuracy_checks_passed": true,
+  "scope": "Frozen same-session repeat of the first nine-shape benchmark, without tuning. Isolated native torch.softmax baseline; full raw samples remain remote.",
+  "cases": [
+    {
+      "rows": 1,
+      "columns": 65,
+      "reference_us": 34.57,
+      "native_pytorch_us": 4.279,
+      "triton_us": 3.701,
+      "native_over_triton": 1.156,
+      "paired_median_saving_us": 0.399,
+      "triton_faster_rounds": 30
+    },
+    {
+      "rows": 1,
+      "columns": 128,
+      "reference_us": 30.629,
+      "native_pytorch_us": 3.85,
+      "triton_us": 3.467,
+      "native_over_triton": 1.111,
+      "paired_median_saving_us": 0.455,
+      "triton_faster_rounds": 30
+    },
+    {
+      "rows": 16,
+      "columns": 128,
+      "reference_us": 21.107,
+      "native_pytorch_us": 2.703,
+      "triton_us": 2.067,
+      "native_over_triton": 1.308,
+      "paired_median_saving_us": 0.697,
+      "triton_faster_rounds": 30
+    },
+    {
+      "rows": 128,
+      "columns": 128,
+      "reference_us": 20.775,
+      "native_pytorch_us": 2.651,
+      "triton_us": 2.162,
+      "native_over_triton": 1.226,
+      "paired_median_saving_us": 0.533,
+      "triton_faster_rounds": 30
+    },
+    {
+      "rows": 16,
+      "columns": 1024,
+      "reference_us": 24.596,
+      "native_pytorch_us": 5.592,
+      "triton_us": 2.192,
+      "native_over_triton": 2.551,
+      "paired_median_saving_us": 3.398,
+      "triton_faster_rounds": 30
+    },
+    {
+      "rows": 128,
+      "columns": 1024,
+      "reference_us": 31.886,
+      "native_pytorch_us": 5.975,
+      "triton_us": 2.993,
+      "native_over_triton": 1.996,
+      "paired_median_saving_us": 3.021,
+      "triton_faster_rounds": 30
+    },
+    {
+      "rows": 1,
+      "columns": 1536,
+      "reference_us": 19.64,
+      "native_pytorch_us": 3.563,
+      "triton_us": 2.316,
+      "native_over_triton": 1.538,
+      "paired_median_saving_us": 1.313,
+      "triton_faster_rounds": 30
+    },
+    {
+      "rows": 128,
+      "columns": 1536,
+      "reference_us": 41.152,
+      "native_pytorch_us": 11.432,
+      "triton_us": 3.523,
+      "native_over_triton": 3.245,
+      "paired_median_saving_us": 7.916,
+      "triton_faster_rounds": 30
+    },
+    {
+      "rows": 1,
+      "columns": 8192,
+      "reference_us": 22.222,
+      "native_pytorch_us": 5.443,
+      "triton_us": 3.442,
+      "native_over_triton": 1.581,
+      "paired_median_saving_us": 2.039,
+      "triton_faster_rounds": 30
+    }
+  ]
+}

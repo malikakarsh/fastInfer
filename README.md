@@ -11,7 +11,7 @@ FastInfer is an experimental LLM inference runtime centered on custom Triton GPU
 ## Implemented
 
 - A PyTorch reference for two-dimensional matrix multiplication.
-- A readable stable softmax reference and a one-program-per-row Triton kernel; all seven reference/GPU tests passed on the pinned Kaggle setup. A benchmark against native PyTorch softmax and the readable reference is ready; GPU timing is pending.
+- A readable stable softmax reference and a one-program-per-row Triton kernel; all seven reference/GPU tests passed on the pinned Kaggle setup. Two frozen FP16 runs measured1.10–3.25× speedups over native PyTorch softmax across nine synthetic shapes; a compiled-reference comparison is prepared and awaiting GPU execution.
 - A tiled float16 Triton matrix multiplication with K-block accumulation, validated against PyTorch on tested CUDA shapes.
 - A specialized single-row FP16 matrix–vector kernel with FP32 reductions for contiguous stored linear weights.
 - A readable PyTorch RMSNorm reference and an initial fused Triton implementation preserving Qwen's rounding order; all seven CPU/GPU checks passed on the tested setup, with a first isolated performance comparison recorded below.
@@ -104,6 +104,28 @@ All 912 local normalization checks per prompt passed, baseline repeats agreed, a
 ## Initial RMSNorm kernel: broader numerical-behavior result
 
 On 16 fixed raw-text prompts with up to 64 generated tokens and EOS stopping, baseline repeats were stable and the fused-normalization model matched the original greedy sequence on **15/16 prompts**. The science continuation first differed at token 21. Strict final-logit tolerance failed on every prompt. Worst probability total variation on shared token histories was 0.005197 (approximately 0.52 percentage points). This is agreement on a small curated suite, not a task-accuracy score or a general quality guarantee. The replacement remains experimental and opt-in; its measured performance benefit does not establish exact output preservation. The [console summary](results/raw/qwen_rmsnorm_quality_20261013T071906163552Z_console_summary.json) records the supplied results. Original JSONs and both timing runs are packaged in an evidence ZIP on Kaggle; local archival and examination of the divergent continuation remain pending.
+
+## Softmax performance versus native PyTorch
+
+The first FP16 CUDA-graph benchmark measured lower Triton latency on all nine
+tested shapes, with reported native-PyTorch/Triton median ratios1.101–3.251×.
+All accuracy checks passed. Native PyTorch means the built-in
+`torch.softmax(x, dim=-1)`, distinct from our readable sequence of operations.
+For16rows of1024scores, native/Triton medians were5.651/2.194µs (2.576×);
+for128rows of1536scores they were11.460/3.525µs (3.251×). Paired savings
+were positive on all nine shapes, with Triton faster in29/30rounds for1x65
+and30/30for every other shape. These are isolated fixed-input graph timings,
+not an inference-model integration result. A separate compiled-reference
+comparison remains pending. The
+[console summary](results/raw/softmax_comparison_float16_20261013T235704423966Z_console_summary.json)
+stores supplied rounded results; full raw timings remain on Kaggle.
+
+A frozen same-session repeat passed every accuracy check and favored Triton
+in30/30paired rounds on all nine shapes (1.111–3.245×). Native/Triton medians
+for16x1024were5.592/2.192µs and for128x1536were11.432/3.523µs.
+The [repeat console summary](results/raw/softmax_comparison_float16_20261014T001552441939Z_console_summary.json)
+records those supplied measurements. No kernel settings were tuned between
+runs. A warp comparison remains future work.
 
 ## Setup and tests
 

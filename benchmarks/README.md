@@ -339,8 +339,8 @@ softmax tests. It does not create the GPU environment or replace PyTorch/Triton.
 This prevents the repeated missing-package errors after session changes.
 
 Once installed, run `python -m unittest discover -s tests -p '*softmax*.py' -v`
-in the pinned Kaggle interpreter. Four reference tests pass locally; three GPU tests are
-pending. GPU comparisons cover both native `torch.softmax` and the readable
+in the pinned Kaggle interpreter. Four reference and three GPU tests have
+passed on Kaggle. GPU comparisons cover both native `torch.softmax` and the readable
 reference, plus a double-precision oracle on the same input values. FP16
 comparison tolerance is rtol0.002/atol0.000002; FP32 is rtol0.00001/atol0.0000001.
 Check finite nonnegative outputs and row sums separately. Include width1,
@@ -368,6 +368,69 @@ orders five times. Save all raw timings, separate medians, native-minus-Triton
 paired savings and winning round counts. Accuracy uses the existing GPU-test
 tolerances, a double-precision oracle, and independent probability/row-sum
 checks before each shape is timed. Resource metadata is recorded but is not
-a measured occupancy or bottleneck diagnosis. Two CPU statistical checks pass;
-GPU timing is pending. The correctness runner now also discovers these two
+a measured occupancy or bottleneck diagnosis. Two CPU statistical checks pass.
+The correctness runner now also discovers these two
 benchmark checks, so it runs nine tests in total.
+
+The first FP16 run passed accuracy on all nine shapes. Native/Triton medians
+inµs were4.310/3.914(1x65),4.078/3.645(1x128),2.731/2.046(16x128),
+2.649/2.171(128x128),5.651/2.194(16x1024),5.993/3.049(128x1024),
+3.684/2.350(1x1536),11.460/3.525(128x1536),and5.487/3.479(1x8192).
+Reported speedups ranged1.101–3.251×. Paired median native-minus-Triton
+savings were positive in every case, with wins29/30for1x65 and30/30elsewhere.
+The frozen repeat also passed all accuracy checks and favored Triton30/30rounds
+on every shape, with reported ratios1.111–3.245×. Native/Triton medians were
+4.279/3.701,3.850/3.467,2.703/2.067,2.651/2.162,5.592/2.192,
+5.975/2.993,3.563/2.316,11.432/3.523,and5.443/3.442µs in shape order.
+Repeat raw report: `softmax_comparison_float16_20261014T001552441939Z.json`.
+Raw report: `softmax_comparison_float16_20261013T235704423966Z.json`, still on Kaggle.
+
+The providers are explicit: `readable_reference` calls our separate max,
+subtract, exp, sum and divide operations; `pytorch_native` calls built-in
+`torch.softmax`; `triton` calls the custom kernel. `torch.compile` is not used
+in this first benchmark. Compiling the readable reference would be an
+additional baseline; compiling a native operation does not inherently
+guarantee a faster implementation. Native softmax is already optimized,
+so the measured Triton advantage cannot be attributed to fusion alone.
+
+The compiled resource table reports registers/thread20for block128,
+24for block1024,34for block2048,and79for block8192. All tested configurations
+report zero `n_spills` and16shared bytes. In pinned Triton3.1, NVIDIA's loader
+reads `CU_FUNC_ATTRIBUTE_NUM_REGS` for `n_regs`, and
+`CU_FUNC_ATTRIBUTE_LOCAL_SIZE_BYTES / 4` (integer division) for `n_spills`.
+The latter is per-thread local storage in four-byte units, not a runtime
+memory-transaction count or necessarily a count of distinct spilled variables.
+Local storage can also serve other purposes. These fields come from the loaded
+compiled function and do not measure occupancy. Source:
+[Triton3.1 NVIDIA loader](https://github.com/triton-lang/triton/blob/v3.1.0/third_party/nvidia/backend/driver.c#L110).
+
+### Compiled softmax reference
+
+Run `python benchmarks/softmax_compare.py --include-compiled` to add
+`torch.compile(reference_softmax)` as a fourth provider. This compiles the
+readable PyTorch function independently of our manual kernel, with Inductor,
+fullgraph=True, dynamic=False, and internal `triton.cudagraphs=False`. The
+manual kernel remains four warps. First execution/compilation is synchronized
+and recorded separately, before accuracy checks, warmup and graph capture.
+Existing input shapes, seed2, tolerances,100operations/sample and30rounds
+remain. For four providers, the measurement orders put each provider in each
+position7or8times; the original three-provider ordering is unchanged.
+
+Compiler capture state resets between completed shapes to avoid the pinned
+version's per-function recompilation limit across nine static shapes. This
+does not relax fullgraph compilation or permit eager fallback. Compiled output
+must pass all existing comparisons before timing. Compilation or accuracy
+failure is saved and stops the run. JSON includes compiler settings, initial
+setup durations, raw samples, compiled-minus-Triton paired savings, and source
+hashes. Four local CPU benchmark checks pass, including Dynamo fullgraph
+capture with the eager compiler backend; GPU Inductor execution is pending.
+
+Source inspection also supplies hypotheses for the native timing gap.
+For width1024, the pinned native persistent kernel uses one warp per row,
+four rows per128-thread block, unlike our128threads per single-row block.
+For aligned FP16 width1536, the source selects a1024-thread block with input
+cached in shared memory, whereas our kernel uses128threads and16reported
+shared bytes. These are source-derived expected launch paths, not yet verified
+with a runtime trace. They do not isolate each contribution to latency.
+Sources: [native dispatch](https://github.com/pytorch/pytorch/blob/v2.5.1/aten/src/ATen/native/cuda/SoftMax.cu#L776),
+[persistent launch](https://github.com/pytorch/pytorch/blob/v2.5.1/aten/src/ATen/native/cuda/PersistentSoftmax.cuh#L282).
