@@ -684,3 +684,39 @@ inspection files. Archive SHA256 matches Kaggle, all23manifest-listed members
 passed integrity checks, all26timed-case statistics and112model checks were
 verified. See `notes/swiglu_results.md` and the adjacent archive verification
 record. This supersedes earlier SwiGLU notes saying evidence remains only on Kaggle.
+
+
+## Three-way Qwen decode SwiGLU comparison
+
+Run the existing model setup/tests script (now20SwiGLU-related tests:14CPU,
+6GPU), then `python benchmarks/qwen_swiglu_decode_compare.py --steps 16 --repetitions 30`.
+The new scoped context replaces only SiLU(gate)*up in every eligible
+single-token QwenMLP call. All learned projections and other components
+remain original; original prefill occurs outside the replacement context,
+with a fresh DynamicCache per trial. Modules restore on exit/errors;
+unsupported inputs fall back. The helper is intended for serial experiments.
+
+Three providers are original eager Qwen, eager Qwen with a shared
+`torch.compile(reference_swiglu)` stage, and eager Qwen with the manual
+Triton stage. This is not full-model compilation. The16x8960prefill tuning
+is not exercised during single-token decode; the Triton stage uses the
+single-row fallback256/4. The pinned4.46.3activation map uses `nn.SiLU`,
+which is checked before dispatch ([activation source](https://github.com/huggingface/transformers/blob/v4.46.3/src/transformers/activations.py#L199)).
+
+For each of three prompts, validation runs original twice and each candidate
+once for16steps. Full next-token scores use rtol=atol0.01 and greedy token
+sequences must match. Every candidate stage call is checked against eager
+and stagedFP64 with rtol0.002/atol0.0002; expected448calls,zero fallbacks,
+16calls perMLP must be confirmed. Default timing is skipped if either
+candidate or baseline-repeat checks fail. `--diagnose` always skips timing;
+there is no automatic tolerance relaxation or exploratory mode.
+
+After validation, two warmup trajectories per provider precede30timing
+rounds balanced over all six provider orders. Compilation and captures are
+excluded. The primary metric is full cached-decode wall milliseconds/step,
+including growing cache,argmax,Python dispatch and GPU synchronization;
+CUDA-event timings are secondary. Fixed decode steps continue after EOS.
+Reports preserve raw timings, per-step score/probability differences,
+local accuracy,counters,source hashes,environment, and all three pairwise
+comparisons. No model speedup is established until GPU evidence arrives.
+The evidence archiver now includes these new reports and the scoped helper.

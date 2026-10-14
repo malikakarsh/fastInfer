@@ -275,3 +275,10 @@ Triton timing was approximately1.88–2.05x faster than eager, winning30/30
 rounds per case. It essentially tied compiled in prefill and was slightly
 slower than compiled during decode. Qwen remained unchanged; full-model
 accuracy and performance with SwiGLU replacement remain untested.
+
+
+A three-way full cached-decode experiment is prepared: original eager Qwen,
+eager Qwen with only its elementwise SwiGLU compiled, and eager Qwen with
+our Triton stage. Full next-token score/token, local product, baseline-repeat
+and dispatch checks gate timing. This remains distinct from compiling the
+whole model. GPU validation and full-model timings are pending.

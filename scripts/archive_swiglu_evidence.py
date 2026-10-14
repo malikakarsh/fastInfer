@@ -15,7 +15,8 @@ def main():
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     raw = ROOT / "results/raw"
-    reports = sorted({*raw.glob("swiglu*.json"), *raw.glob("qwen_real_swiglu*.json")})
+    reports = sorted({*raw.glob("swiglu*.json"), *raw.glob("qwen_real_swiglu*.json"),
+                      *raw.glob("qwen_swiglu_decode*.json")})
     if not any(not path.name.endswith("_console_summary.json")
                and path.name.startswith("swiglu_") for path in reports):
         parser.error("No full SwiGLU JSON reports found; run the GPU benchmarks first")
@@ -27,7 +28,7 @@ def main():
                       *ROOT.glob("scripts/*swiglu*.py"),
                       ROOT / "benchmarks/softmax_compare.py",
                       ROOT / "benchmarks/matmul_compare.py",
-                      ROOT / "scripts/rmsnorm_compiled_inspect.py"})
+                      ROOT / "scripts/rmsnorm_compiled_inspect.py", ROOT / "decode_swiglu.py"})
     files = sorted(set(reports + generated + sources))
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
     base = Path("/kaggle/working") if Path("/kaggle/working").is_dir() else raw
