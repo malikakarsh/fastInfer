@@ -1,0 +1,98 @@
+{
+  "source": "User-supplied rounded console observations, not raw timing samples.",
+  "original_report": "swiglu_comparison_float16_20261014T022339063468Z.json",
+  "dtype": "float16",
+  "gpu": "Tesla T4",
+  "torch": "2.5.1+cu121",
+  "triton": "3.1.0",
+  "seed": 2,
+  "tests_passed": 11,
+  "all_accuracy_passed": true,
+  "cases": [
+    {
+      "shape": [
+        1,
+        65
+      ],
+      "native_us": 6.202,
+      "compiled_us": 3.03,
+      "triton_us": 3.098,
+      "native_paired_saving_us": 3.112,
+      "compiled_paired_saving_us": -0.072,
+      "triton_faster_than_native_rounds": 30,
+      "triton_faster_than_compiled_rounds": 5,
+      "block_size": 256,
+      "num_warps": 4,
+      "spills": 0,
+      "shared_bytes": 0
+    },
+    {
+      "shape": [
+        1,
+        1536
+      ],
+      "native_us": 6.615,
+      "compiled_us": 3.088,
+      "triton_us": 3.153,
+      "native_paired_saving_us": 3.472,
+      "compiled_paired_saving_us": -0.074,
+      "triton_faster_than_native_rounds": 30,
+      "triton_faster_than_compiled_rounds": 7,
+      "block_size": 256,
+      "num_warps": 4,
+      "spills": 0,
+      "shared_bytes": 0
+    },
+    {
+      "shape": [
+        1,
+        8960
+      ],
+      "native_us": 6.711,
+      "compiled_us": 3.19,
+      "triton_us": 3.235,
+      "native_paired_saving_us": 3.477,
+      "compiled_paired_saving_us": -0.042,
+      "triton_faster_than_native_rounds": 30,
+      "triton_faster_than_compiled_rounds": 7,
+      "block_size": 256,
+      "num_warps": 4,
+      "spills": 0,
+      "shared_bytes": 0
+    },
+    {
+      "shape": [
+        16,
+        8960
+      ],
+      "native_us": 9.648,
+      "compiled_us": 5.141,
+      "triton_us": 5.102,
+      "native_paired_saving_us": 4.545,
+      "compiled_paired_saving_us": 0.053,
+      "triton_faster_than_native_rounds": 30,
+      "triton_faster_than_compiled_rounds": 21,
+      "block_size": 512,
+      "num_warps": 4,
+      "spills": 0,
+      "shared_bytes": 0
+    },
+    {
+      "shape": [
+        128,
+        8960
+      ],
+      "native_us": 42.55,
+      "compiled_us": 29.151,
+      "triton_us": 29.117,
+      "native_paired_saving_us": 13.458,
+      "compiled_paired_saving_us": 0.035,
+      "triton_faster_than_native_rounds": 30,
+      "triton_faster_than_compiled_rounds": 21,
+      "block_size": 256,
+      "num_warps": 4,
+      "spills": 0,
+      "shared_bytes": 0
+    }
+  ]
+}

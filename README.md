@@ -242,5 +242,30 @@ preserves rounded results; full samples remain on Kaggle. Absolute timing
 varied substantially; comparisons are paired within each case. Generated
 compiled code keeps SiLU in FP32 through multiplication while our kernel
 preserves the eager FP16 boundary; both passed tolerance, not bitwise checks.
-No full-model performance claim follows. Final automatic-selection comparison
-and new dispatch tests are pending on Kaggle.
+No full-model performance claim follows.
+
+The final automatic-selection run passed all11tests and all five benchmark
+accuracy checks. Resource metadata confirms512/4 for16x8960 and256/4elsewhere,
+with zero reported spills/shared memory. Eager speedups were1.46–2.10x,
+winning30/30paired rounds on every shape. Compiled was slightly faster at the
+three single-row shapes;16x8960 was only0.8%lower latency than compiled
+(21/30wins) and128x8960 was essentially tied. Thus the controlled tuning
+improvement over our original kernel is supported, but a substantial final
+advantage over compiled PyTorch is not established. See the
+[final console summary](results/raw/swiglu_comparison_float16_20261014T022339063468Z_console_summary.json).
+Full SwiGLU raw reports and generated code still need to be archived locally.
+
+
+## Remaining model validation
+
+Standalone softmax is validated on synthetic finite rows only; it has no
+learned weights and has not been integrated into Qwen attention. Its kernel
+speedups do not establish model-level attention gains. Tiled attention,
+which combines scores, normalization and value accumulation across tiles,
+is a separate later milestone.
+
+The real-input SwiGLU check is prepared: capture learned gate/up projection
+outputs and their actual product across allMLPs for16-token prefill and
+single-token decode, then benchmark one isolated stage against eager and
+compiled PyTorch. GPU execution is pending; no model replacement or
+full-model performance claim is made.

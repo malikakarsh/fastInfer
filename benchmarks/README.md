@@ -623,3 +623,53 @@ Run the setup/tests script (now11tests:6CPU,5GPU), then
 selected comparison. The inspection script intentionally still compares the
 compiler against explicit original256/4. Local policy test and syntax checks
 pass; newGPUdispatch tests and final selected timings are pending.
+
+
+Final automatic-selection run022339063468Z passed11tests and all five accuracy
+checks, with expected512/4resources at16x8960 and256/4elsewhere, zero spills.
+Eager speedups1.46–2.10x won30/30rounds on all shapes. Versus compiled,
+single-row shapes were slightly slower;16x8960 showed only0.053us paired
+saving (21/30wins),128x8960 only0.035us (21/30wins). Treat those as near ties,
+not a broad compiled win. Confirmation supports the choice over original256/4;
+final benchmark does not establish the earlier2.2–3.2%compiled advantage
+as a stable effect across measurement contexts. Full raw evidence archive
+and validation on real model gate/up tensors remain next tasks.
+
+
+## Real Qwen SwiGLU inputs and evidence archive
+
+Run `scripts/kaggle_qwen_swiglu_check.py` with the notebook interpreter.
+It prepares the existing pinned kernel environment, runs14SwiGLU tests
+(9CPU/5GPU, including capture-boundary/cleanup checks), and installs pinned
+transformers4.46.3/accelerate1.1.1/safetensors0.4.5 with constraints preventing
+torch2.5.1+cu121/Triton3.1.0/NumPy1.26.4 from changing.
+
+Then run `python benchmarks/qwen_swiglu_check.py`. The original pinned
+Qwen2.5-1.5B FP16 model uses math SDPA and remains unmodified. Hooks capture
+both learned projection outputs and the product consumed by each down_proj.
+A16-token unpadded prefill and three single-token cached decode calls check
+all28MLPs against eager PyTorch and a stagedFP64oracle at rtol0.002/atol0.0002.
+Hooks are removed even on error; no hooks remain during isolated replay.
+Only layer0's captured elementwise stage is timed, with the existing
+native/compiled/automatic Triton benchmark methodology. Full-model timing,
+model replacement and generation-quality claims are excluded. Captured
+3D16-token tensors are explicitly reshaped to2D16x8960 for the tested policy.
+
+Run `python scripts/archive_swiglu_evidence.py` afterward. It creates a ZIP
+in `/kaggle/working` containing SwiGLU synthetic/real-input JSON reports,
+generated compiler source and resource summaries, current source snapshots,
+and a memberSHA256manifest. Failure reports are preserved. Packaging has
+passed a local integrity/hash/diagnostic-preservation smoke test; actual
+Kaggle archive import and numerical capture tests remain pending.
+
+## Attention validation still outstanding
+
+Standalone softmax benchmarks use synthetic finite matrices. No Qwen
+attention-score capture, attention replacement or full-model speedup from
+softmax has been established. Softmax has no learned weights. Current
+Qwen mathSDPA computes attention internally; replacing its normalization
+requires an explicit attention implementation and appropriate mask/dtype
+checks. Standalone row softmax is separate from tiled attention. Tiled
+attention combines score computation, online normalization and value
+accumulation to avoid materializing full score/probability matrices, and
+belongs to the later attention milestone. Neither route is validated yet.
