@@ -11,7 +11,7 @@ FastInfer is an experimental LLM inference runtime centered on custom Triton GPU
 ## Implemented
 
 - A PyTorch reference for two-dimensional matrix multiplication.
-- A readable stable softmax reference and a one-program-per-row Triton kernel; all seven reference/GPU tests passed on the pinned Kaggle setup. Two frozen FP16 runs measured1.10–3.25× speedups over native PyTorch softmax across nine synthetic shapes; a compiled-reference comparison is prepared and awaiting GPU execution.
+- A readable stable softmax reference and a one-program-per-row Triton kernel; initial reference/GPU checks passed on the pinned Kaggle setup. Two frozen FP16 runs measured1.10–3.25× speedups over native PyTorch softmax across nine synthetic shapes. A first compiled-reference comparison passed accuracy; results are below. Warp tuning is pending.
 - A tiled float16 Triton matrix multiplication with K-block accumulation, validated against PyTorch on tested CUDA shapes.
 - A specialized single-row FP16 matrix–vector kernel with FP32 reductions for contiguous stored linear weights.
 - A readable PyTorch RMSNorm reference and an initial fused Triton implementation preserving Qwen's rounding order; all seven CPU/GPU checks passed on the tested setup, with a first isolated performance comparison recorded below.
@@ -115,8 +115,7 @@ For16rows of1024scores, native/Triton medians were5.651/2.194µs (2.576×);
 for128rows of1536scores they were11.460/3.525µs (3.251×). Paired savings
 were positive on all nine shapes, with Triton faster in29/30rounds for1x65
 and30/30for every other shape. These are isolated fixed-input graph timings,
-not an inference-model integration result. A separate compiled-reference
-comparison remains pending. The
+not an inference-model integration result. The
 [console summary](results/raw/softmax_comparison_float16_20261013T235704423966Z_console_summary.json)
 stores supplied rounded results; full raw timings remain on Kaggle.
 
@@ -126,6 +125,18 @@ for16x1024were5.592/2.192µs and for128x1536were11.432/3.523µs.
 The [repeat console summary](results/raw/softmax_comparison_float16_20261014T001552441939Z_console_summary.json)
 records those supplied measurements. No kernel settings were tuned between
 runs. A warp comparison remains future work.
+
+The first default-Inductor compiled-reference comparison passed accuracy on
+all nine shapes. The compiled reference was faster at128x128 (1.929vs2.093µs),
+while the three small differences at1x65,1x128,and16x128are near ties.
+Manual Triton had lower latency on the other five shapes, with compiled/manual
+ratios1.063–1.628× and winning28–30of30paired rounds. The largest difference
+was128x1536: compiled5.633µs versus manual3.459µs. This is one compiled run,
+not a confirmed advantage over every compiler configuration. Native PyTorch
+remained slower in30/30rounds for every shape. The
+[compiled console summary](results/raw/softmax_compiled_comparison_float16_20261014T003126243894Z_console_summary.json)
+records supplied results; original raw samples remain on Kaggle. The custom
+default is still four warps. A controlled1/2/4/8warp comparison is prepared.
 
 ## Setup and tests
 

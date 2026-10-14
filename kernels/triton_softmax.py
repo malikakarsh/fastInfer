@@ -20,7 +20,7 @@ def _softmax(X, Y, COLUMNS: tl.constexpr, BLOCK: tl.constexpr):
     tl.store(Y + row * COLUMNS + columns, probabilities, mask=valid)
 
 
-def softmax(x):
+def softmax(x, *, num_warps=4):
     """Forward-only softmax for finite contiguous CUDA FP16/FP32 matrices.
 
     Normalize each row in FP32, then store in the input dtype. This first
@@ -36,11 +36,13 @@ def softmax(x):
         raise ValueError("contiguous input required")
     if torch.is_grad_enabled() and x.requires_grad:
         raise RuntimeError("forward-only kernel; disable gradients for training tensors")
+    if num_warps not in (1, 2, 4, 8):
+        raise ValueError("num_warps must be 1, 2, 4 or 8")
 
     rows, columns = x.shape
     output = torch.empty_like(x)
     _softmax[(rows,)](
         x, output, columns, triton.next_power_of_2(columns),
-        num_warps=4, enable_fp_fusion=False,
+        num_warps=num_warps, enable_fp_fusion=False,
     )
     return output

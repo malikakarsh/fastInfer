@@ -423,7 +423,14 @@ must pass all existing comparisons before timing. Compilation or accuracy
 failure is saved and stops the run. JSON includes compiler settings, initial
 setup durations, raw samples, compiled-minus-Triton paired savings, and source
 hashes. Four local CPU benchmark checks pass, including Dynamo fullgraph
-capture with the eager compiler backend; GPU Inductor execution is pending.
+capture with the eager compiler backend; GPU Inductor execution completed.
+All nine accuracy checks passed. Manual Triton versus compiled is nearly tied
+on1x65/1x128/16x128, loses128x128 (compiled1.929vsmanual2.093µs), and has
+lower latency on16x1024/128x1024/1x1536/128x1536/1x8192, with compiled/manual
+ratios1.063/1.138/1.150/1.628/1.194and wins28/28/30/30/30of30paired rounds.
+These latter advantages await independent confirmation. The native baseline
+remained slower on every shape in30/30rounds. Raw report:
+`softmax_compiled_comparison_float16_20261014T003126243894Z.json` on Kaggle.
 
 Source inspection also supplies hypotheses for the native timing gap.
 For width1024, the pinned native persistent kernel uses one warp per row,
@@ -434,3 +441,23 @@ shared bytes. These are source-derived expected launch paths, not yet verified
 with a runtime trace. They do not isolate each contribution to latency.
 Sources: [native dispatch](https://github.com/pytorch/pytorch/blob/v2.5.1/aten/src/ATen/native/cuda/SoftMax.cu#L776),
 [persistent launch](https://github.com/pytorch/pytorch/blob/v2.5.1/aten/src/ATen/native/cuda/PersistentSoftmax.cuh#L282).
+
+### Controlled softmax warp comparison
+
+Run `python benchmarks/softmax_warp_check.py` after the GPU tests. The wrapper
+now accepts keyword-only `num_warps=1/2/4/8`, retaining default4. Only this
+setting changes among manual variants; arithmetic, fusion settings and
+accuracy tolerances are unchanged. Six FP16 shape families cover1x4,1x65,
+128x128,16x1024,128x1536,and1x8192, using new seed3. All variants receive
+identical inputs per case. Native `torch.softmax` remains in the timed run;
+the compiler-generated provider is not modified or included in this sweep.
+
+Report latency, registers/thread, `n_spills`, shared bytes, and paired savings
+against both native and four-warps. Thirty rounds alternate forward/reverse
+rotations among five providers; each provider appears in each position six
+times. Graph replay remains100operations/sample with10warmups and10graph
+warmups. Every variant must pass native/reference/double-oracle and row-sum
+checks before timing. This sweep selects candidates for later confirmation,
+not a new default. GPU tests now cover all four warp settings on masked odd
+and wide8192rows in both FP16 and FP32. Nine CPU tests pass locally; four GPU
+tests are pending. This discovery pattern runs13tests in total.
