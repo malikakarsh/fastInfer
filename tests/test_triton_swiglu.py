@@ -49,7 +49,7 @@ class TritonSwigluTest(unittest.TestCase):
 
     def test_sweep_variants_on_odd_and_model_widths(self):
         torch.manual_seed(3)
-        configurations = ((256, 4), (256, 1), (256, 2), (512, 4), (1024, 4), (1024, 8))
+        configurations = ((256, 4), (256, 1), (256, 2), (512, 4), (512, 8), (1024, 4), (1024, 8))
         for dtype in (torch.float16, torch.float32):
             for shape in ((3, 65), (1, 8960)):
                 gate = 2 * torch.randn(shape, device="cuda", dtype=dtype)

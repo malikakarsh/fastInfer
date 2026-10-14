@@ -561,12 +561,12 @@ assumed to be the selected setting. Generated and manual outputs must pass
 native and staged FP64 checks. This is not a timing or causal experiment;
 compiler caches are disabled during inspection and benchmark settings stay unchanged.
 
-Then `python benchmarks/swiglu_compare.py --config-sweep` compares six
+Then `python benchmarks/swiglu_compare.py --config-sweep` compares seven
 manual configurations: (block,warps)=(256,4),(256,1),(256,2),(512,4),
-(1024,4),(1024,8). Eager and compiled reference baselines are included.
+(512,8),(1024,4),(1024,8). Eager and compiled reference baselines are included.
 Three shapes1x8960/16x8960/128x8960 receive identical inputs across providers
 at new seed3. All arithmetic, rounding and accuracy tolerances remain fixed.
-Thirty rotations balance eight providers' positions to3/4occurrences;
+Thirty rotations balance nine providers' positions to3/4occurrences;
 100operations per graph sample,10warmups and10graph warmups remain unchanged.
 The report stores samples, orders, resources and paired savings versus both
 original256/4 and compiled. Positive saving favors the variant. This selects
@@ -576,3 +576,27 @@ For fresh Kaggle sessions, run `scripts/kaggle_swiglu_check.py` with the
 notebook interpreter. Like the existing softmax setup, it installs NumPy and
 editable fastinfer into the pinned interpreter without replacing torch/Triton,
 checks imports/versions/CUDA, then runs the nine SwiGLU tests.
+
+
+### Frozen candidates and the compiler's geometry
+
+The first six-configuration sweep passed all checks. Default256/4 tied
+compiled at1x8960. At16x8960,512/4 took4.391us versus4.658us default and
+4.506us compiled, winning30/30 against default and28/30 against compiled.
+At128x8960,1024/8 saved only0.138us paired versus default (29/30 wins).
+All variants reported zero spills. These remain candidates, not defaults.
+
+The16x8960 inspection selected XBLOCK512/warps8,280programs,14registers/thread,
+zero spills/shared. Generated code retains SiLU in FP32 through multiplication;
+manual code rounds to FP16 first. Both passed tolerance, but launch geometry
+alone cannot explain the gap because arithmetic boundaries differ.
+
+Run `python benchmarks/swiglu_compare.py --confirm-configs` after the tests.
+Four fixed manual configurations256/4,512/4,512/8,1024/8 plus eager/compiled
+baselines receive the same input at each shape and seed. Shapes1/16/128x8960
+and fresh seeds4/5/6 produce nine cases; middle-pass shape order reverses.
+Thirty rounds balance six providers exactly (five occurrences per position).
+The512/8 configuration is newly added from inspection and is exploratory;
+512/4 and1024/8 were selected in the previous seed3sweep. Defaults, arithmetic,
+accuracy tolerances and graph timing remain unchanged. The report records
+per-case seed, raw samples, paired savings and resources; failure stops the run.

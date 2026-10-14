@@ -1,0 +1,75 @@
+{
+  "source": "User-supplied rounded console observations; original generated source and raw timing samples remain on Kaggle.",
+  "raw_report": "swiglu_config_sweep_float16_20261014T020104308938Z.json",
+  "inspection_directory": "swiglu_generated_20261014T020059767332Z",
+  "gpu": "Tesla T4",
+  "torch": "2.5.1+cu121",
+  "triton": "3.1.0",
+  "dtype": "float16",
+  "tests_passed": 9,
+  "compiled_inspection": {
+    "shape": [
+      16,
+      8960
+    ],
+    "XBLOCK": 512,
+    "num_warps": 8,
+    "programs": 280,
+    "registers_per_thread": 14,
+    "spills": 0,
+    "shared_bytes": 0,
+    "silu_intermediate": "FP32 through multiplication in generated source"
+  },
+  "manual_default": {
+    "block_size": 256,
+    "num_warps": 4,
+    "silu_intermediate": "Explicit input-dtype rounding before multiplication"
+  },
+  "selected_observations": [
+    {
+      "shape": [
+        1,
+        8960
+      ],
+      "native_us": 6.703,
+      "compiled_us": 3.235,
+      "default_us": 3.236,
+      "decision": "Keep default; essentially tied with compiled"
+    },
+    {
+      "shape": [
+        16,
+        8960
+      ],
+      "native_us": 8.335,
+      "compiled_us": 4.506,
+      "default_us": 4.658,
+      "candidate_block": 512,
+      "candidate_warps": 4,
+      "candidate_us": 4.391,
+      "paired_saving_vs_default_us": 0.268,
+      "wins_vs_default": 30,
+      "paired_saving_vs_compiled_us": 0.106,
+      "wins_vs_compiled": 28
+    },
+    {
+      "shape": [
+        128,
+        8960
+      ],
+      "native_us": 41.8,
+      "compiled_us": 28.896,
+      "default_us": 28.836,
+      "candidate_block": 1024,
+      "candidate_warps": 8,
+      "candidate_us": 28.709,
+      "paired_saving_vs_default_us": 0.138,
+      "wins_vs_default": 29,
+      "paired_saving_vs_compiled_us": 0.176,
+      "wins_vs_compiled": 29
+    }
+  ],
+  "all_sweep_accuracy_passed": true,
+  "all_manual_sweep_spills": 0,
+  "scope": "Candidate selection, not confirmation. Inspection geometry alone does not explain timing; rounding differs."
+}

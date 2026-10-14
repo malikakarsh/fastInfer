@@ -16,11 +16,12 @@ from matmul_compare import capture_graph, summarize
 
 ROOT = Path(__file__).resolve().parents[1]
 SHAPES = ((1, 65), (1, 1536), (1, 8960), (16, 8960), (128, 8960))
-SWEEP_CONFIGS = ((256, 4), (256, 1), (256, 2), (512, 4), (1024, 4), (1024, 8))
+SWEEP_CONFIGS = ((256, 4), (256, 1), (256, 2), (512, 4), (512, 8), (1024, 4), (1024, 8))
+CONFIRM_CONFIGS = ((256, 4), (512, 4), (512, 8), (1024, 8))
 
 
 def sweep_orders(names):
-    """Rotate eight providers over thirty rounds; position counts differ by at most one."""
+    """Rotate providers over thirty rounds; position counts differ by at most one."""
     names = tuple(names)
     return [names[i % len(names):] + names[:i % len(names)] for i in range(30)]
 
@@ -127,22 +128,36 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--include-compiled", action="store_true")
     parser.add_argument("--dtype", choices=("float16", "float32"), default="float16")
-    parser.add_argument("--config-sweep", action="store_true",
-                        help="compare six fixed configurations and eager/compiled baselines at seed3")
+    modes = parser.add_mutually_exclusive_group()
+    modes.add_argument("--config-sweep", action="store_true",
+                       help="compare seven fixed configurations and eager/compiled baselines at seed3")
+    modes.add_argument("--confirm-configs", action="store_true",
+                       help="compare default, selected candidates and new512/8 at seeds4/5/6")
     args = parser.parse_args()
-    include_compiled = args.include_compiled or args.config_sweep
-    shapes = ((1, 8960), (16, 8960), (128, 8960)) if args.config_sweep else SHAPES
-    configurations = SWEEP_CONFIGS if args.config_sweep else ((256, 4),)
-    seed = 3 if args.config_sweep else 2
+    tuning = args.config_sweep or args.confirm_configs
+    include_compiled = args.include_compiled or tuning
+    shapes = ((1, 8960), (16, 8960), (128, 8960)) if tuning else SHAPES
+    configurations = CONFIRM_CONFIGS if args.confirm_configs else (
+        SWEEP_CONFIGS if args.config_sweep else ((256, 4),)
+    )
+    seeds = (4, 5, 6) if args.confirm_configs else ((3,) if args.config_sweep else (2,))
+    mode = "configuration_confirmation" if args.confirm_configs else (
+        "config_sweep" if args.config_sweep else "comparison"
+    )
+    trials = [(seed, shape) for index, seed in enumerate(seeds)
+              for shape in (shapes[::-1] if index % 2 else shapes)]
     if not torch.cuda.is_available():
         parser.error("CUDA required")
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
-    destination = ROOT / "results/raw" / f"swiglu_{'config_sweep' if args.config_sweep else 'comparison'}_{args.dtype}_{stamp}.json"
+    destination = ROOT / "results/raw" / f"swiglu_{mode}_{args.dtype}_{stamp}.json"
     destination.parent.mkdir(parents=True, exist_ok=True)
     report = {
         "benchmark": "elementwise_swiglu_comparison", "dtype": args.dtype,
-        "seed": seed, "configurations": [list(c) for c in configurations], "input_distribution": "gate=2*randn, up=randn",
+        "seeds": list(seeds), "mode": mode, "configurations": [list(c) for c in configurations], "input_distribution": "gate=2*randn, up=randn",
         "shapes": [list(shape) for shape in shapes],
+        "trials": [{"seed": seed, "shape": list(shape)} for seed, shape in trials],
+        "confirmation_scope": "512/4 and1024/8 were selected at seed3;512/8 is newly added "
+                              "from generated launch inspection and remains exploratory.",
         "timing_mode": "cuda_graph_replay_amortized", "operations_per_sample": 100,
         "warmup": 10, "graph_warmup": 10, "repetitions": 30,
         "compiled_settings": COMPILED_SETTINGS if include_compiled else None,
@@ -163,12 +178,16 @@ def main():
     shape = None
     try:
         with torch.inference_mode():
-            torch.manual_seed(seed)
-            for shape in shapes:
-                print(f"Preparing shape={shape}...", flush=True)
+            active_seed = None
+            for seed, shape in trials:
+                if seed != active_seed:
+                    torch.manual_seed(seed)
+                    active_seed = seed
+                print(f"Preparing seed={seed}, shape={shape}...", flush=True)
                 gate = 2 * torch.randn(shape, device="cuda", dtype=getattr(torch, args.dtype))
                 up = torch.randn_like(gate)
                 case = measure_case(gate, up, include_compiled=include_compiled, configurations=configurations)
+                case["seed"] = seed
                 report["cases"].append(case)
                 for name, values in case["implementations"].items():
                     print(f"  {name}: {values['latency_us']['median']:.3f} us", flush=True)
@@ -180,7 +199,7 @@ def main():
                               f"Triton faster {row['triton_faster_rounds']}/30", flush=True)
                 for name, resources in case["resources_by_implementation"].items():
                     print(f"  {name} resources: {resources} | accuracy PASS", flush=True)
-                    if args.config_sweep:
+                    if tuning:
                         for baseline in ("default_vs_variant", "compiled_vs_variant"):
                             comparison = case["configuration_comparisons"][name][baseline]
                             print(f"    {baseline}: paired saving "
@@ -188,7 +207,7 @@ def main():
                                   f"variant faster {comparison['triton_faster_rounds']}/30", flush=True)
                 destination.write_text(json.dumps(report, indent=2) + "\n")
     except Exception as error:
-        report["failure"] = {"shape": shape, "type": type(error).__name__, "message": str(error)}
+        report["failure"] = {"seed": seed, "shape": shape, "type": type(error).__name__, "message": str(error)}
         raise
     finally:
         destination.write_text(json.dumps(report, indent=2) + "\n")
