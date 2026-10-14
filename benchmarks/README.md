@@ -720,3 +720,43 @@ Reports preserve raw timings, per-step score/probability differences,
 local accuracy,counters,source hashes,environment, and all three pairwise
 comparisons. No model speedup is established until GPU evidence arrives.
 The evidence archiver now includes these new reports and the scoped helper.
+
+
+### SwiGLU numerical stage diagnosis
+
+The initial three-way model run030054275090Z exercised448stage calls per
+candidate/prompt with zero fallback and local accuracyPASS. Both compiled
+and manual candidates failed strict logits on all three prompts while
+16-step greedy tokens matched; timing was skipped. Console summary is
+stored locally; full raw report remains on Kaggle.
+
+Run `python benchmarks/qwen_swiglu_stages.py` for the first prompt and first
+cached decode step. Optional `--prompt-index 1` or2 selects another original
+prompt; this is not a16-step rollout. The unchanged model provides gate/up
+and product captures for28MLPs. Original reference must exactly match each
+captured product; select the first non-equal product in model order for
+compiled and manual implementations independently.
+
+On each selected pair, native FP32 SiLU→FP16→multiply stages are compared
+with a separate instrumented manual kernel. Native reconstruction must match
+the actual model and instrumented output must match production before
+attribution. The sigmoid comparison is a diagnostic comparator, not an
+asserted internal native SiLU operation. Pinned CUDA SiLU source uses
+x/(1+exp(-x)); manual code multiplies x by a reciprocal. These are equivalent
+in real arithmetic but floating-point operation ordering and exponential
+approximations can differ; source differences are hypotheses, not GPU proof.
+[Native2.5.1source](https://github.com/pytorch/pytorch/blob/v2.5.1/aten/src/ATen/native/cuda/ActivationSiluKernel.cu#L27).
+
+An eager and a compiled proxy retaining FP32 SiLU through multiplication
+are compared with the actual compiled output, testing its rounding-boundary
+hypothesis. Proxy agreement alone does not establish all generated arithmetic.
+Selected original inputs, outputs and intermediate tensors are saved to
+`.pt` snapshots for future replay. Previous full-decodeJSON contains error
+statistics, not raw inputs; this script recaptures them. No timing, tolerance
+relaxation, production changes or full-model precision guarantee is made.
+
+New oneCPU/twoGPU diagnostic tests cover stage boundaries, mask tails,
+selected shape, extreme inputs and exact diagnostic/production output
+agreement. The model setup script now discovers23SwiGLU-related tests
+(15CPU/8GPU). Local syntax passed; numerical tests and diagnosis are pending
+on Kaggle. The archive tool also collects stageJSON and tensor snapshots.

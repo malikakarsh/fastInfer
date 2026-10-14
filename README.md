@@ -281,4 +281,8 @@ A three-way full cached-decode experiment is prepared: original eager Qwen,
 eager Qwen with only its elementwise SwiGLU compiled, and eager Qwen with
 our Triton stage. Full next-token score/token, local product, baseline-repeat
 and dispatch checks gate timing. This remains distinct from compiling the
-whole model. GPU validation and full-model timings are pending.
+whole model. The first full-model check exercised448stage calls per candidate per prompt
+with zero fallbacks and all local checks passing. Both candidates generated
+the same16-step token sequences but failed the strict logit tolerance on all
+three prompts, so timing was skipped. Numerical stage diagnosis is pending;
+no full-model SwiGLU speedup is established.

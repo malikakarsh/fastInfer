@@ -1,0 +1,32 @@
+{
+  "source": "User-supplied console summary; full raw diagnostic report remains on Kaggle.",
+  "original_report": "qwen_swiglu_decode_20261014T030054275090Z.json",
+  "steps": 16,
+  "stage_calls_per_candidate_per_prompt": 448,
+  "fallback_calls": 0,
+  "all_local_checks_passed": true,
+  "timing_status": "accuracy_failed_timing_skipped",
+  "cases": [
+    {
+      "prompt": "The capital of France is",
+      "compiled_logit_mismatches": 12652,
+      "triton_logit_mismatches": 6451,
+      "compiled_identical_tokens": true,
+      "triton_identical_tokens": true
+    },
+    {
+      "prompt": "Explain why the sky appears blue in one sentence.",
+      "compiled_logit_mismatches": 20993,
+      "triton_logit_mismatches": 14926,
+      "compiled_identical_tokens": true,
+      "triton_identical_tokens": true
+    },
+    {
+      "prompt": "def add(a, b):\n    return",
+      "compiled_logit_mismatches": 2951,
+      "triton_logit_mismatches": 6704,
+      "compiled_identical_tokens": true,
+      "triton_identical_tokens": true
+    }
+  ]
+}

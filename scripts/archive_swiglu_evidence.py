@@ -16,7 +16,7 @@ def main():
     args = parser.parse_args()
     raw = ROOT / "results/raw"
     reports = sorted({*raw.glob("swiglu*.json"), *raw.glob("qwen_real_swiglu*.json"),
-                      *raw.glob("qwen_swiglu_decode*.json")})
+                      *raw.glob("qwen_swiglu_decode*.json"), *raw.glob("qwen_swiglu_stages*.json")})
     if not any(not path.name.endswith("_console_summary.json")
                and path.name.startswith("swiglu_") for path in reports):
         parser.error("No full SwiGLU JSON reports found; run the GPU benchmarks first")
@@ -29,7 +29,8 @@ def main():
                       ROOT / "benchmarks/softmax_compare.py",
                       ROOT / "benchmarks/matmul_compare.py",
                       ROOT / "scripts/rmsnorm_compiled_inspect.py", ROOT / "decode_swiglu.py"})
-    files = sorted(set(reports + generated + sources))
+    snapshots = sorted(raw.glob("qwen_swiglu_stages*.pt"))
+    files = sorted(set(reports + generated + sources + snapshots))
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
     base = Path("/kaggle/working") if Path("/kaggle/working").is_dir() else raw
     destination = args.output or base / f"swiglu_evidence_{stamp}.zip"
@@ -53,7 +54,7 @@ def main():
         if archive.testzip() is not None:
             raise RuntimeError("Archive integrity check failed")
     print(f"Archived {len(reports)} JSON reports, {len(generated)} generated files, "
-          f"{len(sources)} source files: {destination}")
+          f"{len(sources)} source files, {len(snapshots)} tensor snapshots: {destination}")
     print("SHA256:", hashlib.sha256(destination.read_bytes()).hexdigest())
 
 
