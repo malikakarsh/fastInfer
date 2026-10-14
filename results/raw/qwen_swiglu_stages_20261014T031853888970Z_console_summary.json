@@ -1,0 +1,23 @@
+{
+  "source": "User-supplied rounded diagnostic console results; raw JSON and tensors remain on Kaggle.",
+  "original_report": "qwen_swiglu_stages_20261014T031853888970Z.json",
+  "tests_passed": 23,
+  "cross_checks_passed": true,
+  "compiled": {
+    "first_differing_module": "model.layers.0.mlp",
+    "product_differences": 2347,
+    "max_abs_product_difference": 0.00390625,
+    "matches_compiled_unrounded_proxy": true,
+    "manual_product_matches_captured": true
+  },
+  "triton": {
+    "first_differing_module": "model.layers.1.mlp",
+    "silu_fp32_differences": 7038,
+    "max_abs_silu_fp32_difference": 1.1920929e-07,
+    "silu_fp16_differences": 7,
+    "product_differences": 7,
+    "max_abs_product_difference": 6.10351562e-05,
+    "hybrid_rounded_activation_then_eager_multiply_matches_production": true
+  },
+  "scope": "One original first cached decode step on first prompt. Manual difference localized before multiplication; exponential versus division cause not yet isolated. No timing/full-model exactness claim."
+}

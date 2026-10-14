@@ -760,3 +760,35 @@ selected shape, extreme inputs and exact diagnostic/production output
 agreement. The model setup script now discovers23SwiGLU-related tests
 (15CPU/8GPU). Local syntax passed; numerical tests and diagnosis are pending
 on Kaggle. The archive tool also collects stageJSON and tensor snapshots.
+
+
+### Final small arithmetic replay
+
+The first-step diagnosis passed all cross-checks. Compiled first differed
+atMLPlayer0 (2347product positions,max0.00390625) and exactly matched the
+compiled unrounded proxy. Manual first differed atlayer1: tiny FP32 SiLU
+changes persisted at7FP16activation/product positions,maxproduct0.0000610351562.
+Eager multiplication of manual rounded SiLU reproduced manual production
+exactly. This localizes manual output changes before multiplication; it
+does not distinguish exponential versus division effects yet.
+
+Run only the new GPU tests with `python -m unittest discover -s tests
+-p test_swiglu_arithmetic_candidate.py -v`, then replay the saved manual
+snapshot using `python benchmarks/swiglu_arithmetic_check.py --snapshot
+results/raw/qwen_swiglu_stages_20261014T031853888970Z_triton.pt`.
+No Qwen load or timing is involved. Five accuracy-only variants compare
+fast/libdevice exponential with reciprocal multiplication/plain division,
+plus libdevice exponential with explicit round-to-nearest division.
+Geometry, FP16rounding, fusion=False and tolerances remain unchanged.
+The fast/reciprocal control must exactly reproduce production and native
+replay must reproduce the saved original product. Selected snapshots are
+loaded with `weights_only=True`; stage differences, sources,environment,
+resources and PTX are saved. Ordinary division may be rewritten, so saved
+assembly is evidence rather than assuming the source operation survives.
+Verified APIs in [Triton3.1math](https://github.com/triton-lang/triton/blob/v3.1.0/python/triton/language/math.py#L188)
+and [CUDA libdevice](https://github.com/triton-lang/triton/blob/v3.1.0/python/triton/language/extra/cuda/libdevice.py#L1052).
+
+Production kernel remains unchanged. New numerical GPU tests are pending;
+local syntax checks passed. After this bounded replay, document the outcome
+and close the kernel lab; unresolved full-model precision/performance remains
+an integration issue rather than extending tuning indefinitely.

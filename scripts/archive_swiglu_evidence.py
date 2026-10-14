@@ -30,7 +30,8 @@ def main():
                       ROOT / "benchmarks/matmul_compare.py",
                       ROOT / "scripts/rmsnorm_compiled_inspect.py", ROOT / "decode_swiglu.py"})
     snapshots = sorted(raw.glob("qwen_swiglu_stages*.pt"))
-    files = sorted(set(reports + generated + sources + snapshots))
+    assembly = sorted(raw.glob("swiglu_arithmetic_*.ptx"))
+    files = sorted(set(reports + generated + sources + snapshots + assembly))
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
     base = Path("/kaggle/working") if Path("/kaggle/working").is_dir() else raw
     destination = args.output or base / f"swiglu_evidence_{stamp}.zip"
@@ -54,7 +55,8 @@ def main():
         if archive.testzip() is not None:
             raise RuntimeError("Archive integrity check failed")
     print(f"Archived {len(reports)} JSON reports, {len(generated)} generated files, "
-          f"{len(sources)} source files, {len(snapshots)} tensor snapshots: {destination}")
+          f"{len(sources)} source files, {len(snapshots)} tensor snapshots, "
+          f"{len(assembly)} assembly files: {destination}")
     print("SHA256:", hashlib.sha256(destination.read_bytes()).hexdigest())
 
 
