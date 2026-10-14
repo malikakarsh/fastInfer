@@ -512,3 +512,37 @@ SHA256 hashes and verification checks. Both final selected-run source hashes
 match local code, all selected resources report zero spills, and saved
 medians and paired statistics agree with their raw samples. Earlier mentions
 of softmax reports remaining only on Kaggle are superseded by this archive.
+
+
+## Initial elementwise SwiGLU
+
+Run `python -m unittest discover -s tests -p '*swiglu*.py' -v` first (four
+reference tests and three GPU tests), then
+`python benchmarks/swiglu_compare.py --include-compiled` in the existing
+pinned environment. Local syntax checks pass; numerical/GPU checks are
+pending. There is no speedup claim yet.
+
+The native baseline is `F.silu(gate) * up`: one SiLU operation followed by
+multiplication. The compiled baseline uses Inductor/fullgraph on that same
+PyTorch reference, with internal CUDA graphs disabled. It does not invoke
+our custom Triton. The kernel computes in FP32, rounds the SiLU result to
+the input dtype before multiplication, and stores the input dtype output.
+This follows the eager model's operation boundaries; exact matching is
+not promised. The staged FP64 oracle includes both dtype-rounding steps.
+Tolerances are FP16 rtol0.002/atol0.0002, FP32 rtol0.00001/atol0.000002.
+
+Programs own fixed256-element chunks, four warps each. There is no row-wide
+reduction and no padding of the entire8960width to a power of two. Contiguous
+matching tensors, FP16/FP32, finite inputs and inference-only execution are
+the initial scope. Tests include small/odd shapes,3Dtoken shapes, signs,
+large gate magnitudes, half rounding, tails, and rejection of invalid inputs.
+
+The five synthetic benchmark shapes are1x65,1x1536,1x8960,16x8960,128x8960;
+seed2,gate=2*randn andup=randn. Accuracy checks precede timing. Graph replay
+uses100operations/sample,30paired rounds with balanced provider orders,
+10warmups and10graph warmups. Compilation is excluded and first-call time
+recorded. Reports preserve samples, paired savings, environment/source hashes,
+and compiled resources. No learned projections or full-model timing are included.
+
+Implementation references: [PyTorch2.5.1 SiLU](https://github.com/pytorch/pytorch/blob/v2.5.1/torch/nn/functional.py),
+[Triton3.1 masked elementwise indexing](https://github.com/triton-lang/triton/blob/v3.1.0/python/tutorials/01-vector-add.py).
