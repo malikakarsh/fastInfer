@@ -5,6 +5,7 @@ import triton
 import triton.language as tl
 
 from .swiglu import validate_pair
+from .swiglu_config import choose_swiglu_config
 
 BLOCK_SIZE = 256
 NUM_WARPS = 4
@@ -27,11 +28,22 @@ def _swiglu(GATE, UP, OUTPUT, ELEMENTS: tl.constexpr, BLOCK: tl.constexpr):
     tl.store(OUTPUT + offsets, result, mask=valid)
 
 
-def swiglu(gate, up, *, block_size=BLOCK_SIZE, num_warps=NUM_WARPS):
+def default_swiglu_config(gate):
+    """Return the shape/dtype/hardware/software-scoped automatic setting."""
+    return choose_swiglu_config(
+        gate.shape, dtype=str(gate.dtype).removeprefix("torch."),
+        gpu_name=torch.cuda.get_device_name(gate.device),
+        torch_version=torch.__version__, triton_version=triton.__version__,
+    )
+
+
+def swiglu(gate, up, *, block_size=None, num_warps=None):
     """Process equal contiguous CUDA FP16/FP32 tensors, with no backward pass.
 
-    Defaults are 256-element chunks and four warps. Explicit settings support
-    controlled scheduling experiments; defaults are not tuned choices. Finite inputs are required; no bitwise-agreement promise.
+    Omit both settings for automatic selection:512/4 for the confirmed T4
+    FP16 shape16x8960, otherwise256/4. Supplying either setting disables
+    automatic selection and uses the original default for the other setting.
+    Finite inputs are required; no bitwise-agreement promise.
     """
     validate_pair(gate, up)
     if not gate.is_cuda:
@@ -41,6 +53,11 @@ def swiglu(gate, up, *, block_size=BLOCK_SIZE, num_warps=NUM_WARPS):
     if torch.is_grad_enabled() and (gate.requires_grad or up.requires_grad):
         raise RuntimeError("forward-only kernel; disable gradients for training tensors")
 
+    if block_size is None and num_warps is None:
+        block_size, num_warps = default_swiglu_config(gate)
+    else:
+        block_size = BLOCK_SIZE if block_size is None else block_size
+        num_warps = NUM_WARPS if num_warps is None else num_warps
     if block_size not in (128, 256, 512, 1024):
         raise ValueError("block_size must be 128, 256, 512 or 1024")
     if num_warps not in (1, 2, 4, 8):

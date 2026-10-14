@@ -219,3 +219,28 @@ now imported into `results/raw/`. The
 records file hashes and checks. Final source hashes match local kernel and
 benchmark code; raw medians, paired comparisons, accuracy and selected warp
 resources were verified. See the [softmax findings](notes/softmax_results.md).
+
+
+## Confirmed elementwise SwiGLU scheduling
+
+The fused operation is `SiLU(gate) * up`, with explicit input-dtype rounding
+after SiLU. Shapes describe token vectors and intermediate features:1x8960
+is one token vector,16x8960 sixteen vectors. Multiple vectors can come from
+one prompt or several requests; this synthetic benchmark does not measure
+a request-batching system or learned projections.
+
+Across seeds4/5/6,512elements/program and4warps at FP16shape16x8960 reduced
+latency approximately5.5–6.6% versus original256/4, winning89/90paired rounds.
+Versus the compiled reference, savings were approximately2.2–3.2% from medians,
+with72/90wins. All accuracy checks passed and all manual variants reported
+zero spills. Other shapes showed no consistent reason to change the default.
+Automatic selection now uses512/4 only for this exact shape onTeslaT4,
+torch2.5.1+cu121 andTriton3.1.0; otherwise256/4. Explicit overrides remain.
+
+The [confirmation console summary](results/raw/swiglu_configuration_confirmation_float16_20261014T021553529186Z_console_summary.json)
+preserves rounded results; full samples remain on Kaggle. Absolute timing
+varied substantially; comparisons are paired within each case. Generated
+compiled code keeps SiLU in FP32 through multiplication while our kernel
+preserves the eager FP16 boundary; both passed tolerance, not bitwise checks.
+No full-model performance claim follows. Final automatic-selection comparison
+and new dispatch tests are pending on Kaggle.

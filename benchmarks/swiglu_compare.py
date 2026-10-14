@@ -26,28 +26,35 @@ def sweep_orders(names):
     return [names[i % len(names):] + names[:i % len(names)] for i in range(30)]
 
 
-def measure_case(gate, up, *, include_compiled, configurations=((256, 4),)):
+def measure_case(gate, up, *, include_compiled, configurations=None):
     import triton
     from fastinfer.kernels.swiglu import reference_swiglu
-    from fastinfer.kernels.triton_swiglu import swiglu, _swiglu, BLOCK_SIZE, NUM_WARPS
+    from fastinfer.kernels.triton_swiglu import swiglu, _swiglu, BLOCK_SIZE, NUM_WARPS, default_swiglu_config
 
     operations = {"pytorch_native": reference_swiglu}
     if include_compiled:
         torch.compiler.reset()
         operations["pytorch_compiled"] = torch.compile(reference_swiglu, **COMPILED_SETTINGS)
+    automatic = configurations is None
+    if automatic:
+        configurations = (default_swiglu_config(gate),)
     variants = {}
     for block, warps in configurations:
-        name = "triton" if (block, warps) == (BLOCK_SIZE, NUM_WARPS) else f"triton_b{block}_w{warps}"
+        name = "triton" if automatic or (block, warps) == (BLOCK_SIZE, NUM_WARPS) else f"triton_b{block}_w{warps}"
         variants[name] = (block, warps)
-        operations[name] = lambda g, u, block=block, warps=warps: swiglu(
-            g, u, block_size=block, num_warps=warps,
-        )
+        if automatic:
+            operations[name] = swiglu
+        else:
+            operations[name] = lambda g, u, block=block, warps=warps: swiglu(
+                g, u, block_size=block, num_warps=warps,
+            )
     native = reference_swiglu(gate, up)
     # The oracle includes the SiLU intermediate's input-dtype rounding.
     activated = (gate.double() * torch.sigmoid(gate.double())).to(gate.dtype)
     oracle = (activated.double() * up.double()).to(gate.dtype)
     rtol, atol = (.002, 2e-4) if gate.dtype == torch.float16 else (1e-5, 2e-6)
     case = {"shape": list(gate.shape), "elements": gate.numel(),
+            "selection_mode": "automatic" if automatic else "explicit_original_and_candidates",
             "accuracy": {"rtol": rtol, "atol": atol,
                          "oracle": "float64 arithmetic with input-dtype rounding after SiLU and multiply",
                          "implementations": {}}, "first_call_setup_and_execution_seconds": {}}
@@ -138,7 +145,7 @@ def main():
     include_compiled = args.include_compiled or tuning
     shapes = ((1, 8960), (16, 8960), (128, 8960)) if tuning else SHAPES
     configurations = CONFIRM_CONFIGS if args.confirm_configs else (
-        SWEEP_CONFIGS if args.config_sweep else ((256, 4),)
+        SWEEP_CONFIGS if args.config_sweep else None
     )
     seeds = (4, 5, 6) if args.confirm_configs else ((3,) if args.config_sweep else (2,))
     mode = "configuration_confirmation" if args.confirm_configs else (
@@ -153,7 +160,7 @@ def main():
     destination.parent.mkdir(parents=True, exist_ok=True)
     report = {
         "benchmark": "elementwise_swiglu_comparison", "dtype": args.dtype,
-        "seeds": list(seeds), "mode": mode, "configurations": [list(c) for c in configurations], "input_distribution": "gate=2*randn, up=randn",
+        "seeds": list(seeds), "mode": mode, "configurations": [list(c) for c in configurations] if configurations is not None else "automatic", "input_distribution": "gate=2*randn, up=randn",
         "shapes": [list(shape) for shape in shapes],
         "trials": [{"seed": seed, "shape": list(shape)} for seed, shape in trials],
         "confirmation_scope": "512/4 and1024/8 were selected at seed3;512/8 is newly added "
@@ -165,10 +172,11 @@ def main():
                  "Native means F.silu(gate)*up, not a built-in fused SwiGLU. "
                  "Compiled reference is independent of our Triton kernel. Setup/compilation excluded. "
                  "Accuracy against eager PyTorch and staged FP64 oracle precedes timing; no eager fallback. "
-                 "Default block256/warps4 unchanged. Sweep selects candidates only; no exact-output claim. "
+                 "Automatic512/4 only for confirmed T4FP16shape16x8960;otherwise256/4. "
+                 "Sweeps retain explicit256/4 original baseline. No exact-output claim. "
                  "Spills is compiler local-storage metadata, not runtime transaction count.",
         "source_sha256": {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
-                          for name in ("kernels/swiglu.py", "kernels/triton_swiglu.py",
+                          for name in ("kernels/swiglu.py", "kernels/triton_swiglu.py", "kernels/swiglu_config.py",
                                        "benchmarks/swiglu_compare.py", "benchmarks/softmax_compare.py",
                                        "benchmarks/matmul_compare.py")},
         "environment": json.loads(subprocess.check_output(

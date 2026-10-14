@@ -50,7 +50,7 @@ def main():
         expected = reference_swiglu(gate, up)
         oracle_activation = (gate.double() * torch.sigmoid(gate.double())).to(gate.dtype)
         oracle = (oracle_activation.double() * up.double()).to(gate.dtype)
-        for output in (actual, swiglu(gate, up)):
+        for output in (actual, swiglu(gate, up, block_size=BLOCK_SIZE, num_warps=NUM_WARPS)):
             for reference in (expected, oracle):
                 torch.testing.assert_close(output, reference, rtol=.002, atol=2e-4)
         resource_output = torch.empty_like(gate)

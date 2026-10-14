@@ -600,3 +600,26 @@ The512/8 configuration is newly added from inspection and is exploratory;
 512/4 and1024/8 were selected in the previous seed3sweep. Defaults, arithmetic,
 accuracy tolerances and graph timing remain unchanged. The report records
 per-case seed, raw samples, paired savings and resources; failure stops the run.
+
+
+### Confirmed automatic SwiGLU selection
+
+The seeds4/5/6confirmation passed ninecases. At16x8960,512/4 won89/90rounds
+against256/4 and72/90against compiled, with approximately5.5–6.6% and
+2.2–3.2% median latency reductions respectively.512/8 did not consistently
+improve manual performance;128x8960's initial1024/8advantage did not repeat.
+All checks passed and all manual variants reported zero spills.
+
+Calling `swiglu(gate, up)` now selects512/4 only for contiguous FP16shape
+16x8960 onTeslaT4/torch2.5.1+cu121/Triton3.1.0; otherwise256/4. Supplying
+either keyword setting disables automatic selection; an omitted setting
+uses the original default. `block_size=256, num_warps=4` remains the original
+baseline. Selection/confirmation modes use explicit settings, preserving
+historical comparisons. Default comparison uses the automatic wrapper and
+reports matching selected resources; policy source is hashed.
+
+Run the setup/tests script (now11tests:6CPU,5GPU), then
+`python benchmarks/swiglu_compare.py --include-compiled` for the final
+selected comparison. The inspection script intentionally still compares the
+compiler against explicit original256/4. Local policy test and syntax checks
+pass; newGPUdispatch tests and final selected timings are pending.

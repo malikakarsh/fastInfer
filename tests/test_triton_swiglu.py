@@ -58,6 +58,24 @@ class TritonSwigluTest(unittest.TestCase):
                     with self.subTest(dtype=dtype, shape=shape, block=block, warps=warps):
                         self.check_output(gate, up, block_size=block, num_warps=warps)
 
+    def test_automatic_selection_and_explicit_baseline(self):
+        from fastinfer.kernels.triton_swiglu import swiglu, default_swiglu_config
+
+        torch.manual_seed(7)
+        for dtype in (torch.float16, torch.float32):
+            for shape in ((16, 8960), (1, 8960)):
+                with self.subTest(dtype=dtype, shape=shape):
+                    gate = 2 * torch.randn(shape, device="cuda", dtype=dtype)
+                    up = torch.randn_like(gate)
+                    automatic = self.check_output(gate, up)
+                    block, warps = default_swiglu_config(gate)
+                    explicit = swiglu(gate, up, block_size=block, num_warps=warps)
+                    torch.testing.assert_close(automatic, explicit, rtol=0, atol=0)
+                    # Explicit overrides preserve the original baseline and bypass selection.
+                    original = self.check_output(gate, up, block_size=256, num_warps=4)
+                    torch.testing.assert_close(swiglu(gate, up, num_warps=4), original, rtol=0, atol=0)
+                    torch.testing.assert_close(swiglu(gate, up, block_size=256), original, rtol=0, atol=0)
+
     def test_rejects_unsupported_layout_device_and_gradients(self):
         from fastinfer.kernels.triton_swiglu import swiglu
 
