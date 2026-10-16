@@ -1,5 +1,6 @@
 """Capture real Qwen gate/up tensors; check all MLPs and time one isolated stage."""
 
+import argparse
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -52,10 +53,15 @@ def capture_mlp_branches(mlps, execute):
                     for name, branches in captured.items()}
 
 
-def check_captured(captured):
+def check_captured(captured, *, kernel="current"):
     from fastinfer.kernels.swiglu import reference_swiglu
     from fastinfer.kernels.triton_swiglu import swiglu, default_swiglu_config
 
+    if kernel == "precise_candidate":
+        from fastinfer.kernels.swiglu_precise_candidate import swiglu_precise
+        swiglu = swiglu_precise
+    elif kernel != "current":
+        raise ValueError("unknown kernel")
     records = []
     for name, tensors in captured.items():
         for key, value in tensors.items():
@@ -94,6 +100,10 @@ def check_captured(captured):
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--kernel", choices=("current", "precise_candidate"), default="current")
+    parser.add_argument("--accuracy-only", action="store_true", help="skip all isolated timing")
+    args = parser.parse_args()
     if not torch.cuda.is_available():
         raise RuntimeError("CUDA required")
     from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -115,9 +125,10 @@ def main():
     if target not in mlps:
         raise RuntimeError("Expected first Qwen MLP")
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
-    destination = ROOT / "results/raw" / f"qwen_real_swiglu_{stamp}.json"
+    destination = ROOT / "results/raw" / f"qwen_real_swiglu_{args.kernel}_{stamp}.json"
     report = {
-        "benchmark": "qwen_captured_elementwise_swiglu", "model": MODEL, "revision": REVISION,
+        "benchmark": "qwen_captured_elementwise_swiglu", "kernel": args.kernel,
+        "accuracy_only": args.accuracy_only, "model": MODEL, "revision": REVISION,
         "dtype": "float16", "attention": "sdpa_math", "module_count": len(mlps),
         "rtol": .002, "atol": 2e-4, "timed_module": target,
         "scope": "Original model remains unchanged. Captured branches use learned Qwen projections. "
@@ -128,7 +139,8 @@ def main():
         "source_sha256": {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
                           for name in ("benchmarks/qwen_swiglu_check.py", "benchmarks/swiglu_compare.py",
                                        "benchmarks/qwen_decode_profile.py", "kernels/swiglu.py",
-                                       "kernels/triton_swiglu.py", "kernels/swiglu_config.py")},
+                                       "kernels/triton_swiglu.py", "kernels/swiglu_config.py",
+                                       "kernels/swiglu_precise_candidate.py")},
         "environment": json.loads(subprocess.check_output(
             [sys.executable, str(ROOT / "scripts/environment_report.py")], cwd=ROOT, text=True)),
         "cases": [],
@@ -155,20 +167,27 @@ def main():
                             mlps, lambda: decode_steps(model, cache, token, mask, 1)
                         )
                         require_finite(result, "original_decode.logits")
-                records = check_captured(captured)
+                records = check_captured(captured, kernel=args.kernel)
                 case = {"phase": phase, "prompt": prompt,
                         "input_ids": encoded["input_ids"].tolist(), "modules": records}
                 report["cases"].append(case)
                 largest = max(row["comparisons"]["triton_vs_captured"]["max_abs_error"] for row in records)
                 print(f"{phase}: {len(records)}/{len(mlps)} MLP checks PASS | "
                       f"largest Triton/model product difference {largest:.6f}", flush=True)
+                exact = sum(row["comparisons"]["triton_vs_captured"]["different_elements"] == 0
+                            for row in records)
+                print(f"  Exact products: {exact}/{len(records)} modules", flush=True)
+                if args.accuracy_only:
+                    destination.write_text(json.dumps(report, indent=2) + "\n")
+                    del captured, result
+                    continue
                 tensors = captured[target]
                 gate = tensors["gate"].reshape(-1, 8960).contiguous()
                 up = tensors["up"].reshape(-1, 8960).contiguous()
                 expected_shape = (16 if phase == "prefill16" else 1, 8960)
                 if tuple(gate.shape) != expected_shape:
                     raise RuntimeError(f"Unexpected timing shape {gate.shape}")
-                case["isolated_timing"] = measure_case(gate, up, include_compiled=True)
+                case["isolated_timing"] = measure_case(gate, up, include_compiled=True, kernel=args.kernel)
                 timing = case["isolated_timing"]
                 medians = {name: row["latency_us"]["median"]
                            for name, row in timing["implementations"].items()}

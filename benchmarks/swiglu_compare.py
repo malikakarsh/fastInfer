@@ -26,11 +26,18 @@ def sweep_orders(names):
     return [names[i % len(names):] + names[:i % len(names)] for i in range(30)]
 
 
-def measure_case(gate, up, *, include_compiled, configurations=None):
+def measure_case(gate, up, *, include_compiled, configurations=None, kernel="current"):
     import triton
     from fastinfer.kernels.swiglu import reference_swiglu
     from fastinfer.kernels.triton_swiglu import swiglu, _swiglu, BLOCK_SIZE, NUM_WARPS, default_swiglu_config
 
+    if kernel not in ("current", "precise_candidate"):
+        raise ValueError("unknown kernel")
+    if kernel == "precise_candidate":
+        if configurations is not None or gate.dtype != torch.float16:
+            raise ValueError("precise candidate requires automatic settings and FP16")
+        from fastinfer.kernels.swiglu_precise_candidate import swiglu_precise, _swiglu_precise
+        swiglu, _swiglu = swiglu_precise, _swiglu_precise
     operations = {"pytorch_native": reference_swiglu}
     if include_compiled:
         torch.compiler.reset()
@@ -53,7 +60,7 @@ def measure_case(gate, up, *, include_compiled, configurations=None):
     activated = (gate.double() * torch.sigmoid(gate.double())).to(gate.dtype)
     oracle = (activated.double() * up.double()).to(gate.dtype)
     rtol, atol = (.002, 2e-4) if gate.dtype == torch.float16 else (1e-5, 2e-6)
-    case = {"shape": list(gate.shape), "elements": gate.numel(),
+    case = {"kernel": kernel, "shape": list(gate.shape), "elements": gate.numel(),
             "selection_mode": "automatic" if automatic else "explicit_original_and_candidates",
             "accuracy": {"rtol": rtol, "atol": atol,
                          "oracle": "float64 arithmetic with input-dtype rounding after SiLU and multiply",
@@ -133,6 +140,7 @@ def measure_case(gate, up, *, include_compiled, configurations=None):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--kernel", choices=("current", "precise_candidate"), default="current")
     parser.add_argument("--include-compiled", action="store_true")
     parser.add_argument("--dtype", choices=("float16", "float32"), default="float16")
     modes = parser.add_mutually_exclusive_group()
@@ -142,6 +150,8 @@ def main():
                        help="compare default, selected candidates and new512/8 at seeds4/5/6")
     args = parser.parse_args()
     tuning = args.config_sweep or args.confirm_configs
+    if args.kernel == "precise_candidate" and (tuning or args.dtype != "float16"):
+        parser.error("precise candidate supports FP16 automatic settings only; no sweep")
     include_compiled = args.include_compiled or tuning
     shapes = ((1, 8960), (16, 8960), (128, 8960)) if tuning else SHAPES
     configurations = CONFIRM_CONFIGS if args.confirm_configs else (
@@ -156,10 +166,10 @@ def main():
     if not torch.cuda.is_available():
         parser.error("CUDA required")
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
-    destination = ROOT / "results/raw" / f"swiglu_{mode}_{args.dtype}_{stamp}.json"
+    destination = ROOT / "results/raw" / f"swiglu_{mode}_{args.kernel}_{args.dtype}_{stamp}.json"
     destination.parent.mkdir(parents=True, exist_ok=True)
     report = {
-        "benchmark": "elementwise_swiglu_comparison", "dtype": args.dtype,
+        "benchmark": "elementwise_swiglu_comparison", "kernel": args.kernel, "dtype": args.dtype,
         "seeds": list(seeds), "mode": mode, "configurations": [list(c) for c in configurations] if configurations is not None else "automatic", "input_distribution": "gate=2*randn, up=randn",
         "shapes": [list(shape) for shape in shapes],
         "trials": [{"seed": seed, "shape": list(shape)} for seed, shape in trials],
@@ -176,7 +186,7 @@ def main():
                  "Sweeps retain explicit256/4 original baseline. No exact-output claim. "
                  "Spills is compiler local-storage metadata, not runtime transaction count.",
         "source_sha256": {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
-                          for name in ("kernels/swiglu.py", "kernels/triton_swiglu.py", "kernels/swiglu_config.py",
+                          for name in ("kernels/swiglu.py", "kernels/triton_swiglu.py", "kernels/swiglu_config.py", "kernels/swiglu_precise_candidate.py",
                                        "benchmarks/swiglu_compare.py", "benchmarks/softmax_compare.py",
                                        "benchmarks/matmul_compare.py")},
         "environment": json.loads(subprocess.check_output(
@@ -194,7 +204,7 @@ def main():
                 print(f"Preparing seed={seed}, shape={shape}...", flush=True)
                 gate = 2 * torch.randn(shape, device="cuda", dtype=getattr(torch, args.dtype))
                 up = torch.randn_like(gate)
-                case = measure_case(gate, up, include_compiled=include_compiled, configurations=configurations)
+                case = measure_case(gate, up, include_compiled=include_compiled, configurations=configurations, kernel=args.kernel)
                 case["seed"] = seed
                 report["cases"].append(case)
                 for name, values in case["implementations"].items():

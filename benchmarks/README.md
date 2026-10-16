@@ -792,3 +792,43 @@ Production kernel remains unchanged. New numerical GPU tests are pending;
 local syntax checks passed. After this bounded replay, document the outcome
 and close the kernel lab; unresolved full-model precision/performance remains
 an integration issue rather than extending tuning indefinitely.
+
+
+Replay034247486800Z passed after25tests. On saved layer1input, fast-exp
+variants had7FP16product differences; both library-exp variants had0;
+library-exp plus div_rn additionally had0FP32SiLU differences. Full final
+archive034251356392Z was created on Kaggle with14reports/2generated files/
+18sources/2snapshots/5PTX. This closes the bounded kernel-lab investigation;
+production remains unchanged. No full-model rerun or timing of these
+instrumented arithmetic variants was performed. Local final-archive import
+is pending; console observations are preserved explicitly as such.
+
+### Precise SwiGLU candidate: accuracy before timing
+
+After syncing these sources to Kaggle, run with notebook Python:
+
+```python
+import subprocess
+import sys
+
+repo = "/kaggle/working/fastinfer"
+subprocess.run(
+    [sys.executable, "scripts/kaggle_swiglu_precise_check.py", "--measure"],
+    cwd=repo,
+    check=True,
+)
+```
+
+This repairs the pinned interpreter's editable install/NumPy, runs the SwiGLU
+tests (including the new candidate), installs pinned model dependencies, checks
+all MLP products on real inputs, and checks full-model decode accuracy without
+timing. Any failure stops the workflow. Only after success does it measure
+isolated real-input eager/compiled/custom stages and full decode using accurate
+providers, then archive evidence. Omit `--measure` for accuracy only.
+
+The candidate uses library exponential plus round-to-nearest division and has no
+diagnostic output stores. Geometry and tolerance are unchanged. Compiled-stage
+full-model accuracy is checked independently; a failing compiled stage is excluded
+from full-model timing. Isolated comparisons report its local differences and do
+not establish model equivalence. Reports identify the selected candidate, exact
+logit agreement, source hashes, timings and excluded providers. GPU results pending.

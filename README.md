@@ -286,3 +286,18 @@ with zero fallbacks and all local checks passing. Both candidates generated
 the same16-step token sequences but failed the strict logit tolerance on all
 three prompts, so timing was skipped. Numerical stage diagnosis is pending;
 no full-model SwiGLU speedup is established.
+
+
+The bounded SwiGLU arithmetic diagnosis is complete. On one saved actual
+Qwen layer1input, the production formula differed at7of8960FP16products.
+A library-exponential variant matched all FP16products; adding explicitly
+round-to-nearest division also matched FP32SiLU exactly on that pair.
+These accuracy-only variants remain separate from production, with broader
+accuracy, latency and full-model behavior unvalidated. The kernel lab is
+closed with those integration limits recorded in the findings. The final
+Kaggle archive including tensors/PTX still needs local download/verification.
+
+A separate [precise SwiGLU candidate](kernels/swiglu_precise_candidate.py) and
+[accuracy-first Kaggle workflow](benchmarks/README.md#precise-swiglu-candidate-accuracy-before-timing)
+are prepared for broader validation of the library-exponential/round-to-nearest
+arithmetic. This candidate has no new GPU accuracy or speed results yet.
