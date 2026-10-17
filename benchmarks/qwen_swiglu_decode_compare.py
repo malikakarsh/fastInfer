@@ -127,15 +127,35 @@ def eligible_precise_providers(case, *, diagnose, expected_calls):
             else ["eager", "triton_swiglu"])
 
 
+def eligible_wrapper_providers(case, *, diagnose, expected_calls):
+    """Time the control only when both replacements reproduce original logits exactly."""
+    if diagnose or not case["baseline_repeat_accuracy"]["passed"]:
+        return []
+    for name in ("wrapped_eager", "triton_swiglu"):
+        row = case["candidates"].get(name)
+        if (not row or not row["accuracy"]["passed"]
+                or not row["accuracy"].get("exact_logits", False)
+                or not row["local_checks"]["all_passed"]
+                or row["local_checks"]["calls_checked"] != expected_calls
+                or row["dispatch"]["stage_calls"] != expected_calls
+                or row["dispatch"]["fallback_calls"] != 0):
+            return []
+    return ["eager", "wrapped_eager", "triton_swiglu"]
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--kernel", choices=("current", "precise_candidate"), default="current")
+    parser.add_argument("--wrapper-control", action="store_true",
+                        help="compare original model, wrapped eager stage and wrapped precise stage")
     parser.add_argument("--report", type=Path, help="write report to this exact path")
     parser.add_argument("--require-accuracy", action="store_true", help="exit nonzero if custom model checks fail")
     parser.add_argument("--steps", type=int, default=16)
     parser.add_argument("--repetitions", type=int, default=30)
     parser.add_argument("--diagnose", action="store_true", help="check model outputs, skip timing")
     args = parser.parse_args()
+    if args.wrapper_control and args.kernel != "precise_candidate":
+        parser.error("--wrapper-control requires --kernel precise_candidate")
     if not torch.cuda.is_available() or args.steps < 1 or args.repetitions < 2:
         parser.error("CUDA, positive steps and at least two repetitions required")
     from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -160,12 +180,16 @@ def main():
             if module.__class__.__name__ == "Qwen2MLP"}
     if len(mlps) != model.config.num_hidden_layers or not mlps:
         raise RuntimeError("Unexpected MLP count")
-    # One shared compiled stage for identical single-token shapes across all layers.
-    torch.compiler.reset()
-    compiled = torch.compile(reference_swiglu, **COMPILED_SETTINGS)
-    kernels = {"eager": None, "compiled_swiglu": compiled, "triton_swiglu": swiglu}
+    if args.wrapper_control:
+        kernels = {"eager": None, "wrapped_eager": reference_swiglu, "triton_swiglu": swiglu}
+        print("Control: original Qwen | same wrapper + eager SiLU/multiply | same wrapper + Triton", flush=True)
+    else:
+        # One shared compiled stage for identical single-token shapes across all layers.
+        torch.compiler.reset()
+        compiled = torch.compile(reference_swiglu, **COMPILED_SETTINGS)
+        kernels = {"eager": None, "compiled_swiglu": compiled, "triton_swiglu": swiglu}
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
-    destination = ROOT / "results/raw" / f"qwen_swiglu_decode_{args.kernel}_{stamp}.json"
+    destination = ROOT / "results/raw" / f"qwen_swiglu_decode_{args.kernel}{'_wrapper_control' if args.wrapper_control else ''}_{stamp}.json"
     if args.report is not None:
         destination = args.report
         if destination.exists():
@@ -175,9 +199,15 @@ def main():
         "benchmark": "qwen_three_way_swiglu_decode", "kernel": args.kernel, "model": MODEL, "revision": REVISION,
         "dtype": "float16", "attention": "sdpa_math", "cache": "DynamicCache",
         "steps": args.steps, "repetitions": args.repetitions, "diagnose": args.diagnose,
-        "provider_policy": ("precise custom must pass; compiled timed only if independently accurate"
+        "wrapper_control": args.wrapper_control, "providers": list(kernels),
+        "provider_policy": ("both wrapper paths must pass and have exact logits" if args.wrapper_control else
+                            "precise custom must pass; compiled timed only if independently accurate"
                             if args.kernel == "precise_candidate" else "both candidates must pass"),
-        "replacement_modules": list(mlps), "compiled_settings": COMPILED_SETTINGS,
+        "replacement_modules": list(mlps),
+        "compiled_settings": None if args.wrapper_control else COMPILED_SETTINGS,
+        "control_scope": ("Same MLP wrapper, eligibility checks, reshapes and counters for eager/custom. "
+                          "Kernel-internal validation, allocation and dispatch differ; this control "
+                          "does not attribute those costs individually." if args.wrapper_control else None),
         "accuracy": {"logits_rtol": .01, "logits_atol": .01, "local_rtol": .002,
                      "local_atol": 2e-4, "identical_greedy_tokens_required": True},
         "scope": "Original eager model versus only SiLU(gate)*up compiled or custom, "
@@ -207,7 +237,9 @@ def main():
             case = {"prompt": prompt, "baseline_repeat_accuracy": compare_outputs(baseline, repeat),
                     "candidates": {}}
             report["cases"].append(case)
-            for name in ("compiled_swiglu", "triton_swiglu"):
+            for name in kernels:
+                if name == "eager":
+                    continue
                 candidate = decode_trial(model, encoded, mlps, kernels[name], args.steps, validate=True)
                 accuracy = compare_outputs(baseline, candidate)
                 accuracy["exact_logits"] = torch.equal(baseline["logits"], candidate["logits"])
@@ -222,7 +254,9 @@ def main():
                 del candidate
             del baseline, repeat
             expected_calls = args.steps * len(mlps)
-            if args.kernel == "precise_candidate":
+            if args.wrapper_control:
+                providers = eligible_wrapper_providers(case, diagnose=False, expected_calls=expected_calls)
+            elif args.kernel == "precise_candidate":
                 providers = eligible_precise_providers(case, diagnose=False, expected_calls=expected_calls)
             else:
                 providers = list(kernels) if timing_allowed(
@@ -230,7 +264,7 @@ def main():
             allowed = bool(providers)
             case["eligible_timing_providers"] = providers
             case["excluded_timing_providers"] = [name for name in kernels if name not in providers]
-            if allowed and "compiled_swiglu" not in providers:
+            if allowed and "compiled_swiglu" in kernels and "compiled_swiglu" not in providers:
                 print("  Compiled stage failed accuracy: excluded from full-model timing.", flush=True)
             case["timing_status"] = "diagnostic_only" if args.diagnose else (
                 "strict_accuracy_passed" if allowed else "accuracy_failed_timing_skipped"
@@ -253,7 +287,9 @@ def main():
                 case["paired_comparisons"] = {}
                 for name, base, candidate in (("eager_vs_compiled", "eager", "compiled_swiglu"),
                                                ("eager_vs_triton", "eager", "triton_swiglu"),
-                                               ("compiled_vs_triton", "compiled_swiglu", "triton_swiglu")):
+                                               ("compiled_vs_triton", "compiled_swiglu", "triton_swiglu"),
+                                               ("eager_vs_wrapped_eager", "eager", "wrapped_eager"),
+                                               ("wrapped_eager_vs_triton", "wrapped_eager", "triton_swiglu")):
                     if base not in samples or candidate not in samples:
                         continue
                     comparison = native_triton_comparison(
@@ -280,8 +316,9 @@ def main():
         print(f"Saved: {destination}", flush=True)
 
     if args.require_accuracy:
+        gate = eligible_wrapper_providers if args.wrapper_control else eligible_precise_providers
         if len(report["cases"]) != len(PROMPTS) or not all(
-            eligible_precise_providers(case, diagnose=False, expected_calls=args.steps * len(mlps))
+            gate(case, diagnose=False, expected_calls=args.steps * len(mlps))
             for case in report["cases"]
         ):
             raise RuntimeError("Custom model accuracy/dispatch check failed; do not proceed to timing")

@@ -7,12 +7,41 @@ import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "benchmarks"))
 try:
-    from qwen_swiglu_decode_compare import timing_allowed, eligible_precise_providers
+    from qwen_swiglu_decode_compare import (
+        timing_allowed, eligible_precise_providers, eligible_wrapper_providers,
+    )
 finally:
     sys.path.pop(0)
 
 
 class SwigluTimingGateTest(unittest.TestCase):
+    def test_wrapper_control_requires_both_exact_and_exercised_paths(self):
+        row = {"accuracy": {"passed": True, "exact_logits": True},
+               "local_checks": {"all_passed": True, "calls_checked": 6},
+               "dispatch": {"stage_calls": 6, "fallback_calls": 0}}
+        case = {"baseline_repeat_accuracy": {"passed": True},
+                "candidates": {"wrapped_eager": deepcopy(row), "triton_swiglu": deepcopy(row)}}
+        self.assertEqual(eligible_wrapper_providers(case, diagnose=False, expected_calls=6),
+                         ["eager", "wrapped_eager", "triton_swiglu"])
+        for name in case["candidates"]:
+            for group, key, value in (("accuracy", "passed", False),
+                                      ("accuracy", "exact_logits", False),
+                                      ("local_checks", "all_passed", False),
+                                      ("local_checks", "calls_checked", 5),
+                                      ("dispatch", "stage_calls", 5),
+                                      ("dispatch", "fallback_calls", 1)):
+                with self.subTest(name=name, group=group, key=key):
+                    broken = deepcopy(case)
+                    broken["candidates"][name][group][key] = value
+                    self.assertEqual(eligible_wrapper_providers(
+                        broken, diagnose=False, expected_calls=6), [])
+            broken = deepcopy(case)
+            del broken["candidates"][name]
+            self.assertEqual(eligible_wrapper_providers(broken, diagnose=False, expected_calls=6), [])
+        self.assertEqual(eligible_wrapper_providers(case, diagnose=True, expected_calls=6), [])
+        case["baseline_repeat_accuracy"]["passed"] = False
+        self.assertEqual(eligible_wrapper_providers(case, diagnose=False, expected_calls=6), [])
+
     def test_precise_gate_checks_candidates_independently(self):
         row = {"accuracy": {"passed": True},
                "local_checks": {"all_passed": True, "calls_checked": 6},

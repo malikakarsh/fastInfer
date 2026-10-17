@@ -94,3 +94,61 @@ is excluded from full-model timing; isolated compiled performance remains a
 clearly scoped comparator with its own local tolerance/difference counts. This
 is still not whole-model compilation. Four local dependency-free workflow/gate
 tests passed; CUDA numerical checks and measurements have not run locally.
+
+### Kaggle accuracy result, 2026-10-16 (user-supplied console)
+
+All31SwiGLU tests passed on TeslaT4 in10.905s, including the precise candidate's
+fresh inputs and finite-FP16-value coverage. Actual Qwen products matched exactly
+for all28MLPs in each of four captures (112/112). Reports:
+`qwen_real_swiglu_precise_candidate_20261016T215558165826Z.json` and
+`qwen_swiglu_decode_precise_candidate_accuracy_20261016T215603507309Z.json`.
+
+With only cached-decode SwiGLU replaced, all three16-step prompts had zero strict
+logit mismatches and identical tokens; the runner confirmed exact logits3/3.
+Each prompt exercised448candidate calls with no fallback (1344total). The compiled
+stage still had12652/20993/2951strict logit mismatches and is ineligible for
+full-model timing. No speed measurements were taken in this accuracy-only run.
+Exactness is established for these tested trajectories, not universally.
+
+Kaggle archived `swiglu_evidence_20261016T215631359586Z.zip`, reported SHA256
+`79599c37852e9ceb5f964fa596e681ebaef23eec9565714044f6585e23b962fb`.
+It contains14JSON reports,2generated files,20sources and no snapshots/assembly.
+This observation comes from supplied console output; the new raw reports/archive
+have not been downloaded and independently verified locally. Next: isolated
+real-input eager/compiled/candidate timing, then strictly gated full decode.
+
+### Precise candidate performance, 2026-10-17 (user-supplied console)
+
+Real-input report `qwen_real_swiglu_precise_candidate_20261017T233845018075Z.json`
+again found112/112products exact. Isolated layer0 graph-replay times in microseconds
+(eager/compiled/precise):prefill16=8.720/4.619/5.202; three decode inputs=
+5.187/2.577/2.627,5.174/2.552/2.643,4.597/2.274/2.327. Precise beat eager30/30rounds
+in each case; compiled was faster (precise wins1/5/1/5rounds respectively).
+
+Full decode report `qwen_swiglu_decode_precise_candidate_20261017T234045192294Z.json`
+passed local/model strict accuracy with identical tokens on all3prompts. Compiled
+failed strict logits again and was excluded. Eager/precise median wallms perstep:
+France35.0302/38.6066;sky35.4079/38.8275;code35.1250/38.7838. Thus the integrated
+replacement was approximately9.7–10.4%slower, losing all30paired rounds perprompt.
+Paired median savings:-3607.20/-3539.45/-3638.42us perstep. Each prompt timed
+13440custom stage calls and0fallback. This is a clear slowdown in this run, not
+an end-to-end optimization. Do not promote it as a faster model implementation.
+
+The isolated benchmark uses CUDA graph replay; full decode includes CPU dispatch,
+validation of shapes/modules, reshapes, allocation and launch submission. Source
+inspection confirms those operations occur in the replacement, including automatic
+configuration lookup percall. Their contribution has not been measured; do not
+attribute the3.4–3.7ms regression to one cause without a control/profile. A useful
+next control is the same MLP wrapper calling the original eager SiLU/multiply,
+then comparing wrapper and precise launch overhead. No further warp sweep warranted.
+Raw reports remain on Kaggle; these measurements are console observations only.
+
+Prepared a three-way replacement control using `--wrapper-control`: original
+Qwen, the same wrapper calling eager SiLU/multiply, and the same wrapper calling
+the precise Triton candidate. No reshapes, eligibility checks, counters or kernel
+arithmetic were changed. Both wrapped paths must produce exact model logits and
+pass all local/dispatch checks before timing; a failure skips the comparison.
+No compiled stage is involved. Existing balanced30round timing is reused. Three
+local gate tests passed via their actual functions extracted without Torch;
+GPU execution of this new comparison is pending. This measures net replacement
+path effects and cannot assign a cost to each Python check or allocation.

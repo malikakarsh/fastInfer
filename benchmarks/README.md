@@ -832,3 +832,22 @@ full-model accuracy is checked independently; a failing compiled stage is exclud
 from full-model timing. Isolated comparisons report its local differences and do
 not establish model equivalence. Reports identify the selected candidate, exact
 logit agreement, source hashes, timings and excluded providers. GPU results pending.
+
+### SwiGLU replacement control after the full-model slowdown
+
+`qwen_swiglu_decode_compare.py --kernel precise_candidate --wrapper-control
+--require-accuracy --steps 16 --repetitions 30` compares original Qwen (`eager`),
+the existing MLP wrapper calling `reference_swiglu` (`wrapped_eager`), and the
+same wrapper calling the unchanged precise Triton candidate (`triton_swiglu`).
+No compiled stage is built or executed in this mode. Both wrapped paths must
+pass all local/dispatch checks and produce exact logits before timing starts.
+All three provider orders rotate through six permutations over30paired rounds;
+fresh-cache prefill is excluded and decoding wall time includes CPU dispatch.
+
+The wrapper, reshapes, counters, projections and kernel are unchanged. Original
+versus wrapped eager measures the net effect of the replacement path (including
+reference-helper validation), not an isolated cost for each check. Wrapped eager
+versus Triton includes their distinct kernel wrappers/allocations/launch paths,
+not GPU arithmetic alone. Interpret these contrasts before attributing slowdown
+or removing checks. Run the existing `scripts/kaggle_qwen_swiglu_check.py` setup
+first if the session is fresh; it restores imports and checks tests.
