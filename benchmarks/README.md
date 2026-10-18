@@ -851,3 +851,12 @@ versus Triton includes their distinct kernel wrappers/allocations/launch paths,
 not GPU arithmetic alone. Interpret these contrasts before attributing slowdown
 or removing checks. Run the existing `scripts/kaggle_qwen_swiglu_check.py` setup
 first if the session is fresh; it restores imports and checks tests.
+
+### First RoPE reference checks
+
+Run `scripts/kaggle_rope_check.py` using notebook Python after syncing sources.
+It repairs the existing isolated interpreter's NumPy/editable project install
+and runs only `test_rope_reference.py`. No Qwen download, GPU kernel or timing
+is involved. The reference separates position-dependent cosine/sine tables
+from their application to Q/K; see `notes/rope_reference.md`. Numerical execution
+is pending; a Triton benchmark comes after this reference milestone.

@@ -301,3 +301,10 @@ A separate [precise SwiGLU candidate](kernels/swiglu_precise_candidate.py) and
 [accuracy-first Kaggle workflow](benchmarks/README.md#precise-swiglu-candidate-accuracy-before-timing)
 are prepared for broader validation of the library-exponential/round-to-nearest
 arithmetic. This candidate has no new GPU accuracy or speed results yet.
+
+## RoPE reference in progress
+
+Added a [readable PyTorch RoPE reference](kernels/rope.py) with split-half Q/K
+pairing and separate position-table construction. Five numerical tests are
+prepared; local syntax checks passed and Kaggle execution is pending. This is
+not yet a Triton kernel or a model integration. See the [reference notes](notes/rope_reference.md).
