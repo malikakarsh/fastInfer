@@ -153,6 +153,8 @@ def main():
     parser.add_argument("--output", type=Path, default=Path("results/raw/swiglu_compiler_accuracy.json"))
     parser.add_argument("--rtol", type=float, default=0.002)
     parser.add_argument("--atol", type=float, default=0.0002)
+    parser.add_argument("--emulate-precision-casts", action="store_true",
+                        help="enable Inductor's eager intermediate-rounding policy")
     parser.add_argument("--strict", action="store_true",
                         help="exit 1 for suspected cast bugs, tolerance/contract/repeat failures, or execution errors")
     args = parser.parse_args()
@@ -160,13 +162,17 @@ def main():
         parser.error("CUDA unavailable; use --device cpu only for a separate CPU investigation")
     if args.rtol < 0 or args.atol < 0:
         parser.error("tolerances must be nonnegative")
+    from torch._inductor import config
+    if args.emulate_precision_casts:
+        config.emulate_precision_casts = True
     report = {"environment": {
         "torch": torch.__version__, "torch_git": torch.version.git_version,
         "cuda_build": torch.version.cuda, "python": platform.python_version(),
         "platform": platform.platform(), "device": args.device,
         "gpu": torch.cuda.get_device_name() if args.device == "cuda" else None,
         "compute_capability": torch.cuda.get_device_capability() if args.device == "cuda" else None,
-    }, "compile_settings": {"fullgraph": True, "dynamic": False},
+    }, "compile_settings": {"fullgraph": True, "dynamic": False,
+                            "emulate_precision_casts": config.emulate_precision_casts},
         "rtol": args.rtol, "atol": args.atol,
         "interpretation": "Cast failures are potential bugs requiring compiler-policy review. "
         "SwiGLU differences alone do not prove a bug. FP64 references are approximations. "

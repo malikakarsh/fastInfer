@@ -68,6 +68,33 @@ behavior.
 
 ## Checking whether the upstream fix is installed
 
+To compare Kaggle's installed build against a separate fixed build:
+
+```bash
+python scripts/kaggle_pytorch_cast_fix_check.py
+```
+
+The runner creates `/kaggle/working/pytorch_cast_fix_env`, installs the pinned
+official `torch==2.13.0+cu126` wheel and its dependencies there, and runs both
+builds with default and emulated precision policies in separate processes and
+compiler caches. Kaggle Internet and a GPU are required. Downloads and the
+environment require several GB of disk space. The notebook interpreter's
+packages are unchanged; no kernel restart is required. A CUDA smoke test checks
+that the isolated build works on the assigned GPU before diagnostics start.
+
+Reports and `summary.json` are saved under
+`/kaggle/working/pytorch_cast_fix_results`. Expected baseline strict failures
+do not stop the four-run comparison. The final check requires explicit casts
+to pass in `fixed_emulated`; other strict failures are reported separately.
+Use a new `--output-dir` to repeat without overwriting earlier results.
+The comparison changes Torch, Triton and CUDA dependencies together, so a pass
+on the new build supports version-level resolution, not single-commit causality.
+This runner does not run the full model or establish exact model logits.
+
+The [official CUDA 12.6 wheel index](https://download.pytorch.org/whl/cu126/torch/)
+lists the PyTorch 2.13.0 Linux x86_64 Python 3.13 wheel. CUDA 12.6 is used here
+because the CUDA 12.8 index does not list that version.
+
 ```bash
 python scripts/check_pytorch_cast_fix.py --output results/raw/pytorch_cast_fix_audit.json
 ```
