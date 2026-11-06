@@ -8,6 +8,7 @@ import argparse
 import json
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 import venv
@@ -21,6 +22,24 @@ INDEX = "https://download.pytorch.org/whl/cu126"
 def run(command, **kwargs):
     print("Running: " + " ".join(map(str, command)), flush=True)
     return subprocess.run(list(map(str, command)), cwd=ROOT, **kwargs)
+
+
+def prepare_environment(environment):
+    # Kaggle's system Python may lack a working ensurepip. Create the venv
+    # without pip and let uv install into it using an explicit interpreter.
+    # This can also repair the partial environment left by the old bootstrap.
+    uv_binary = shutil.which("uv")
+    if uv_binary:
+        uv = [uv_binary]
+    else:
+        uv = [sys.executable, "-m", "uv"]
+        if run([*uv, "--version"], check=False).returncode:
+            run([sys.executable, "-m", "pip", "install", "uv"], check=True)
+    venv.EnvBuilder(with_pip=False, system_site_packages=False).create(environment)
+    python = environment / "bin/python"
+    run([*uv, "pip", "install", "--python", python, "--no-cache",
+         "--index-url", INDEX, f"torch=={TARGET}"], check=True)
+    return python
 
 
 def main():
@@ -39,10 +58,7 @@ def main():
                 parser.error(f"reports exist in {destination}; choose a new --output-dir")
     # No system-site-packages: Torch, Triton, and CUDA Python dependencies must
     # resolve from the isolated environment rather than Kaggle's base packages.
-    venv.EnvBuilder(with_pip=True, system_site_packages=False).create(environment)
-    python = environment / "bin/python"
-    run([python, "-m", "pip", "install", "--no-cache-dir", "--index-url", INDEX,
-         f"torch=={TARGET}"], check=True)
+    python = prepare_environment(environment)
     run([python, "-c", "import torch; "
          f"assert torch.__version__ == '{TARGET}', torch.__version__; "
          "assert torch.cuda.is_available(), 'CUDA unavailable in isolated environment'; "

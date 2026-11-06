@@ -79,7 +79,11 @@ official `torch==2.13.0+cu126` wheel and its dependencies there, and runs both
 builds with default and emulated precision policies in separate processes and
 compiler caches. Kaggle Internet and a GPU are required. Downloads and the
 environment require several GB of disk space. The notebook interpreter's
-packages are unchanged; no kernel restart is required. A CUDA smoke test checks
+Torch installation is unchanged; no kernel restart is required. The runner uses
+an existing `uv` installation (or installs that environment manager if missing)
+to populate a pip-free venv, avoiding Kaggle's unavailable `ensurepip`. It can
+reuse the partial environment left by the earlier bootstrap failure.
+A CUDA smoke test checks
 that the isolated build works on the assigned GPU before diagnostics start.
 
 Reports and `summary.json` are saved under
