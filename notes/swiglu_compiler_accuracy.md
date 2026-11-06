@@ -66,5 +66,30 @@ also be collected with `TORCH_LOGS=output_code` when supported by that version.
 CPU investigation is available with `--device cpu`; it cannot validate CUDA
 behavior.
 
+## Checking whether the upstream fix is installed
+
+```bash
+python scripts/check_pytorch_cast_fix.py --output results/raw/pytorch_cast_fix_audit.json
+```
+
+This read-only audit saves the installed `to_dtype` and `_convert_element_type`
+lowering functions and asks the GitHub compare API whether the original fix
+commit is an ancestor of `torch.version.git_version`. Use `--offline` to skip
+the API query. Network/API failures mean ancestry is unknown. Missing ancestry
+does not exclude a cherry-picked equivalent fix, so the installed source and
+runtime cast tests must also be considered.
+
+For the reported build `70d99e998b4955e0049d13a98d77ae1b14db1f45`
+(PyTorch 2.11.0), upstream source lacks the explicit-cast precision guard
+visible in PyTorch 2.13.0. The 2.13.0 release notes list the cast fix as #180575.
+This is consistent with an unfixed older build, rather than evidence of a new
+regression. The audit fingerprints that later source pattern; it cannot identify
+every equivalent implementation or prove runtime correctness by source alone.
+
+Sources: [reported build's lowering](https://github.com/pytorch/pytorch/blob/70d99e998b4955e0049d13a98d77ae1b14db1f45/torch/_inductor/lowering.py),
+[2.13.0 lowering](https://github.com/pytorch/pytorch/blob/v2.13.0/torch/_inductor/lowering.py),
+[upstream issue](https://github.com/pytorch/pytorch/issues/179561),
+[2.13.0 release notes](https://github.com/pytorch/pytorch/releases/tag/v2.13.0).
+
 PyTorch documents that mathematical equivalence does not guarantee bitwise
 identity in its [numerical accuracy notes](https://docs.pytorch.org/docs/stable/notes/numerical_accuracy.html).
