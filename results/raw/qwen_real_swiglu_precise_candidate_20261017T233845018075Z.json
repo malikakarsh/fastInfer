@@ -1,0 +1,6052 @@
+{
+  "benchmark": "qwen_captured_elementwise_swiglu",
+  "kernel": "precise_candidate",
+  "accuracy_only": false,
+  "model": "Qwen/Qwen2.5-1.5B",
+  "revision": "8faed761d45a263340a0528343f099c05c9a4323",
+  "dtype": "float16",
+  "attention": "sdpa_math",
+  "module_count": 28,
+  "rtol": 0.002,
+  "atol": 0.0002,
+  "timed_module": "model.layers.0.mlp",
+  "scope": "Original model remains unchanged. Captured branches use learned Qwen projections. All MLP products checked; isolated stage replay timed only for layer0. One actual16-token prefill and three one-token cached decode captures. Capture hooks are removed before replay timing; model stays resident. No full-model speedup or attention/softmax integration measured.",
+  "source_sha256": {
+    "benchmarks/qwen_swiglu_check.py": "244dff7623f402e4b8a6380cef009a9fc55f1cec8a0b3f7f2774d948719e2ba9",
+    "benchmarks/swiglu_compare.py": "9ee8195fdd5c1c565fef920f35c2c1dc27837bb856d1cfa5516be9a9cb06ab4c",
+    "benchmarks/qwen_decode_profile.py": "c5199774af1e6bfe2feacbf6ca17b0717489a09f5d5c7beb4ee53482f84dc084",
+    "kernels/swiglu.py": "d44b08c825cf118ef3fdb2e0c0364e332bb7c75d49f87742e001593f04da2174",
+    "kernels/triton_swiglu.py": "0acd55b57365376960e17d3c1eb43eec081e236cf143dbb0cb77a2faa2431ee6",
+    "kernels/swiglu_config.py": "0fd2ba7c2ae152020ad8e96803a8ad1e4daa681020686dd896aeb04020a4f8f9",
+    "kernels/swiglu_precise_candidate.py": "b176a01972100cd308182f4510ed59b70f9fc8081fd2572f3bf38e98eb4dfe93"
+  },
+  "environment": {
+    "timestamp_utc": "2026-10-17T23:38:45.100878+00:00",
+    "os": "Linux-6.18.48+-x86_64-with-glibc2.39",
+    "python": "3.12.15",
+    "git_commit": "21946a7c09a94b82941cc63afbc16877f53e8f95",
+    "torch_version": "2.5.1+cu121",
+    "triton_version": "3.1.0",
+    "transformers_version": "4.46.3",
+    "cuda_version": "12.1",
+    "gpu_count": 2,
+    "gpus": [
+      {
+        "name": "Tesla T4",
+        "compute_capability": [
+          7,
+          5
+        ],
+        "memory_gib": 14.56
+      },
+      {
+        "name": "Tesla T4",
+        "compute_capability": [
+          7,
+          5
+        ],
+        "memory_gib": 14.56
+      }
+    ],
+    "nvidia_driver": "580.178.04\n580.178.04",
+    "scheduler": null
+  },
+  "cases": [
+    {
+      "phase": "prefill16",
+      "prompt": "Explain how plants convert sunlight into chemical energy through photosynthesis. Describe the roles of chlorophyll, water, carbon dioxide, oxygen, and glucose, and explain why this process matters for living organisms on Earth.",
+      "input_ids": [
+        [
+          840,
+          20772,
+          1246,
+          10779,
+          5508,
+          39020,
+          1119,
+          11483,
+          4802,
+          1526,
+          7249,
+          73667,
+          13,
+          60785,
+          279,
+          12783
+        ]
+      ],
+      "modules": [
+        {
+          "name": "model.layers.0.mlp",
+          "shape": [
+            16,
+            8960
+          ],
+          "selected_config": [
+            512,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 3,
+              "max_abs_error": 0.0001220703125
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 3,
+              "max_abs_error": 0.0001220703125
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.1.mlp",
+          "shape": [
+            16,
+            8960
+          ],
+          "selected_config": [
+            512,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 11,
+              "max_abs_error": 0.000244140625
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 11,
+              "max_abs_error": 0.000244140625
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.2.mlp",
+          "shape": [
+            16,
+            8960
+          ],
+          "selected_config": [
+            512,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 17,
+              "max_abs_error": 0.000244140625
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 17,
+              "max_abs_error": 0.000244140625
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.3.mlp",
+          "shape": [
+            16,
+            8960
+          ],
+          "selected_config": [
+            512,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 39,
+              "max_abs_error": 0.000244140625
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 39,
+              "max_abs_error": 0.000244140625
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.4.mlp",
+          "shape": [
+            16,
+            8960
+          ],
+          "selected_config": [
+            512,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 55,
+              "max_abs_error": 0.000244140625
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 55,
+              "max_abs_error": 0.000244140625
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.5.mlp",
+          "shape": [
+            16,
+            8960
+          ],
+          "selected_config": [
+            512,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 41,
+              "max_abs_error": 0.000244140625
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 41,
+              "max_abs_error": 0.000244140625
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.6.mlp",
+          "shape": [
+            16,
+            8960
+          ],
+          "selected_config": [
+            512,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 12,
+              "max_abs_error": 0.0001220703125
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 12,
+              "max_abs_error": 0.0001220703125
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.7.mlp",
+          "shape": [
+            16,
+            8960
+          ],
+          "selected_config": [
+            512,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 6,
+              "max_abs_error": 6.103515625e-05
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 6,
+              "max_abs_error": 6.103515625e-05
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.8.mlp",
+          "shape": [
+            16,
+            8960
+          ],
+          "selected_config": [
+            512,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 4,
+              "max_abs_error": 6.103515625e-05
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 4,
+              "max_abs_error": 6.103515625e-05
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.9.mlp",
+          "shape": [
+            16,
+            8960
+          ],
+          "selected_config": [
+            512,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 1.52587890625e-05
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 1.52587890625e-05
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.10.mlp",
+          "shape": [
+            16,
+            8960
+          ],
+          "selected_config": [
+            512,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 3,
+              "max_abs_error": 0.0001220703125
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 3,
+              "max_abs_error": 0.0001220703125
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.11.mlp",
+          "shape": [
+            16,
+            8960
+          ],
+          "selected_config": [
+            512,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 14,
+              "max_abs_error": 0.0001220703125
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 14,
+              "max_abs_error": 0.0001220703125
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.12.mlp",
+          "shape": [
+            16,
+            8960
+          ],
+          "selected_config": [
+            512,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 3,
+              "max_abs_error": 0.0001220703125
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 3,
+              "max_abs_error": 0.0001220703125
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.13.mlp",
+          "shape": [
+            16,
+            8960
+          ],
+          "selected_config": [
+            512,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 4,
+              "max_abs_error": 0.0001220703125
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 4,
+              "max_abs_error": 0.0001220703125
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.14.mlp",
+          "shape": [
+            16,
+            8960
+          ],
+          "selected_config": [
+            512,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.15.mlp",
+          "shape": [
+            16,
+            8960
+          ],
+          "selected_config": [
+            512,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 4,
+              "max_abs_error": 0.0001220703125
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 4,
+              "max_abs_error": 0.0001220703125
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.16.mlp",
+          "shape": [
+            16,
+            8960
+          ],
+          "selected_config": [
+            512,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 1.52587890625e-05
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 1.52587890625e-05
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.17.mlp",
+          "shape": [
+            16,
+            8960
+          ],
+          "selected_config": [
+            512,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 1.52587890625e-05
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 1.52587890625e-05
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.18.mlp",
+          "shape": [
+            16,
+            8960
+          ],
+          "selected_config": [
+            512,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 4,
+              "max_abs_error": 0.0001220703125
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 4,
+              "max_abs_error": 0.0001220703125
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.19.mlp",
+          "shape": [
+            16,
+            8960
+          ],
+          "selected_config": [
+            512,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 4,
+              "max_abs_error": 0.0001220703125
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 4,
+              "max_abs_error": 0.0001220703125
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.20.mlp",
+          "shape": [
+            16,
+            8960
+          ],
+          "selected_config": [
+            512,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 3,
+              "max_abs_error": 0.0001220703125
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 3,
+              "max_abs_error": 0.0001220703125
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.21.mlp",
+          "shape": [
+            16,
+            8960
+          ],
+          "selected_config": [
+            512,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 15,
+              "max_abs_error": 0.000244140625
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 15,
+              "max_abs_error": 0.000244140625
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.22.mlp",
+          "shape": [
+            16,
+            8960
+          ],
+          "selected_config": [
+            512,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 23,
+              "max_abs_error": 0.000244140625
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 23,
+              "max_abs_error": 0.000244140625
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.23.mlp",
+          "shape": [
+            16,
+            8960
+          ],
+          "selected_config": [
+            512,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 40,
+              "max_abs_error": 0.00048828125
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 40,
+              "max_abs_error": 0.00048828125
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.24.mlp",
+          "shape": [
+            16,
+            8960
+          ],
+          "selected_config": [
+            512,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 29,
+              "max_abs_error": 0.000244140625
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 29,
+              "max_abs_error": 0.000244140625
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.25.mlp",
+          "shape": [
+            16,
+            8960
+          ],
+          "selected_config": [
+            512,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 14,
+              "max_abs_error": 0.00048828125
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 14,
+              "max_abs_error": 0.00048828125
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.26.mlp",
+          "shape": [
+            16,
+            8960
+          ],
+          "selected_config": [
+            512,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 13,
+              "max_abs_error": 0.000244140625
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 13,
+              "max_abs_error": 0.000244140625
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.27.mlp",
+          "shape": [
+            16,
+            8960
+          ],
+          "selected_config": [
+            512,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 37,
+              "max_abs_error": 0.00048828125
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 37,
+              "max_abs_error": 0.00048828125
+            }
+          },
+          "passed": true
+        }
+      ],
+      "isolated_timing": {
+        "kernel": "precise_candidate",
+        "shape": [
+          16,
+          8960
+        ],
+        "elements": 143360,
+        "selection_mode": "automatic",
+        "accuracy": {
+          "rtol": 0.002,
+          "atol": 0.0002,
+          "oracle": "float64 arithmetic with input-dtype rounding after SiLU and multiply",
+          "implementations": {
+            "pytorch_native": {
+              "passed": true,
+              "max_abs_oracle_error": 0.0001220703125,
+              "different_elements_from_native": 0
+            },
+            "pytorch_compiled": {
+              "passed": true,
+              "max_abs_oracle_error": 0.00390625,
+              "different_elements_from_native": 37512
+            },
+            "triton": {
+              "passed": true,
+              "max_abs_oracle_error": 0.0001220703125,
+              "different_elements_from_native": 0
+            }
+          }
+        },
+        "first_call_setup_and_execution_seconds": {
+          "pytorch_native": 0.000139253000043027,
+          "pytorch_compiled": 3.651007757000002,
+          "triton": 0.00034754099999645405
+        },
+        "resources_by_implementation": {
+          "triton": {
+            "programs": 280,
+            "block_size": 512,
+            "num_warps": 4,
+            "registers_per_thread": 24,
+            "spills": 0,
+            "shared_bytes": 0
+          }
+        },
+        "triton_resources": {
+          "programs": 280,
+          "block_size": 512,
+          "num_warps": 4,
+          "registers_per_thread": 24,
+          "spills": 0,
+          "shared_bytes": 0
+        },
+        "measurement_orders": [
+          [
+            "pytorch_native",
+            "pytorch_compiled",
+            "triton"
+          ],
+          [
+            "pytorch_native",
+            "triton",
+            "pytorch_compiled"
+          ],
+          [
+            "pytorch_compiled",
+            "pytorch_native",
+            "triton"
+          ],
+          [
+            "pytorch_compiled",
+            "triton",
+            "pytorch_native"
+          ],
+          [
+            "triton",
+            "pytorch_native",
+            "pytorch_compiled"
+          ],
+          [
+            "triton",
+            "pytorch_compiled",
+            "pytorch_native"
+          ],
+          [
+            "pytorch_native",
+            "pytorch_compiled",
+            "triton"
+          ],
+          [
+            "pytorch_native",
+            "triton",
+            "pytorch_compiled"
+          ],
+          [
+            "pytorch_compiled",
+            "pytorch_native",
+            "triton"
+          ],
+          [
+            "pytorch_compiled",
+            "triton",
+            "pytorch_native"
+          ],
+          [
+            "triton",
+            "pytorch_native",
+            "pytorch_compiled"
+          ],
+          [
+            "triton",
+            "pytorch_compiled",
+            "pytorch_native"
+          ],
+          [
+            "pytorch_native",
+            "pytorch_compiled",
+            "triton"
+          ],
+          [
+            "pytorch_native",
+            "triton",
+            "pytorch_compiled"
+          ],
+          [
+            "pytorch_compiled",
+            "pytorch_native",
+            "triton"
+          ],
+          [
+            "pytorch_compiled",
+            "triton",
+            "pytorch_native"
+          ],
+          [
+            "triton",
+            "pytorch_native",
+            "pytorch_compiled"
+          ],
+          [
+            "triton",
+            "pytorch_compiled",
+            "pytorch_native"
+          ],
+          [
+            "pytorch_native",
+            "pytorch_compiled",
+            "triton"
+          ],
+          [
+            "pytorch_native",
+            "triton",
+            "pytorch_compiled"
+          ],
+          [
+            "pytorch_compiled",
+            "pytorch_native",
+            "triton"
+          ],
+          [
+            "pytorch_compiled",
+            "triton",
+            "pytorch_native"
+          ],
+          [
+            "triton",
+            "pytorch_native",
+            "pytorch_compiled"
+          ],
+          [
+            "triton",
+            "pytorch_compiled",
+            "pytorch_native"
+          ],
+          [
+            "pytorch_native",
+            "pytorch_compiled",
+            "triton"
+          ],
+          [
+            "pytorch_native",
+            "triton",
+            "pytorch_compiled"
+          ],
+          [
+            "pytorch_compiled",
+            "pytorch_native",
+            "triton"
+          ],
+          [
+            "pytorch_compiled",
+            "triton",
+            "pytorch_native"
+          ],
+          [
+            "triton",
+            "pytorch_native",
+            "pytorch_compiled"
+          ],
+          [
+            "triton",
+            "pytorch_compiled",
+            "pytorch_native"
+          ]
+        ],
+        "implementations": {
+          "pytorch_native": {
+            "latency_us": {
+              "median": 8.72048020362854,
+              "p95": 8.922240138053894,
+              "min": 8.663359880447388,
+              "max": 9.004799723625183
+            },
+            "samples_us": [
+              8.870400190353394,
+              8.721920251846313,
+              8.663359880447388,
+              8.742079734802246,
+              8.675839900970459,
+              8.719040155410767,
+              8.730239868164062,
+              8.702080249786377,
+              8.722879886627197,
+              8.689600229263306,
+              8.724480271339417,
+              8.683519959449768,
+              8.714240193367004,
+              8.721920251846313,
+              8.691840171813965,
+              8.724480271339417,
+              9.004799723625183,
+              8.922240138053894,
+              8.874880075454712,
+              8.68831992149353,
+              8.724799752235413,
+              8.686079978942871,
+              8.712319731712341,
+              8.704000115394592,
+              8.713279962539673,
+              8.765119910240173,
+              8.686720132827759,
+              8.726080060005188,
+              8.707519769668579,
+              8.724799752235413
+            ]
+          },
+          "pytorch_compiled": {
+            "latency_us": {
+              "median": 4.618560075759888,
+              "p95": 4.976640045642853,
+              "min": 4.481920003890991,
+              "max": 6.040639877319336
+            },
+            "samples_us": [
+              4.693759977817535,
+              4.607680141925812,
+              4.481920003890991,
+              4.640960097312927,
+              4.631679952144623,
+              4.621120095252991,
+              4.607999920845032,
+              4.608319997787476,
+              4.5103999972343445,
+              4.70304012298584,
+              4.721919894218445,
+              4.586879909038544,
+              4.607999920845032,
+              4.5952001214027405,
+              4.485119879245758,
+              4.72927987575531,
+              6.040639877319336,
+              4.976640045642853,
+              4.689919948577881,
+              4.626879990100861,
+              4.504959881305695,
+              4.616000056266785,
+              4.6492800116539,
+              4.622400104999542,
+              4.587520062923431,
+              4.607999920845032,
+              4.50111985206604,
+              4.625279903411865,
+              4.63808000087738,
+              4.606080055236816
+            ]
+          },
+          "triton": {
+            "latency_us": {
+              "median": 5.2019202709198,
+              "p95": 5.367680191993713,
+              "min": 5.161600112915039,
+              "max": 5.3862398862838745
+            },
+            "samples_us": [
+              5.367680191993713,
+              5.225600004196167,
+              5.255680084228516,
+              5.181440114974976,
+              5.17087996006012,
+              5.198720097541809,
+              5.178880095481873,
+              5.2019202709198,
+              5.227519869804382,
+              5.182080268859863,
+              5.220159888267517,
+              5.161600112915039,
+              5.2019202709198,
+              5.21727979183197,
+              5.2019202709198,
+              5.201600193977356,
+              5.3193598985672,
+              5.3862398862838745,
+              5.193600058555603,
+              5.2019202709198,
+              5.256959795951843,
+              5.175359845161438,
+              5.186560153961182,
+              5.194240212440491,
+              5.176640152931213,
+              5.220159888267517,
+              5.185279846191406,
+              5.222079753875732,
+              5.2019202709198,
+              5.195840001106262
+            ]
+          }
+        },
+        "native_vs_triton": {
+          "ratio_of_separate_medians": 1.676396359317247,
+          "paired_saving_us_samples": [
+            3.50271999835968,
+            3.4963202476501465,
+            3.407679796218872,
+            3.5606396198272705,
+            3.5049599409103394,
+            3.5203200578689575,
+            3.55135977268219,
+            3.500159978866577,
+            3.495360016822815,
+            3.5075199604034424,
+            3.5043203830718994,
+            3.521919846534729,
+            3.5123199224472046,
+            3.5046404600143433,
+            3.489919900894165,
+            3.5228800773620605,
+            3.6854398250579834,
+            3.5360002517700195,
+            3.681280016899109,
+            3.4863996505737305,
+            3.4678399562835693,
+            3.510720133781433,
+            3.5257595777511597,
+            3.5097599029541016,
+            3.5366398096084595,
+            3.5449600219726562,
+            3.5014402866363525,
+            3.5040003061294556,
+            3.5055994987487793,
+            3.5289597511291504
+          ],
+          "paired_median_saving_us": 3.508639931678772,
+          "triton_faster_rounds": 30,
+          "tied_rounds": 0,
+          "rounds": 30
+        },
+        "compiled_vs_triton": {
+          "ratio_of_separate_medians": 0.8878567596621848,
+          "paired_saving_us_samples": [
+            -0.673920214176178,
+            -0.6179198622703552,
+            -0.7737600803375244,
+            -0.5404800176620483,
+            -0.5392000079154968,
+            -0.5776000022888184,
+            -0.5708801746368408,
+            -0.5936002731323242,
+            -0.7171198725700378,
+            -0.47904014587402344,
+            -0.49823999404907227,
+            -0.5747202038764954,
+            -0.5939203500747681,
+            -0.6220796704292297,
+            -0.7168003916740417,
+            -0.4723203182220459,
+            0.7212799787521362,
+            -0.40959984064102173,
+            -0.5036801099777222,
+            -0.5750402808189392,
+            -0.7519999146461487,
+            -0.5593597888946533,
+            -0.5372801423072815,
+            -0.5718401074409485,
+            -0.589120090007782,
+            -0.6121599674224854,
+            -0.6841599941253662,
+            -0.5967998504638672,
+            -0.5638402700424194,
+            -0.5897599458694458
+          ],
+          "paired_median_saving_us": -0.5763201415538788,
+          "triton_faster_rounds": 1,
+          "tied_rounds": 0,
+          "rounds": 30
+        },
+        "configuration_comparisons": {
+          "triton": {
+            "native_vs_variant": {
+              "ratio_of_separate_medians": 1.676396359317247,
+              "paired_saving_us_samples": [
+                3.50271999835968,
+                3.4963202476501465,
+                3.407679796218872,
+                3.5606396198272705,
+                3.5049599409103394,
+                3.5203200578689575,
+                3.55135977268219,
+                3.500159978866577,
+                3.495360016822815,
+                3.5075199604034424,
+                3.5043203830718994,
+                3.521919846534729,
+                3.5123199224472046,
+                3.5046404600143433,
+                3.489919900894165,
+                3.5228800773620605,
+                3.6854398250579834,
+                3.5360002517700195,
+                3.681280016899109,
+                3.4863996505737305,
+                3.4678399562835693,
+                3.510720133781433,
+                3.5257595777511597,
+                3.5097599029541016,
+                3.5366398096084595,
+                3.5449600219726562,
+                3.5014402866363525,
+                3.5040003061294556,
+                3.5055994987487793,
+                3.5289597511291504
+              ],
+              "paired_median_saving_us": 3.508639931678772,
+              "triton_faster_rounds": 30,
+              "tied_rounds": 0,
+              "rounds": 30
+            },
+            "default_vs_variant": {
+              "ratio_of_separate_medians": 1.0,
+              "paired_saving_us_samples": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "paired_median_saving_us": 0.0,
+              "triton_faster_rounds": 0,
+              "tied_rounds": 30,
+              "rounds": 30
+            },
+            "compiled_vs_variant": {
+              "ratio_of_separate_medians": 0.8878567596621848,
+              "paired_saving_us_samples": [
+                -0.673920214176178,
+                -0.6179198622703552,
+                -0.7737600803375244,
+                -0.5404800176620483,
+                -0.5392000079154968,
+                -0.5776000022888184,
+                -0.5708801746368408,
+                -0.5936002731323242,
+                -0.7171198725700378,
+                -0.47904014587402344,
+                -0.49823999404907227,
+                -0.5747202038764954,
+                -0.5939203500747681,
+                -0.6220796704292297,
+                -0.7168003916740417,
+                -0.4723203182220459,
+                0.7212799787521362,
+                -0.40959984064102173,
+                -0.5036801099777222,
+                -0.5750402808189392,
+                -0.7519999146461487,
+                -0.5593597888946533,
+                -0.5372801423072815,
+                -0.5718401074409485,
+                -0.589120090007782,
+                -0.6121599674224854,
+                -0.6841599941253662,
+                -0.5967998504638672,
+                -0.5638402700424194,
+                -0.5897599458694458
+              ],
+              "paired_median_saving_us": -0.5763201415538788,
+              "triton_faster_rounds": 1,
+              "tied_rounds": 0,
+              "rounds": 30
+            }
+          }
+        }
+      }
+    },
+    {
+      "phase": "decode1",
+      "prompt": "The capital of France is",
+      "input_ids": [
+        [
+          785,
+          6722,
+          315,
+          9625,
+          374
+        ]
+      ],
+      "modules": [
+        {
+          "name": "model.layers.0.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.1.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.2.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 3,
+              "max_abs_error": 0.000244140625
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 3,
+              "max_abs_error": 0.000244140625
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.3.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 7,
+              "max_abs_error": 0.000244140625
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 7,
+              "max_abs_error": 0.000244140625
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.4.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 4,
+              "max_abs_error": 0.000244140625
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 4,
+              "max_abs_error": 0.000244140625
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.5.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 4,
+              "max_abs_error": 0.0001220703125
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 4,
+              "max_abs_error": 0.0001220703125
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.6.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.7.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.8.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.9.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.10.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.11.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.12.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.13.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 1.52587890625e-05
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 1.52587890625e-05
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.14.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.15.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.16.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.17.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.18.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.19.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.20.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.21.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.22.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 2,
+              "max_abs_error": 0.000244140625
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 2,
+              "max_abs_error": 0.000244140625
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.23.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 0.00048828125
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 0.00048828125
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.24.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.25.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 2,
+              "max_abs_error": 0.00048828125
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 2,
+              "max_abs_error": 0.00048828125
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.26.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 6.103515625e-05
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 6.103515625e-05
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.27.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 5,
+              "max_abs_error": 0.000244140625
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 5,
+              "max_abs_error": 0.000244140625
+            }
+          },
+          "passed": true
+        }
+      ],
+      "isolated_timing": {
+        "kernel": "precise_candidate",
+        "shape": [
+          1,
+          8960
+        ],
+        "elements": 8960,
+        "selection_mode": "automatic",
+        "accuracy": {
+          "rtol": 0.002,
+          "atol": 0.0002,
+          "oracle": "float64 arithmetic with input-dtype rounding after SiLU and multiply",
+          "implementations": {
+            "pytorch_native": {
+              "passed": true,
+              "max_abs_oracle_error": 0.0,
+              "different_elements_from_native": 0
+            },
+            "pytorch_compiled": {
+              "passed": true,
+              "max_abs_oracle_error": 0.00390625,
+              "different_elements_from_native": 2347
+            },
+            "triton": {
+              "passed": true,
+              "max_abs_oracle_error": 0.0,
+              "different_elements_from_native": 0
+            }
+          }
+        },
+        "first_call_setup_and_execution_seconds": {
+          "pytorch_native": 0.00017744000001584936,
+          "pytorch_compiled": 0.4393534619999855,
+          "triton": 0.0002338960000543011
+        },
+        "resources_by_implementation": {
+          "triton": {
+            "programs": 35,
+            "block_size": 256,
+            "num_warps": 4,
+            "registers_per_thread": 18,
+            "spills": 0,
+            "shared_bytes": 0
+          }
+        },
+        "triton_resources": {
+          "programs": 35,
+          "block_size": 256,
+          "num_warps": 4,
+          "registers_per_thread": 18,
+          "spills": 0,
+          "shared_bytes": 0
+        },
+        "measurement_orders": [
+          [
+            "pytorch_native",
+            "pytorch_compiled",
+            "triton"
+          ],
+          [
+            "pytorch_native",
+            "triton",
+            "pytorch_compiled"
+          ],
+          [
+            "pytorch_compiled",
+            "pytorch_native",
+            "triton"
+          ],
+          [
+            "pytorch_compiled",
+            "triton",
+            "pytorch_native"
+          ],
+          [
+            "triton",
+            "pytorch_native",
+            "pytorch_compiled"
+          ],
+          [
+            "triton",
+            "pytorch_compiled",
+            "pytorch_native"
+          ],
+          [
+            "pytorch_native",
+            "pytorch_compiled",
+            "triton"
+          ],
+          [
+            "pytorch_native",
+            "triton",
+            "pytorch_compiled"
+          ],
+          [
+            "pytorch_compiled",
+            "pytorch_native",
+            "triton"
+          ],
+          [
+            "pytorch_compiled",
+            "triton",
+            "pytorch_native"
+          ],
+          [
+            "triton",
+            "pytorch_native",
+            "pytorch_compiled"
+          ],
+          [
+            "triton",
+            "pytorch_compiled",
+            "pytorch_native"
+          ],
+          [
+            "pytorch_native",
+            "pytorch_compiled",
+            "triton"
+          ],
+          [
+            "pytorch_native",
+            "triton",
+            "pytorch_compiled"
+          ],
+          [
+            "pytorch_compiled",
+            "pytorch_native",
+            "triton"
+          ],
+          [
+            "pytorch_compiled",
+            "triton",
+            "pytorch_native"
+          ],
+          [
+            "triton",
+            "pytorch_native",
+            "pytorch_compiled"
+          ],
+          [
+            "triton",
+            "pytorch_compiled",
+            "pytorch_native"
+          ],
+          [
+            "pytorch_native",
+            "pytorch_compiled",
+            "triton"
+          ],
+          [
+            "pytorch_native",
+            "triton",
+            "pytorch_compiled"
+          ],
+          [
+            "pytorch_compiled",
+            "pytorch_native",
+            "triton"
+          ],
+          [
+            "pytorch_compiled",
+            "triton",
+            "pytorch_native"
+          ],
+          [
+            "triton",
+            "pytorch_native",
+            "pytorch_compiled"
+          ],
+          [
+            "triton",
+            "pytorch_compiled",
+            "pytorch_native"
+          ],
+          [
+            "pytorch_native",
+            "pytorch_compiled",
+            "triton"
+          ],
+          [
+            "pytorch_native",
+            "triton",
+            "pytorch_compiled"
+          ],
+          [
+            "pytorch_compiled",
+            "pytorch_native",
+            "triton"
+          ],
+          [
+            "pytorch_compiled",
+            "triton",
+            "pytorch_native"
+          ],
+          [
+            "triton",
+            "pytorch_native",
+            "pytorch_compiled"
+          ],
+          [
+            "triton",
+            "pytorch_compiled",
+            "pytorch_native"
+          ]
+        ],
+        "implementations": {
+          "pytorch_native": {
+            "latency_us": {
+              "median": 5.1872000098228455,
+              "p95": 5.304639935493469,
+              "min": 5.147839784622192,
+              "max": 5.323200225830078
+            },
+            "samples_us": [
+              5.323200225830078,
+              5.185279846191406,
+              5.188800096511841,
+              5.1951998472213745,
+              5.17408013343811,
+              5.177599787712097,
+              5.202239751815796,
+              5.263360142707825,
+              5.147839784622192,
+              5.200319886207581,
+              5.182399749755859,
+              5.191360116004944,
+              5.178560018539429,
+              5.187519788742065,
+              5.1894402503967285,
+              5.161280035972595,
+              5.171520113945007,
+              5.178239941596985,
+              5.181440114974976,
+              5.201600193977356,
+              5.204799771308899,
+              5.170239806175232,
+              5.194240212440491,
+              5.181440114974976,
+              5.2611202001571655,
+              5.304639935493469,
+              5.1763200759887695,
+              5.177279710769653,
+              5.191680192947388,
+              5.1868802309036255
+            ]
+          },
+          "pytorch_compiled": {
+            "latency_us": {
+              "median": 2.577119916677475,
+              "p95": 2.741439938545227,
+              "min": 2.433920055627823,
+              "max": 2.752639949321747
+            },
+            "samples_us": [
+              2.610880136489868,
+              2.5804799795150757,
+              2.4719999730587006,
+              2.5593599677085876,
+              2.5628799200057983,
+              2.7344000339508057,
+              2.6019200682640076,
+              2.5808000564575195,
+              2.4569599330425262,
+              2.6681599020957947,
+              2.6204800605773926,
+              2.576639950275421,
+              2.5804799795150757,
+              2.741439938545227,
+              2.457599937915802,
+              2.5603199005126953,
+              2.5804799795150757,
+              2.5328001379966736,
+              2.577599883079529,
+              2.752639949321747,
+              2.4563199281692505,
+              2.563520073890686,
+              2.587200105190277,
+              2.5545600056648254,
+              2.7235201001167297,
+              2.55840003490448,
+              2.433920055627823,
+              2.5600001215934753,
+              2.5830399990081787,
+              2.5648000836372375
+            ]
+          },
+          "triton": {
+            "latency_us": {
+              "median": 2.62703999876976,
+              "p95": 2.762559950351715,
+              "min": 2.5833600759506226,
+              "max": 2.7811199426651
+            },
+            "samples_us": [
+              2.70143985748291,
+              2.648639976978302,
+              2.662400007247925,
+              2.619839906692505,
+              2.74399995803833,
+              2.616640031337738,
+              2.6416000723838806,
+              2.6396799087524414,
+              2.6313599944114685,
+              2.5833600759506226,
+              2.6214399933815002,
+              2.6159998774528503,
+              2.60127991437912,
+              2.618879973888397,
+              2.6419198513031006,
+              2.6156800985336304,
+              2.6364800333976746,
+              2.616960108280182,
+              2.7398398518562317,
+              2.709439992904663,
+              2.6419198513031006,
+              2.762559950351715,
+              2.6227200031280518,
+              2.6214399933815002,
+              2.6214399933815002,
+              2.621760070323944,
+              2.6790401339530945,
+              2.622399926185608,
+              2.6208001375198364,
+              2.7811199426651
+            ]
+          }
+        },
+        "native_vs_triton": {
+          "ratio_of_separate_medians": 1.9745416941698661,
+          "paired_saving_us_samples": [
+            2.621760368347168,
+            2.5366398692131042,
+            2.526400089263916,
+            2.5753599405288696,
+            2.4300801753997803,
+            2.560959756374359,
+            2.5606396794319153,
+            2.6236802339553833,
+            2.516479790210724,
+            2.616959810256958,
+            2.560959756374359,
+            2.5753602385520935,
+            2.577280104160309,
+            2.568639814853668,
+            2.547520399093628,
+            2.545599937438965,
+            2.5350400805473328,
+            2.561279833316803,
+            2.441600263118744,
+            2.492160201072693,
+            2.5628799200057983,
+            2.407679855823517,
+            2.571520209312439,
+            2.5600001215934753,
+            2.6396802067756653,
+            2.682879865169525,
+            2.497279942035675,
+            2.5548797845840454,
+            2.5708800554275513,
+            2.4057602882385254
+          ],
+          "paired_median_saving_us": 2.560799717903137,
+          "triton_faster_rounds": 30,
+          "tied_rounds": 0,
+          "rounds": 30
+        },
+        "compiled_vs_triton": {
+          "ratio_of_separate_medians": 0.9809975934452225,
+          "paired_saving_us_samples": [
+            -0.09055972099304199,
+            -0.06815999746322632,
+            -0.19040003418922424,
+            -0.060479938983917236,
+            -0.18112003803253174,
+            0.11776000261306763,
+            -0.03968000411987305,
+            -0.058879852294921875,
+            -0.17440006136894226,
+            0.08479982614517212,
+            -0.000959932804107666,
+            -0.0393599271774292,
+            -0.02079993486404419,
+            0.12255996465682983,
+            -0.18431991338729858,
+            -0.05536019802093506,
+            -0.05600005388259888,
+            -0.0841599702835083,
+            -0.16223996877670288,
+            0.04319995641708374,
+            -0.1855999231338501,
+            -0.19903987646102905,
+            -0.03551989793777466,
+            -0.0668799877166748,
+            0.10208010673522949,
+            -0.06336003541946411,
+            -0.2451200783252716,
+            -0.06239980459213257,
+            -0.037760138511657715,
+            -0.21631985902786255
+          ],
+          "paired_median_saving_us": -0.0614398717880249,
+          "triton_faster_rounds": 5,
+          "tied_rounds": 0,
+          "rounds": 30
+        },
+        "configuration_comparisons": {
+          "triton": {
+            "native_vs_variant": {
+              "ratio_of_separate_medians": 1.9745416941698661,
+              "paired_saving_us_samples": [
+                2.621760368347168,
+                2.5366398692131042,
+                2.526400089263916,
+                2.5753599405288696,
+                2.4300801753997803,
+                2.560959756374359,
+                2.5606396794319153,
+                2.6236802339553833,
+                2.516479790210724,
+                2.616959810256958,
+                2.560959756374359,
+                2.5753602385520935,
+                2.577280104160309,
+                2.568639814853668,
+                2.547520399093628,
+                2.545599937438965,
+                2.5350400805473328,
+                2.561279833316803,
+                2.441600263118744,
+                2.492160201072693,
+                2.5628799200057983,
+                2.407679855823517,
+                2.571520209312439,
+                2.5600001215934753,
+                2.6396802067756653,
+                2.682879865169525,
+                2.497279942035675,
+                2.5548797845840454,
+                2.5708800554275513,
+                2.4057602882385254
+              ],
+              "paired_median_saving_us": 2.560799717903137,
+              "triton_faster_rounds": 30,
+              "tied_rounds": 0,
+              "rounds": 30
+            },
+            "default_vs_variant": {
+              "ratio_of_separate_medians": 1.0,
+              "paired_saving_us_samples": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "paired_median_saving_us": 0.0,
+              "triton_faster_rounds": 0,
+              "tied_rounds": 30,
+              "rounds": 30
+            },
+            "compiled_vs_variant": {
+              "ratio_of_separate_medians": 0.9809975934452225,
+              "paired_saving_us_samples": [
+                -0.09055972099304199,
+                -0.06815999746322632,
+                -0.19040003418922424,
+                -0.060479938983917236,
+                -0.18112003803253174,
+                0.11776000261306763,
+                -0.03968000411987305,
+                -0.058879852294921875,
+                -0.17440006136894226,
+                0.08479982614517212,
+                -0.000959932804107666,
+                -0.0393599271774292,
+                -0.02079993486404419,
+                0.12255996465682983,
+                -0.18431991338729858,
+                -0.05536019802093506,
+                -0.05600005388259888,
+                -0.0841599702835083,
+                -0.16223996877670288,
+                0.04319995641708374,
+                -0.1855999231338501,
+                -0.19903987646102905,
+                -0.03551989793777466,
+                -0.0668799877166748,
+                0.10208010673522949,
+                -0.06336003541946411,
+                -0.2451200783252716,
+                -0.06239980459213257,
+                -0.037760138511657715,
+                -0.21631985902786255
+              ],
+              "paired_median_saving_us": -0.0614398717880249,
+              "triton_faster_rounds": 5,
+              "tied_rounds": 0,
+              "rounds": 30
+            }
+          }
+        }
+      }
+    },
+    {
+      "phase": "decode1",
+      "prompt": "Explain why the sky appears blue in one sentence.",
+      "input_ids": [
+        [
+          840,
+          20772,
+          3170,
+          279,
+          12884,
+          7952,
+          6303,
+          304,
+          825,
+          11652,
+          13
+        ]
+      ],
+      "modules": [
+        {
+          "name": "model.layers.0.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.1.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 6.103515625e-05
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 6.103515625e-05
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.2.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 3,
+              "max_abs_error": 0.0001220703125
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 3,
+              "max_abs_error": 0.0001220703125
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.3.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 2,
+              "max_abs_error": 3.0517578125e-05
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 2,
+              "max_abs_error": 3.0517578125e-05
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.4.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 2,
+              "max_abs_error": 0.0001220703125
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 2,
+              "max_abs_error": 0.0001220703125
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.5.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 0.0001220703125
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 0.0001220703125
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.6.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.7.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.8.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.9.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.10.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.11.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.12.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 1.52587890625e-05
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 1.52587890625e-05
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.13.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.14.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.15.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.16.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.17.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.18.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.19.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 3.0517578125e-05
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 3.0517578125e-05
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.20.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.21.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 3.0517578125e-05
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 3.0517578125e-05
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.22.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.23.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.24.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 0.000244140625
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 0.000244140625
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.25.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 0.0001220703125
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 0.0001220703125
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.26.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 6.103515625e-05
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 6.103515625e-05
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.27.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 0.0001220703125
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 0.0001220703125
+            }
+          },
+          "passed": true
+        }
+      ],
+      "isolated_timing": {
+        "kernel": "precise_candidate",
+        "shape": [
+          1,
+          8960
+        ],
+        "elements": 8960,
+        "selection_mode": "automatic",
+        "accuracy": {
+          "rtol": 0.002,
+          "atol": 0.0002,
+          "oracle": "float64 arithmetic with input-dtype rounding after SiLU and multiply",
+          "implementations": {
+            "pytorch_native": {
+              "passed": true,
+              "max_abs_oracle_error": 0.0,
+              "different_elements_from_native": 0
+            },
+            "pytorch_compiled": {
+              "passed": true,
+              "max_abs_oracle_error": 0.0009765625,
+              "different_elements_from_native": 2352
+            },
+            "triton": {
+              "passed": true,
+              "max_abs_oracle_error": 0.0,
+              "different_elements_from_native": 0
+            }
+          }
+        },
+        "first_call_setup_and_execution_seconds": {
+          "pytorch_native": 0.00017375799995988928,
+          "pytorch_compiled": 0.05284684900004777,
+          "triton": 0.00021308800000952033
+        },
+        "resources_by_implementation": {
+          "triton": {
+            "programs": 35,
+            "block_size": 256,
+            "num_warps": 4,
+            "registers_per_thread": 18,
+            "spills": 0,
+            "shared_bytes": 0
+          }
+        },
+        "triton_resources": {
+          "programs": 35,
+          "block_size": 256,
+          "num_warps": 4,
+          "registers_per_thread": 18,
+          "spills": 0,
+          "shared_bytes": 0
+        },
+        "measurement_orders": [
+          [
+            "pytorch_native",
+            "pytorch_compiled",
+            "triton"
+          ],
+          [
+            "pytorch_native",
+            "triton",
+            "pytorch_compiled"
+          ],
+          [
+            "pytorch_compiled",
+            "pytorch_native",
+            "triton"
+          ],
+          [
+            "pytorch_compiled",
+            "triton",
+            "pytorch_native"
+          ],
+          [
+            "triton",
+            "pytorch_native",
+            "pytorch_compiled"
+          ],
+          [
+            "triton",
+            "pytorch_compiled",
+            "pytorch_native"
+          ],
+          [
+            "pytorch_native",
+            "pytorch_compiled",
+            "triton"
+          ],
+          [
+            "pytorch_native",
+            "triton",
+            "pytorch_compiled"
+          ],
+          [
+            "pytorch_compiled",
+            "pytorch_native",
+            "triton"
+          ],
+          [
+            "pytorch_compiled",
+            "triton",
+            "pytorch_native"
+          ],
+          [
+            "triton",
+            "pytorch_native",
+            "pytorch_compiled"
+          ],
+          [
+            "triton",
+            "pytorch_compiled",
+            "pytorch_native"
+          ],
+          [
+            "pytorch_native",
+            "pytorch_compiled",
+            "triton"
+          ],
+          [
+            "pytorch_native",
+            "triton",
+            "pytorch_compiled"
+          ],
+          [
+            "pytorch_compiled",
+            "pytorch_native",
+            "triton"
+          ],
+          [
+            "pytorch_compiled",
+            "triton",
+            "pytorch_native"
+          ],
+          [
+            "triton",
+            "pytorch_native",
+            "pytorch_compiled"
+          ],
+          [
+            "triton",
+            "pytorch_compiled",
+            "pytorch_native"
+          ],
+          [
+            "pytorch_native",
+            "pytorch_compiled",
+            "triton"
+          ],
+          [
+            "pytorch_native",
+            "triton",
+            "pytorch_compiled"
+          ],
+          [
+            "pytorch_compiled",
+            "pytorch_native",
+            "triton"
+          ],
+          [
+            "pytorch_compiled",
+            "triton",
+            "pytorch_native"
+          ],
+          [
+            "triton",
+            "pytorch_native",
+            "pytorch_compiled"
+          ],
+          [
+            "triton",
+            "pytorch_compiled",
+            "pytorch_native"
+          ],
+          [
+            "pytorch_native",
+            "pytorch_compiled",
+            "triton"
+          ],
+          [
+            "pytorch_native",
+            "triton",
+            "pytorch_compiled"
+          ],
+          [
+            "pytorch_compiled",
+            "pytorch_native",
+            "triton"
+          ],
+          [
+            "pytorch_compiled",
+            "triton",
+            "pytorch_native"
+          ],
+          [
+            "triton",
+            "pytorch_native",
+            "pytorch_compiled"
+          ],
+          [
+            "triton",
+            "pytorch_compiled",
+            "pytorch_native"
+          ]
+        ],
+        "implementations": {
+          "pytorch_native": {
+            "latency_us": {
+              "median": 5.173920094966888,
+              "p95": 5.223360061645508,
+              "min": 5.141119956970215,
+              "max": 5.373759865760803
+            },
+            "samples_us": [
+              5.373759865760803,
+              5.181440114974976,
+              5.169919729232788,
+              5.165119767189026,
+              5.164480209350586,
+              5.186240077018738,
+              5.181440114974976,
+              5.156800150871277,
+              5.182399749755859,
+              5.165759921073914,
+              5.180799961090088,
+              5.171520113945007,
+              5.223360061645508,
+              5.1801598072052,
+              5.162240266799927,
+              5.181440114974976,
+              5.199040174484253,
+              5.1900798082351685,
+              5.214400291442871,
+              5.169280171394348,
+              5.1763200759887695,
+              5.156480073928833,
+              5.166720151901245,
+              5.181440114974976,
+              5.198079943656921,
+              5.169919729232788,
+              5.168319940567017,
+              5.15936017036438,
+              5.167679786682129,
+              5.141119956970215
+            ]
+          },
+          "pytorch_compiled": {
+            "latency_us": {
+              "median": 2.5521600246429443,
+              "p95": 2.630079984664917,
+              "min": 2.457599937915802,
+              "max": 2.643199861049652
+            },
+            "samples_us": [
+              2.630079984664917,
+              2.5513601303100586,
+              2.4777600169181824,
+              2.6214399933815002,
+              2.596159875392914,
+              2.542400062084198,
+              2.5436800718307495,
+              2.5459200143814087,
+              2.457599937915802,
+              2.5804799795150757,
+              2.5600001215934753,
+              2.5417599081993103,
+              2.5433599948883057,
+              2.643199861049652,
+              2.4723200500011444,
+              2.542720139026642,
+              2.5756800174713135,
+              2.55295991897583,
+              2.539519965648651,
+              2.5804799795150757,
+              2.4585600197315216,
+              2.5804799795150757,
+              2.608959972858429,
+              2.519040107727051,
+              2.60127991437912,
+              2.5603199005126953,
+              2.4902400374412537,
+              2.580159902572632,
+              2.5760000944137573,
+              2.523519992828369
+            ]
+          },
+          "triton": {
+            "latency_us": {
+              "median": 2.6427198946475983,
+              "p95": 2.674880027770996,
+              "min": 2.6054400205612183,
+              "max": 2.6767998933792114
+            },
+            "samples_us": [
+              2.6441600918769836,
+              2.6422399282455444,
+              2.6627200841903687,
+              2.6054400205612183,
+              2.662400007247925,
+              2.643199861049652,
+              2.6233598589897156,
+              2.662400007247925,
+              2.6556798815727234,
+              2.6096001267433167,
+              2.640959918498993,
+              2.6422399282455444,
+              2.6470398902893066,
+              2.662400007247925,
+              2.6767998933792114,
+              2.6419198513031006,
+              2.6265600323677063,
+              2.629759907722473,
+              2.616640031337738,
+              2.6419198513031006,
+              2.6684799790382385,
+              2.619200050830841,
+              2.672640085220337,
+              2.6339200139045715,
+              2.6444798707962036,
+              2.674880027770996,
+              2.6633599400520325,
+              2.6240000128746033,
+              2.6607999205589294,
+              2.624959945678711
+            ]
+          }
+        },
+        "native_vs_triton": {
+          "ratio_of_separate_medians": 1.9578011674433702,
+          "paired_saving_us_samples": [
+            2.7295997738838196,
+            2.539200186729431,
+            2.5071996450424194,
+            2.5596797466278076,
+            2.502080202102661,
+            2.5430402159690857,
+            2.55808025598526,
+            2.494400143623352,
+            2.526719868183136,
+            2.556159794330597,
+            2.539840042591095,
+            2.529280185699463,
+            2.576320171356201,
+            2.5177597999572754,
+            2.4854403734207153,
+            2.539520263671875,
+            2.5724801421165466,
+            2.5603199005126953,
+            2.597760260105133,
+            2.5273603200912476,
+            2.507840096950531,
+            2.537280023097992,
+            2.494080066680908,
+            2.547520101070404,
+            2.5536000728607178,
+            2.495039701461792,
+            2.504960000514984,
+            2.5353601574897766,
+            2.5068798661231995,
+            2.516160011291504
+          ],
+          "paired_median_saving_us": 2.5363200902938843,
+          "triton_faster_rounds": 30,
+          "tied_rounds": 0,
+          "rounds": 30
+        },
+        "compiled_vs_triton": {
+          "ratio_of_separate_medians": 0.9657323236609116,
+          "paired_saving_us_samples": [
+            -0.01408010721206665,
+            -0.09087979793548584,
+            -0.18496006727218628,
+            0.015999972820281982,
+            -0.06624013185501099,
+            -0.1007997989654541,
+            -0.07967978715896606,
+            -0.11647999286651611,
+            -0.1980799436569214,
+            -0.029120147228240967,
+            -0.08095979690551758,
+            -0.10048002004623413,
+            -0.10367989540100098,
+            -0.019200146198272705,
+            -0.20447984337806702,
+            -0.09919971227645874,
+            -0.05088001489639282,
+            -0.07679998874664307,
+            -0.07712006568908691,
+            -0.0614398717880249,
+            -0.20991995930671692,
+            -0.03872007131576538,
+            -0.06368011236190796,
+            -0.11487990617752075,
+            -0.04319995641708374,
+            -0.11456012725830078,
+            -0.1731199026107788,
+            -0.043840110301971436,
+            -0.08479982614517212,
+            -0.1014399528503418
+          ],
+          "paired_median_saving_us": -0.08287981152534485,
+          "triton_faster_rounds": 1,
+          "tied_rounds": 0,
+          "rounds": 30
+        },
+        "configuration_comparisons": {
+          "triton": {
+            "native_vs_variant": {
+              "ratio_of_separate_medians": 1.9578011674433702,
+              "paired_saving_us_samples": [
+                2.7295997738838196,
+                2.539200186729431,
+                2.5071996450424194,
+                2.5596797466278076,
+                2.502080202102661,
+                2.5430402159690857,
+                2.55808025598526,
+                2.494400143623352,
+                2.526719868183136,
+                2.556159794330597,
+                2.539840042591095,
+                2.529280185699463,
+                2.576320171356201,
+                2.5177597999572754,
+                2.4854403734207153,
+                2.539520263671875,
+                2.5724801421165466,
+                2.5603199005126953,
+                2.597760260105133,
+                2.5273603200912476,
+                2.507840096950531,
+                2.537280023097992,
+                2.494080066680908,
+                2.547520101070404,
+                2.5536000728607178,
+                2.495039701461792,
+                2.504960000514984,
+                2.5353601574897766,
+                2.5068798661231995,
+                2.516160011291504
+              ],
+              "paired_median_saving_us": 2.5363200902938843,
+              "triton_faster_rounds": 30,
+              "tied_rounds": 0,
+              "rounds": 30
+            },
+            "default_vs_variant": {
+              "ratio_of_separate_medians": 1.0,
+              "paired_saving_us_samples": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "paired_median_saving_us": 0.0,
+              "triton_faster_rounds": 0,
+              "tied_rounds": 30,
+              "rounds": 30
+            },
+            "compiled_vs_variant": {
+              "ratio_of_separate_medians": 0.9657323236609116,
+              "paired_saving_us_samples": [
+                -0.01408010721206665,
+                -0.09087979793548584,
+                -0.18496006727218628,
+                0.015999972820281982,
+                -0.06624013185501099,
+                -0.1007997989654541,
+                -0.07967978715896606,
+                -0.11647999286651611,
+                -0.1980799436569214,
+                -0.029120147228240967,
+                -0.08095979690551758,
+                -0.10048002004623413,
+                -0.10367989540100098,
+                -0.019200146198272705,
+                -0.20447984337806702,
+                -0.09919971227645874,
+                -0.05088001489639282,
+                -0.07679998874664307,
+                -0.07712006568908691,
+                -0.0614398717880249,
+                -0.20991995930671692,
+                -0.03872007131576538,
+                -0.06368011236190796,
+                -0.11487990617752075,
+                -0.04319995641708374,
+                -0.11456012725830078,
+                -0.1731199026107788,
+                -0.043840110301971436,
+                -0.08479982614517212,
+                -0.1014399528503418
+              ],
+              "paired_median_saving_us": -0.08287981152534485,
+              "triton_faster_rounds": 1,
+              "tied_rounds": 0,
+              "rounds": 30
+            }
+          }
+        }
+      }
+    },
+    {
+      "phase": "decode1",
+      "prompt": "def add(a, b):\n    return",
+      "input_ids": [
+        [
+          750,
+          912,
+          2877,
+          11,
+          293,
+          982,
+          262,
+          470
+        ]
+      ],
+      "modules": [
+        {
+          "name": "model.layers.0.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.1.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.2.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.3.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 1.52587890625e-05
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 1.52587890625e-05
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.4.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 2,
+              "max_abs_error": 6.103515625e-05
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 2,
+              "max_abs_error": 6.103515625e-05
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.5.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 3,
+              "max_abs_error": 0.0001220703125
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 3,
+              "max_abs_error": 0.0001220703125
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.6.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.7.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.8.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 0.0001220703125
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 0.0001220703125
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.9.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.10.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 6.103515625e-05
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 6.103515625e-05
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.11.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 3.0517578125e-05
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 3.0517578125e-05
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.12.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.13.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.14.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.15.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 6.103515625e-05
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 6.103515625e-05
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.16.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.17.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.18.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.19.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.20.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.21.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 3.0517578125e-05
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 3.0517578125e-05
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.22.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.23.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.24.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 0.00048828125
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 1,
+              "max_abs_error": 0.00048828125
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.25.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.26.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 3,
+              "max_abs_error": 0.00048828125
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 3,
+              "max_abs_error": 0.00048828125
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "model.layers.27.mlp",
+          "shape": [
+            1,
+            8960
+          ],
+          "selected_config": [
+            256,
+            4
+          ],
+          "comparisons": {
+            "native_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "triton_vs_captured": {
+              "mismatches": 0,
+              "different_elements": 0,
+              "max_abs_error": 0.0
+            },
+            "native_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 5,
+              "max_abs_error": 0.0001220703125
+            },
+            "triton_vs_oracle": {
+              "mismatches": 0,
+              "different_elements": 5,
+              "max_abs_error": 0.0001220703125
+            }
+          },
+          "passed": true
+        }
+      ],
+      "isolated_timing": {
+        "kernel": "precise_candidate",
+        "shape": [
+          1,
+          8960
+        ],
+        "elements": 8960,
+        "selection_mode": "automatic",
+        "accuracy": {
+          "rtol": 0.002,
+          "atol": 0.0002,
+          "oracle": "float64 arithmetic with input-dtype rounding after SiLU and multiply",
+          "implementations": {
+            "pytorch_native": {
+              "passed": true,
+              "max_abs_oracle_error": 0.0,
+              "different_elements_from_native": 0
+            },
+            "pytorch_compiled": {
+              "passed": true,
+              "max_abs_oracle_error": 0.001953125,
+              "different_elements_from_native": 2351
+            },
+            "triton": {
+              "passed": true,
+              "max_abs_oracle_error": 0.0,
+              "different_elements_from_native": 0
+            }
+          }
+        },
+        "first_call_setup_and_execution_seconds": {
+          "pytorch_native": 0.00014604799991957407,
+          "pytorch_compiled": 0.04938437900000281,
+          "triton": 0.00016245500000877655
+        },
+        "resources_by_implementation": {
+          "triton": {
+            "programs": 35,
+            "block_size": 256,
+            "num_warps": 4,
+            "registers_per_thread": 18,
+            "spills": 0,
+            "shared_bytes": 0
+          }
+        },
+        "triton_resources": {
+          "programs": 35,
+          "block_size": 256,
+          "num_warps": 4,
+          "registers_per_thread": 18,
+          "spills": 0,
+          "shared_bytes": 0
+        },
+        "measurement_orders": [
+          [
+            "pytorch_native",
+            "pytorch_compiled",
+            "triton"
+          ],
+          [
+            "pytorch_native",
+            "triton",
+            "pytorch_compiled"
+          ],
+          [
+            "pytorch_compiled",
+            "pytorch_native",
+            "triton"
+          ],
+          [
+            "pytorch_compiled",
+            "triton",
+            "pytorch_native"
+          ],
+          [
+            "triton",
+            "pytorch_native",
+            "pytorch_compiled"
+          ],
+          [
+            "triton",
+            "pytorch_compiled",
+            "pytorch_native"
+          ],
+          [
+            "pytorch_native",
+            "pytorch_compiled",
+            "triton"
+          ],
+          [
+            "pytorch_native",
+            "triton",
+            "pytorch_compiled"
+          ],
+          [
+            "pytorch_compiled",
+            "pytorch_native",
+            "triton"
+          ],
+          [
+            "pytorch_compiled",
+            "triton",
+            "pytorch_native"
+          ],
+          [
+            "triton",
+            "pytorch_native",
+            "pytorch_compiled"
+          ],
+          [
+            "triton",
+            "pytorch_compiled",
+            "pytorch_native"
+          ],
+          [
+            "pytorch_native",
+            "pytorch_compiled",
+            "triton"
+          ],
+          [
+            "pytorch_native",
+            "triton",
+            "pytorch_compiled"
+          ],
+          [
+            "pytorch_compiled",
+            "pytorch_native",
+            "triton"
+          ],
+          [
+            "pytorch_compiled",
+            "triton",
+            "pytorch_native"
+          ],
+          [
+            "triton",
+            "pytorch_native",
+            "pytorch_compiled"
+          ],
+          [
+            "triton",
+            "pytorch_compiled",
+            "pytorch_native"
+          ],
+          [
+            "pytorch_native",
+            "pytorch_compiled",
+            "triton"
+          ],
+          [
+            "pytorch_native",
+            "triton",
+            "pytorch_compiled"
+          ],
+          [
+            "pytorch_compiled",
+            "pytorch_native",
+            "triton"
+          ],
+          [
+            "pytorch_compiled",
+            "triton",
+            "pytorch_native"
+          ],
+          [
+            "triton",
+            "pytorch_native",
+            "pytorch_compiled"
+          ],
+          [
+            "triton",
+            "pytorch_compiled",
+            "pytorch_native"
+          ],
+          [
+            "pytorch_native",
+            "pytorch_compiled",
+            "triton"
+          ],
+          [
+            "pytorch_native",
+            "triton",
+            "pytorch_compiled"
+          ],
+          [
+            "pytorch_compiled",
+            "pytorch_native",
+            "triton"
+          ],
+          [
+            "pytorch_compiled",
+            "triton",
+            "pytorch_native"
+          ],
+          [
+            "triton",
+            "pytorch_native",
+            "pytorch_compiled"
+          ],
+          [
+            "triton",
+            "pytorch_compiled",
+            "pytorch_native"
+          ]
+        ],
+        "implementations": {
+          "pytorch_native": {
+            "latency_us": {
+              "median": 4.597439914941788,
+              "p95": 4.642559885978699,
+              "min": 4.567039906978607,
+              "max": 4.728319942951202
+            },
+            "samples_us": [
+              4.728319942951202,
+              4.571839869022369,
+              4.615040123462677,
+              4.610559940338135,
+              4.599359929561615,
+              4.602879881858826,
+              4.595839977264404,
+              4.599039852619171,
+              4.628159999847412,
+              4.642559885978699,
+              4.628480076789856,
+              4.588800072669983,
+              4.607360064983368,
+              4.572159945964813,
+              4.574719965457916,
+              4.587520062923431,
+              4.628480076789856,
+              4.5952001214027405,
+              4.587520062923431,
+              4.567039906978607,
+              4.587520062923431,
+              4.628799855709076,
+              4.609600007534027,
+              4.575999975204468,
+              4.572800099849701,
+              4.576320052146912,
+              4.606080055236816,
+              4.600000083446503,
+              4.5955199003219604,
+              4.567039906978607
+            ]
+          },
+          "pytorch_compiled": {
+            "latency_us": {
+              "median": 2.274079993367195,
+              "p95": 2.35167995095253,
+              "min": 2.155199944972992,
+              "max": 2.396160066127777
+            },
+            "samples_us": [
+              2.3347200453281403,
+              2.2809599339962006,
+              2.189439982175827,
+              2.2841599583625793,
+              2.266560047864914,
+              2.35167995095253,
+              2.3068800568580627,
+              2.274560034275055,
+              2.202560007572174,
+              2.2732800245285034,
+              2.300480008125305,
+              2.2937600314617157,
+              2.2912000119686127,
+              2.2511999309062958,
+              2.1692800521850586,
+              2.255679965019226,
+              2.3347200453281403,
+              2.25600004196167,
+              2.2864000499248505,
+              2.252800017595291,
+              2.155199944972992,
+              2.2841599583625793,
+              2.396160066127777,
+              2.252800017595291,
+              2.329919934272766,
+              2.285120040178299,
+              2.171200066804886,
+              2.2735999524593353,
+              2.2735999524593353,
+              2.252800017595291
+            ]
+          },
+          "triton": {
+            "latency_us": {
+              "median": 2.327199950814247,
+              "p95": 2.465920001268387,
+              "min": 2.2937600314617157,
+              "max": 2.5734400749206543
+            },
+            "samples_us": [
+              2.314240038394928,
+              2.5734400749206543,
+              2.353599965572357,
+              2.333119958639145,
+              2.2937600314617157,
+              2.3027199506759644,
+              2.314240038394928,
+              2.3759999871253967,
+              2.3548799753189087,
+              2.3369599878787994,
+              2.3203200101852417,
+              2.324479967355728,
+              2.300480008125305,
+              2.335039973258972,
+              2.3340800404548645,
+              2.465920001268387,
+              2.316479980945587,
+              2.313919961452484,
+              2.313600033521652,
+              2.337920069694519,
+              2.3718400299549103,
+              2.335360050201416,
+              2.313919961452484,
+              2.2937600314617157,
+              2.3071999847888947,
+              2.3526400327682495,
+              2.337920069694519,
+              2.329919934272766,
+              2.3241600394248962,
+              2.3001599311828613
+            ]
+          }
+        },
+        "native_vs_triton": {
+          "ratio_of_separate_medians": 1.9755242403357833,
+          "paired_saving_us_samples": [
+            2.4140799045562744,
+            1.998399794101715,
+            2.26144015789032,
+            2.27743998169899,
+            2.3055998980998993,
+            2.3001599311828613,
+            2.2815999388694763,
+            2.2230398654937744,
+            2.2732800245285034,
+            2.3055998980998993,
+            2.3081600666046143,
+            2.2643201053142548,
+            2.3068800568580627,
+            2.237119972705841,
+            2.2406399250030518,
+            2.1216000616550446,
+            2.312000095844269,
+            2.2812801599502563,
+            2.273920029401779,
+            2.229119837284088,
+            2.215680032968521,
+            2.29343980550766,
+            2.295680046081543,
+            2.282239943742752,
+            2.2656001150608063,
+            2.223680019378662,
+            2.2681599855422974,
+            2.2700801491737366,
+            2.271359860897064,
+            2.266879975795746
+          ],
+          "paired_median_saving_us": 2.272319942712784,
+          "triton_faster_rounds": 30,
+          "tied_rounds": 0,
+          "rounds": 30
+        },
+        "compiled_vs_triton": {
+          "ratio_of_separate_medians": 0.9771743044990757,
+          "paired_saving_us_samples": [
+            0.02048000693321228,
+            -0.29248014092445374,
+            -0.16415998339653015,
+            -0.04896000027656555,
+            -0.027199983596801758,
+            0.04896000027656555,
+            -0.007359981536865234,
+            -0.1014399528503418,
+            -0.15231996774673462,
+            -0.06367996335029602,
+            -0.019840002059936523,
+            -0.03071993589401245,
+            -0.009279996156692505,
+            -0.08384004235267639,
+            -0.1647999882698059,
+            -0.21024003624916077,
+            0.0182400643825531,
+            -0.05791991949081421,
+            -0.027199983596801758,
+            -0.0851200520992279,
+            -0.21664008498191833,
+            -0.05120009183883667,
+            0.08224010467529297,
+            -0.04096001386642456,
+            0.02271994948387146,
+            -0.06751999258995056,
+            -0.16672000288963318,
+            -0.056319981813430786,
+            -0.05056008696556091,
+            -0.04735991358757019
+          ],
+          "paired_median_saving_us": -0.05088008940219879,
+          "triton_faster_rounds": 5,
+          "tied_rounds": 0,
+          "rounds": 30
+        },
+        "configuration_comparisons": {
+          "triton": {
+            "native_vs_variant": {
+              "ratio_of_separate_medians": 1.9755242403357833,
+              "paired_saving_us_samples": [
+                2.4140799045562744,
+                1.998399794101715,
+                2.26144015789032,
+                2.27743998169899,
+                2.3055998980998993,
+                2.3001599311828613,
+                2.2815999388694763,
+                2.2230398654937744,
+                2.2732800245285034,
+                2.3055998980998993,
+                2.3081600666046143,
+                2.2643201053142548,
+                2.3068800568580627,
+                2.237119972705841,
+                2.2406399250030518,
+                2.1216000616550446,
+                2.312000095844269,
+                2.2812801599502563,
+                2.273920029401779,
+                2.229119837284088,
+                2.215680032968521,
+                2.29343980550766,
+                2.295680046081543,
+                2.282239943742752,
+                2.2656001150608063,
+                2.223680019378662,
+                2.2681599855422974,
+                2.2700801491737366,
+                2.271359860897064,
+                2.266879975795746
+              ],
+              "paired_median_saving_us": 2.272319942712784,
+              "triton_faster_rounds": 30,
+              "tied_rounds": 0,
+              "rounds": 30
+            },
+            "default_vs_variant": {
+              "ratio_of_separate_medians": 1.0,
+              "paired_saving_us_samples": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "paired_median_saving_us": 0.0,
+              "triton_faster_rounds": 0,
+              "tied_rounds": 30,
+              "rounds": 30
+            },
+            "compiled_vs_variant": {
+              "ratio_of_separate_medians": 0.9771743044990757,
+              "paired_saving_us_samples": [
+                0.02048000693321228,
+                -0.29248014092445374,
+                -0.16415998339653015,
+                -0.04896000027656555,
+                -0.027199983596801758,
+                0.04896000027656555,
+                -0.007359981536865234,
+                -0.1014399528503418,
+                -0.15231996774673462,
+                -0.06367996335029602,
+                -0.019840002059936523,
+                -0.03071993589401245,
+                -0.009279996156692505,
+                -0.08384004235267639,
+                -0.1647999882698059,
+                -0.21024003624916077,
+                0.0182400643825531,
+                -0.05791991949081421,
+                -0.027199983596801758,
+                -0.0851200520992279,
+                -0.21664008498191833,
+                -0.05120009183883667,
+                0.08224010467529297,
+                -0.04096001386642456,
+                0.02271994948387146,
+                -0.06751999258995056,
+                -0.16672000288963318,
+                -0.056319981813430786,
+                -0.05056008696556091,
+                -0.04735991358757019
+              ],
+              "paired_median_saving_us": -0.05088008940219879,
+              "triton_faster_rounds": 5,
+              "tied_rounds": 0,
+              "rounds": 30
+            }
+          }
+        }
+      }
+    }
+  ]
+}

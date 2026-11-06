@@ -56,3 +56,40 @@ Run `scripts/kaggle_rope_check.py` with notebook Python to repair NumPy/project
 imports and run only these tests. It does not download Qwen or run benchmarks.
 Next: inspect/understand the reference output and array layout, then implement
 and benchmark a bounded Triton rotation using the same precomputed tables.
+
+## Reference confirmed; first Triton rotation prepared
+
+User's Kaggle run passed all five reference tests in0.020s. This is numerical
+reference validation, not a performance result or a real-Qwen comparison.
+
+`kernels/triton_rope.py` adds `triton_rope(q,k,cos,sin)`. It does not call or
+replace `rope_cos_sin`. The complete calling flow is explicit:
+
+```python
+from fastinfer.kernels.rope import rope_cos_sin, reference_rope
+from fastinfer.kernels.triton_rope import triton_rope
+
+# q and k already exist on CUDA, with [batch,heads,tokens,head_dim] shapes.
+# position_ids has [batch,tokens] shape on the same device.
+cos, sin = rope_cos_sin(position_ids, q.shape[-1], dtype=q.dtype)
+expected_q, expected_k = reference_rope(q, k, cos, sin)
+actual_q, actual_k = triton_rope(q, k, cos, sin)
+```
+
+Both rotations receive exactly the same Q/K and coefficient arrays. There is
+one GPU launch covering both Q and K, one program per head/token vector, four
+warps and next-power-of-two width masking. Initial contract: contiguous CUDA
+FP16/FP32, positive even head widths2..256, separate outputs, inference only.
+It reads each feature's split-half partner and applies its own cosine/sine
+coefficients. Each multiply is rounded to input dtype before addition, matching
+the eager reference; multiply-add fusion is disabled. Coefficient generation
+and Q/K projection are unchanged, and no model replacement is installed.
+
+Four GPU tests cover known90degree rotations/identity, batches/unequal heads,
+multiple seeds and widths2/6/64/66/128/256, FP16/FP32, masked tails, offset positions,
+input preservation, asymmetric per-feature coefficients, supported layouts and
+no-backward validation. They require exact equality with the eager reference
+on these tested inputs. CUDA compilation/numerics remain untested locally;
+syntax checks passed. Run `scripts/kaggle_rope_check.py --gpu` with notebook
+Python to restore imports, check CUDA and run all nine RoPE tests. No timing,
+model download or table-generation Triton kernel is part of this check.

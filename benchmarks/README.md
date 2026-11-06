@@ -860,3 +860,9 @@ and runs only `test_rope_reference.py`. No Qwen download, GPU kernel or timing
 is involved. The reference separates position-dependent cosine/sine tables
 from their application to Q/K; see `notes/rope_reference.md`. Numerical execution
 is pending; a Triton benchmark comes after this reference milestone.
+
+RoPE update: the five PyTorch reference tests passed on Kaggle. Add `--gpu` to
+`scripts/kaggle_rope_check.py` to run both those tests and four tests for the new
+`triton_rope` rotation (nine total). Tables still come from `rope_cos_sin` and
+are passed explicitly to both implementations. This is correctness only;
+Triton execution and performance results are pending.

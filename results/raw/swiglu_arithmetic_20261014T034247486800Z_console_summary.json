@@ -1,0 +1,46 @@
+{
+  "source": "User-supplied console results; full raw report, PTX and tensors are in the Kaggle archive pending local download/verification.",
+  "original_report": "swiglu_arithmetic_20261014T034247486800Z.json",
+  "stage_report": "qwen_swiglu_stages_20261014T034236840519Z.json",
+  "module": "model.layers.1.mlp",
+  "shape": [
+    1,
+    8960
+  ],
+  "tests_passed": 25,
+  "variants": [
+    {
+      "name": "fast_exp_reciprocal",
+      "silu_fp32_differences": 7038,
+      "silu_fp16_differences": 7,
+      "product_fp16_differences": 7
+    },
+    {
+      "name": "libdevice_exp_reciprocal",
+      "silu_fp32_differences": 2547,
+      "silu_fp16_differences": 0,
+      "product_fp16_differences": 0
+    },
+    {
+      "name": "fast_exp_direct",
+      "silu_fp32_differences": 7038,
+      "silu_fp16_differences": 7,
+      "product_fp16_differences": 7
+    },
+    {
+      "name": "libdevice_exp_direct",
+      "silu_fp32_differences": 2547,
+      "silu_fp16_differences": 0,
+      "product_fp16_differences": 0
+    },
+    {
+      "name": "libdevice_exp_div_rn",
+      "silu_fp32_differences": 0,
+      "silu_fp16_differences": 0,
+      "product_fp16_differences": 0
+    }
+  ],
+  "archive": "swiglu_evidence_20261014T034251356392Z.zip",
+  "archive_sha256_reported_by_kaggle": "5669247b7a8ed9d0130066373793656c32d2fcf05fea6cec06b828d94e964151",
+  "scope": "Accuracy replay of one saved actual Qwen pair; no timing, production changes or full-model agreement established."
+}

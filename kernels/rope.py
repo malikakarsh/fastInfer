@@ -14,10 +14,10 @@ DTYPES = (torch.float16, torch.float32)
 def rope_cos_sin(position_ids, head_dim, *, theta=10000.0, dtype=torch.float32):
     """Build [batch, tokens, head_dim] tables; angles are measured in radians.
 
-position_ids is [batch, tokens], containing nonnegative integer positions.
-The model's configured theta must be passed when using actual model inputs.
-Frequencies/trigonometry use FP32; coefficients are then cast to dtype.
-"""
+    position_ids is [batch, tokens], containing nonnegative integer positions.
+    The model's configured theta must be passed when using actual model inputs.
+    Frequencies/trigonometry use FP32; coefficients are then cast to dtype.
+    """
     if position_ids.ndim != 2 or position_ids.numel() == 0:
         raise ValueError("position_ids must have nonempty [batch, tokens] shape")
     if position_ids.dtype not in (torch.int32, torch.int64):
@@ -40,13 +40,8 @@ Frequencies/trigonometry use FP32; coefficients are then cast to dtype.
     return cos.to(dtype), sin.to(dtype)
 
 
-def reference_rope(q, k, cos, sin):
-    """Rotate Q/K using precomputed tables, preserving input dtype arithmetic.
-
-For a vector [a,b,c,d], pairs are (a,c) and (b,d), not adjacent features.
-No V tensor is passed or changed. Finite floating inputs are expected.
-Coefficient construction is separate so it can be measured separately later.
-"""
+def validate_rope_inputs(q, k, cos, sin):
+    """Validate the common Q/K and coefficient-table interface."""
     if q.ndim != 4 or k.ndim != 4 or q.numel() == 0 or k.numel() == 0:
         raise ValueError("Q/K require nonempty [batch, heads, tokens, head_dim] shapes")
     batch, _, tokens, width = q.shape
@@ -58,6 +53,15 @@ Coefficient construction is separate so it can be measured separately later.
         raise TypeError("FP16 or FP32 Q/K required")
     if any(x.dtype != q.dtype or x.device != q.device for x in (k, cos, sin)):
         raise ValueError("Q/K/cos/sin must share dtype and device")
+def reference_rope(q, k, cos, sin):
+    """Rotate Q/K using precomputed tables, preserving input dtype arithmetic.
+
+    For a vector [a,b,c,d], pairs are (a,c) and (b,d), not adjacent features.
+    No V tensor is passed or changed. Finite floating inputs are expected.
+    Coefficient construction is separate so it can be measured separately later.
+    """
+    validate_rope_inputs(q, k, cos, sin)
+    width = q.shape[-1]
 
     # Insert the head dimension: each head uses the same positional tables.
     cos, sin = cos.unsqueeze(1), sin.unsqueeze(1)

@@ -308,3 +308,8 @@ Added a [readable PyTorch RoPE reference](kernels/rope.py) with split-half Q/K
 pairing and separate position-table construction. Five numerical tests are
 prepared; local syntax checks passed and Kaggle execution is pending. This is
 not yet a Triton kernel or a model integration. See the [reference notes](notes/rope_reference.md).
+
+The five RoPE reference tests have now passed on Kaggle. A first
+[Triton rotation](kernels/triton_rope.py) is prepared with four additional GPU
+checks. It consumes the same precomputed tables; compilation, correctness
+on CUDA and speed remain pending. No Qwen integration is enabled.

@@ -1,0 +1,43 @@
+{
+  "archive": "swiglu_evidence_20261018T000123218501Z.zip",
+  "sha256": "8c87794ab7064ae6e34db53204f1010db1213164c96a3d1a912c8d3afe0b4414",
+  "member_hashes_verified": 37,
+  "reports_imported": [
+    "results/raw/qwen_real_swiglu_precise_candidate_20261017T233845018075Z.json",
+    "results/raw/qwen_swiglu_decode_precise_candidate_20261017T234045192294Z.json",
+    "results/raw/qwen_swiglu_decode_precise_candidate_wrapper_control_20261017T235711187158Z.json"
+  ],
+  "paired_comparisons_recomputed": 12,
+  "report_source_status": {
+    "results/raw/qwen_real_swiglu_precise_candidate_20261017T233845018075Z.json": {
+      "benchmarks/qwen_swiglu_check.py": "matches",
+      "benchmarks/swiglu_compare.py": "matches",
+      "benchmarks/qwen_decode_profile.py": "missing_from_archive",
+      "kernels/swiglu.py": "matches",
+      "kernels/triton_swiglu.py": "matches",
+      "kernels/swiglu_config.py": "matches",
+      "kernels/swiglu_precise_candidate.py": "matches"
+    },
+    "results/raw/qwen_swiglu_decode_precise_candidate_20261017T234045192294Z.json": {
+      "decode_swiglu.py": "matches",
+      "kernels/swiglu.py": "matches",
+      "kernels/triton_swiglu.py": "matches",
+      "kernels/swiglu_config.py": "matches",
+      "kernels/swiglu_precise_candidate.py": "matches",
+      "benchmarks/qwen_swiglu_decode_compare.py": "different_version_in_current_source_snapshot",
+      "benchmarks/qwen_decode_compare.py": "missing_from_archive",
+      "benchmarks/softmax_compare.py": "matches"
+    },
+    "results/raw/qwen_swiglu_decode_precise_candidate_wrapper_control_20261017T235711187158Z.json": {
+      "decode_swiglu.py": "matches",
+      "kernels/swiglu.py": "matches",
+      "kernels/triton_swiglu.py": "matches",
+      "kernels/swiglu_config.py": "matches",
+      "kernels/swiglu_precise_candidate.py": "matches",
+      "benchmarks/qwen_swiglu_decode_compare.py": "matches",
+      "benchmarks/qwen_decode_compare.py": "missing_from_archive",
+      "benchmarks/softmax_compare.py": "matches"
+    }
+  },
+  "checks": "CRC, member set/length/SHA256; 112 exact products; 6 decode cases; 30 samples/provider; medians, ratios, paired savings/wins and dispatch totals; exact custom logits. Source-version gaps recorded separately. No archived code executed."
+}

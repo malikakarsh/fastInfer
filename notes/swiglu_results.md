@@ -152,3 +152,58 @@ No compiled stage is involved. Existing balanced30round timing is reused. Three
 local gate tests passed via their actual functions extracted without Torch;
 GPU execution of this new comparison is pending. This measures net replacement
 path effects and cannot assign a cost to each Python check or allocation.
+
+### Replacement control outcome, 2026-10-17 (user-supplied console)
+
+Report `qwen_swiglu_decode_precise_candidate_wrapper_control_20261017T235711187158Z.json`
+completed successfully. Both wrapped eager and precise Triton passed the exact-logit
+control gate, local checks and dispatch checks for all three16-step prompts.
+Each wrapped provider timed13440stage calls perprompt with0fallbacks.
+
+| Prompt | Original ms/step | Wrapped eager ms/step | Wrapped precise ms/step |
+| --- | ---: | ---: | ---: |
+| France | 34.180566 | 35.453286 | 38.018399 |
+| Sky | 34.414866 | 35.529111 | 38.081365 |
+| Code | 34.509307 | 35.332647 | 38.040080 |
+
+Paired median additional cost for wrapped eager versus original was1291.32,
+1158.73,817.31us perstep (wrapped eager faster2/30,1/30,3/30rounds).
+Precise Triton versus wrapped eager added2534.01,2478.57,2698.01us perstep
+and was faster0/30rounds for every prompt. Versus original, precise added
+3742.28,3665.71,3646.32us paired median and also won0/30rounds. Paired medians
+are separate statistics; do not assume they add exactly.
+
+This control establishes a net integration cost even for the original eager
+arithmetic and a further regression for the custom call path. It does not
+identify which individual checks, allocations, device queries, launches or
+GPU behavior account for the remaining cost. Do not attribute all slowdown
+to reshapes or the common wrapper. Isolated graph speed does not transfer
+to this eager model execution path.
+
+Decision: close the bounded SwiGLU lab. Preserve the original Qwen stage for
+model execution; keep the original/precise kernels, diagnostics and benchmarks
+as experiments. No performance-driven default promotion, additional scheduling
+sweep or immediate debugging loop is justified by the project schedule.
+An optimized integration can be revisited during runtime integration using
+normal-call and full-model timing. Preserve/archive this report with the previous
+isolated and full-model results before moving to the next project milestone.
+These measurements remain supplied console evidence pending raw archive import.
+
+### Local final evidence verification
+
+Downloaded `swiglu_evidence_20261018T000123218501Z.zip` has SHA256
+`8c87794ab7064ae6e34db53204f1010db1213164c96a3d1a912c8d3afe0b4414`.
+CRC, all37manifest member lengths/hashes and exact member set passed. Imported
+three full precise-candidate reports without executing or overwriting sources.
+Recomputed12full-model pairwise comparisons from raw30round samples, including
+medians/ratios/paired savings/wins and dispatch totals; confirmed112exact captured
+products and exact custom logits in all six full decode/control cases.
+Verification details are in
+`results/raw/swiglu_evidence_20261018T000123218501Z.verification.json`.
+
+The archive snapshots current sources, so the earlier full-decode report refers
+to a previous version of its driver. Two shared helpers (`qwen_decode_profile.py`
+and `qwen_decode_compare.py`) are not bundled. These source-version gaps are
+recorded explicitly; member integrity and raw-sample statistical verification
+are distinct from complete source reproduction. No new GPU run is required to
+preserve the observed outcome.
