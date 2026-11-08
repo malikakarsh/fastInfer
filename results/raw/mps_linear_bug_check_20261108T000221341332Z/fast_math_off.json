@@ -1,0 +1,3591 @@
+{
+  "status": "complete",
+  "environment": {
+    "torch": "2.15.0",
+    "torch_git": "d0f2af8b66b20da4baa50644c0cd3f887a2eae2e",
+    "python": "3.13.12",
+    "platform": "macOS-26.4.1-arm64-arm-64bit-Mach-O",
+    "device": "mps",
+    "mps_flags": {
+      "PYTORCH_MPS_FAST_MATH": "0",
+      "PYTORCH_MPS_PREFER_METAL": null
+    }
+  },
+  "fixture_sha256": "f77def2b05e9654dfdc5603a8e9417770f4d93c934eb176035e7a86be68e1753",
+  "source_sha256": "c8ff4f82b6051b1a2c53f50c3ef770c2e9d30e821af3e645476713c29fa5a6c5",
+  "fixture_subnormal_values": {
+    "inputs": 2,
+    "weight": 35849,
+    "bias": 0
+  },
+  "configuration": "fast_math_off",
+  "interpretation": "Wrong exact-arithmetic outputs are strong correctness evidence. FP64-rounding disagreement alone is not a bug criterion. The FP32 accumulation bound is conditional on its stated arithmetic model, not a PyTorch guarantee. MPS flags request settings; they do not prove which internal kernel dispatched.",
+  "exact_tests": [
+    {
+      "case": "sparse_small_integer",
+      "rows": 1,
+      "operation": "linear_3d",
+      "serial": false,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 1,
+      "operation": "linear_3d",
+      "serial": false,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 1,
+      "operation": "linear_3d",
+      "serial": false,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 1,
+      "operation": "linear_3d",
+      "serial": true,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 1,
+      "operation": "linear_3d",
+      "serial": true,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 1,
+      "operation": "linear_3d",
+      "serial": true,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 1,
+      "operation": "linear_2d",
+      "serial": false,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 1,
+      "operation": "linear_2d",
+      "serial": false,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 1,
+      "operation": "linear_2d",
+      "serial": false,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 1,
+      "operation": "linear_2d",
+      "serial": true,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 1,
+      "operation": "linear_2d",
+      "serial": true,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 1,
+      "operation": "linear_2d",
+      "serial": true,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 1,
+      "operation": "addmm",
+      "serial": false,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 1,
+      "operation": "addmm",
+      "serial": false,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 1,
+      "operation": "addmm",
+      "serial": false,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 1,
+      "operation": "addmm",
+      "serial": true,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 1,
+      "operation": "addmm",
+      "serial": true,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 1,
+      "operation": "addmm",
+      "serial": true,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 1,
+      "operation": "mm_then_bias",
+      "serial": false,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 1,
+      "operation": "mm_then_bias",
+      "serial": false,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 1,
+      "operation": "mm_then_bias",
+      "serial": false,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 1,
+      "operation": "mm_then_bias",
+      "serial": true,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 1,
+      "operation": "mm_then_bias",
+      "serial": true,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 1,
+      "operation": "mm_then_bias",
+      "serial": true,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 1,
+      "operation": "fp32_linear_then_cast",
+      "serial": false,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 1,
+      "operation": "fp32_linear_then_cast",
+      "serial": false,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 1,
+      "operation": "fp32_linear_then_cast",
+      "serial": false,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 1,
+      "operation": "fp32_linear_then_cast",
+      "serial": true,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 1,
+      "operation": "fp32_linear_then_cast",
+      "serial": true,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 1,
+      "operation": "fp32_linear_then_cast",
+      "serial": true,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 2,
+      "operation": "linear_3d",
+      "serial": false,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 2,
+      "operation": "linear_3d",
+      "serial": false,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 2,
+      "operation": "linear_3d",
+      "serial": false,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 2,
+      "operation": "linear_3d",
+      "serial": true,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 2,
+      "operation": "linear_3d",
+      "serial": true,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 2,
+      "operation": "linear_3d",
+      "serial": true,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 2,
+      "operation": "linear_2d",
+      "serial": false,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 2,
+      "operation": "linear_2d",
+      "serial": false,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 2,
+      "operation": "linear_2d",
+      "serial": false,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 2,
+      "operation": "linear_2d",
+      "serial": true,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 2,
+      "operation": "linear_2d",
+      "serial": true,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 2,
+      "operation": "linear_2d",
+      "serial": true,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 2,
+      "operation": "addmm",
+      "serial": false,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 2,
+      "operation": "addmm",
+      "serial": false,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 2,
+      "operation": "addmm",
+      "serial": false,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 2,
+      "operation": "addmm",
+      "serial": true,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 2,
+      "operation": "addmm",
+      "serial": true,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 2,
+      "operation": "addmm",
+      "serial": true,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 2,
+      "operation": "mm_then_bias",
+      "serial": false,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 2,
+      "operation": "mm_then_bias",
+      "serial": false,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 2,
+      "operation": "mm_then_bias",
+      "serial": false,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 2,
+      "operation": "mm_then_bias",
+      "serial": true,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 2,
+      "operation": "mm_then_bias",
+      "serial": true,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 2,
+      "operation": "mm_then_bias",
+      "serial": true,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 2,
+      "operation": "fp32_linear_then_cast",
+      "serial": false,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 2,
+      "operation": "fp32_linear_then_cast",
+      "serial": false,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 2,
+      "operation": "fp32_linear_then_cast",
+      "serial": false,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 2,
+      "operation": "fp32_linear_then_cast",
+      "serial": true,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 2,
+      "operation": "fp32_linear_then_cast",
+      "serial": true,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 2,
+      "operation": "fp32_linear_then_cast",
+      "serial": true,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 4,
+      "operation": "linear_3d",
+      "serial": false,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 4,
+      "operation": "linear_3d",
+      "serial": false,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 4,
+      "operation": "linear_3d",
+      "serial": false,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 4,
+      "operation": "linear_3d",
+      "serial": true,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 4,
+      "operation": "linear_3d",
+      "serial": true,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 4,
+      "operation": "linear_3d",
+      "serial": true,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 4,
+      "operation": "linear_2d",
+      "serial": false,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 4,
+      "operation": "linear_2d",
+      "serial": false,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 4,
+      "operation": "linear_2d",
+      "serial": false,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 4,
+      "operation": "linear_2d",
+      "serial": true,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 4,
+      "operation": "linear_2d",
+      "serial": true,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 4,
+      "operation": "linear_2d",
+      "serial": true,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 4,
+      "operation": "addmm",
+      "serial": false,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 4,
+      "operation": "addmm",
+      "serial": false,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 4,
+      "operation": "addmm",
+      "serial": false,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 4,
+      "operation": "addmm",
+      "serial": true,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 4,
+      "operation": "addmm",
+      "serial": true,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 4,
+      "operation": "addmm",
+      "serial": true,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 4,
+      "operation": "mm_then_bias",
+      "serial": false,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 4,
+      "operation": "mm_then_bias",
+      "serial": false,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 4,
+      "operation": "mm_then_bias",
+      "serial": false,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 4,
+      "operation": "mm_then_bias",
+      "serial": true,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 4,
+      "operation": "mm_then_bias",
+      "serial": true,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 4,
+      "operation": "mm_then_bias",
+      "serial": true,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 4,
+      "operation": "fp32_linear_then_cast",
+      "serial": false,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 4,
+      "operation": "fp32_linear_then_cast",
+      "serial": false,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 4,
+      "operation": "fp32_linear_then_cast",
+      "serial": false,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 4,
+      "operation": "fp32_linear_then_cast",
+      "serial": true,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 4,
+      "operation": "fp32_linear_then_cast",
+      "serial": true,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 4,
+      "operation": "fp32_linear_then_cast",
+      "serial": true,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 8,
+      "operation": "linear_3d",
+      "serial": false,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 8,
+      "operation": "linear_3d",
+      "serial": false,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 8,
+      "operation": "linear_3d",
+      "serial": false,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 8,
+      "operation": "linear_3d",
+      "serial": true,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 8,
+      "operation": "linear_3d",
+      "serial": true,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 8,
+      "operation": "linear_3d",
+      "serial": true,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 8,
+      "operation": "linear_2d",
+      "serial": false,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 8,
+      "operation": "linear_2d",
+      "serial": false,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 8,
+      "operation": "linear_2d",
+      "serial": false,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 8,
+      "operation": "linear_2d",
+      "serial": true,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 8,
+      "operation": "linear_2d",
+      "serial": true,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 8,
+      "operation": "linear_2d",
+      "serial": true,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 8,
+      "operation": "addmm",
+      "serial": false,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 8,
+      "operation": "addmm",
+      "serial": false,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 8,
+      "operation": "addmm",
+      "serial": false,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 8,
+      "operation": "addmm",
+      "serial": true,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 8,
+      "operation": "addmm",
+      "serial": true,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 8,
+      "operation": "addmm",
+      "serial": true,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 8,
+      "operation": "mm_then_bias",
+      "serial": false,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 8,
+      "operation": "mm_then_bias",
+      "serial": false,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 8,
+      "operation": "mm_then_bias",
+      "serial": false,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 8,
+      "operation": "mm_then_bias",
+      "serial": true,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 8,
+      "operation": "mm_then_bias",
+      "serial": true,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 8,
+      "operation": "mm_then_bias",
+      "serial": true,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 8,
+      "operation": "fp32_linear_then_cast",
+      "serial": false,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 8,
+      "operation": "fp32_linear_then_cast",
+      "serial": false,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 8,
+      "operation": "fp32_linear_then_cast",
+      "serial": false,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 8,
+      "operation": "fp32_linear_then_cast",
+      "serial": true,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 8,
+      "operation": "fp32_linear_then_cast",
+      "serial": true,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "sparse_small_integer",
+      "rows": 8,
+      "operation": "fp32_linear_then_cast",
+      "serial": true,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "one_hot_normal_weights_no_bias",
+      "rows": 4,
+      "operation": "linear_3d",
+      "serial": false,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "one_hot_normal_weights_no_bias",
+      "rows": 4,
+      "operation": "linear_3d",
+      "serial": false,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "one_hot_normal_weights_no_bias",
+      "rows": 4,
+      "operation": "linear_3d",
+      "serial": false,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "one_hot_normal_weights_no_bias",
+      "rows": 4,
+      "operation": "linear_3d",
+      "serial": true,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "one_hot_normal_weights_no_bias",
+      "rows": 4,
+      "operation": "linear_3d",
+      "serial": true,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "one_hot_normal_weights_no_bias",
+      "rows": 4,
+      "operation": "linear_3d",
+      "serial": true,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "zero_input_normal_bias",
+      "rows": 4,
+      "operation": "linear_3d",
+      "serial": false,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "zero_input_normal_bias",
+      "rows": 4,
+      "operation": "linear_3d",
+      "serial": false,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "zero_input_normal_bias",
+      "rows": 4,
+      "operation": "linear_3d",
+      "serial": false,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "zero_input_normal_bias",
+      "rows": 4,
+      "operation": "linear_3d",
+      "serial": true,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "zero_input_normal_bias",
+      "rows": 4,
+      "operation": "linear_3d",
+      "serial": true,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "zero_input_normal_bias",
+      "rows": 4,
+      "operation": "linear_3d",
+      "serial": true,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "one_hot_normal_weights_no_bias",
+      "rows": 4,
+      "operation": "linear_2d",
+      "serial": false,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "one_hot_normal_weights_no_bias",
+      "rows": 4,
+      "operation": "linear_2d",
+      "serial": false,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "one_hot_normal_weights_no_bias",
+      "rows": 4,
+      "operation": "linear_2d",
+      "serial": false,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "one_hot_normal_weights_no_bias",
+      "rows": 4,
+      "operation": "linear_2d",
+      "serial": true,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "one_hot_normal_weights_no_bias",
+      "rows": 4,
+      "operation": "linear_2d",
+      "serial": true,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "one_hot_normal_weights_no_bias",
+      "rows": 4,
+      "operation": "linear_2d",
+      "serial": true,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "zero_input_normal_bias",
+      "rows": 4,
+      "operation": "linear_2d",
+      "serial": false,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "zero_input_normal_bias",
+      "rows": 4,
+      "operation": "linear_2d",
+      "serial": false,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "zero_input_normal_bias",
+      "rows": 4,
+      "operation": "linear_2d",
+      "serial": false,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "zero_input_normal_bias",
+      "rows": 4,
+      "operation": "linear_2d",
+      "serial": true,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "zero_input_normal_bias",
+      "rows": 4,
+      "operation": "linear_2d",
+      "serial": true,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "zero_input_normal_bias",
+      "rows": 4,
+      "operation": "linear_2d",
+      "serial": true,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "one_hot_normal_weights_no_bias",
+      "rows": 4,
+      "operation": "addmm",
+      "serial": false,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "one_hot_normal_weights_no_bias",
+      "rows": 4,
+      "operation": "addmm",
+      "serial": false,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "one_hot_normal_weights_no_bias",
+      "rows": 4,
+      "operation": "addmm",
+      "serial": false,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "one_hot_normal_weights_no_bias",
+      "rows": 4,
+      "operation": "addmm",
+      "serial": true,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "one_hot_normal_weights_no_bias",
+      "rows": 4,
+      "operation": "addmm",
+      "serial": true,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "one_hot_normal_weights_no_bias",
+      "rows": 4,
+      "operation": "addmm",
+      "serial": true,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "zero_input_normal_bias",
+      "rows": 4,
+      "operation": "addmm",
+      "serial": false,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "zero_input_normal_bias",
+      "rows": 4,
+      "operation": "addmm",
+      "serial": false,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "zero_input_normal_bias",
+      "rows": 4,
+      "operation": "addmm",
+      "serial": false,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "zero_input_normal_bias",
+      "rows": 4,
+      "operation": "addmm",
+      "serial": true,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "zero_input_normal_bias",
+      "rows": 4,
+      "operation": "addmm",
+      "serial": true,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "zero_input_normal_bias",
+      "rows": 4,
+      "operation": "addmm",
+      "serial": true,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "one_hot_normal_weights_no_bias",
+      "rows": 4,
+      "operation": "mm_then_bias",
+      "serial": false,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "one_hot_normal_weights_no_bias",
+      "rows": 4,
+      "operation": "mm_then_bias",
+      "serial": false,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "one_hot_normal_weights_no_bias",
+      "rows": 4,
+      "operation": "mm_then_bias",
+      "serial": false,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "one_hot_normal_weights_no_bias",
+      "rows": 4,
+      "operation": "mm_then_bias",
+      "serial": true,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "one_hot_normal_weights_no_bias",
+      "rows": 4,
+      "operation": "mm_then_bias",
+      "serial": true,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "one_hot_normal_weights_no_bias",
+      "rows": 4,
+      "operation": "mm_then_bias",
+      "serial": true,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "zero_input_normal_bias",
+      "rows": 4,
+      "operation": "mm_then_bias",
+      "serial": false,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "zero_input_normal_bias",
+      "rows": 4,
+      "operation": "mm_then_bias",
+      "serial": false,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "zero_input_normal_bias",
+      "rows": 4,
+      "operation": "mm_then_bias",
+      "serial": false,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "zero_input_normal_bias",
+      "rows": 4,
+      "operation": "mm_then_bias",
+      "serial": true,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "zero_input_normal_bias",
+      "rows": 4,
+      "operation": "mm_then_bias",
+      "serial": true,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "zero_input_normal_bias",
+      "rows": 4,
+      "operation": "mm_then_bias",
+      "serial": true,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "one_hot_normal_weights_no_bias",
+      "rows": 4,
+      "operation": "fp32_linear_then_cast",
+      "serial": false,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "one_hot_normal_weights_no_bias",
+      "rows": 4,
+      "operation": "fp32_linear_then_cast",
+      "serial": false,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "one_hot_normal_weights_no_bias",
+      "rows": 4,
+      "operation": "fp32_linear_then_cast",
+      "serial": false,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "one_hot_normal_weights_no_bias",
+      "rows": 4,
+      "operation": "fp32_linear_then_cast",
+      "serial": true,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "one_hot_normal_weights_no_bias",
+      "rows": 4,
+      "operation": "fp32_linear_then_cast",
+      "serial": true,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "one_hot_normal_weights_no_bias",
+      "rows": 4,
+      "operation": "fp32_linear_then_cast",
+      "serial": true,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "zero_input_normal_bias",
+      "rows": 4,
+      "operation": "fp32_linear_then_cast",
+      "serial": false,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "zero_input_normal_bias",
+      "rows": 4,
+      "operation": "fp32_linear_then_cast",
+      "serial": false,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "zero_input_normal_bias",
+      "rows": 4,
+      "operation": "fp32_linear_then_cast",
+      "serial": false,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "zero_input_normal_bias",
+      "rows": 4,
+      "operation": "fp32_linear_then_cast",
+      "serial": true,
+      "repeat": 0,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "zero_input_normal_bias",
+      "rows": 4,
+      "operation": "fp32_linear_then_cast",
+      "serial": true,
+      "repeat": 1,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    },
+    {
+      "case": "zero_input_normal_bias",
+      "rows": 4,
+      "operation": "fp32_linear_then_cast",
+      "serial": true,
+      "repeat": 2,
+      "finite": true,
+      "different_values": 0,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "rms_error": 0.0,
+      "passed": true
+    }
+  ],
+  "real_tests": [
+    {
+      "dtype": "torch.float16",
+      "bias": false,
+      "operation": "linear_3d",
+      "full_vs_single": {
+        "finite": true,
+        "different_values": 16,
+        "max_abs": 0.00048828125,
+        "mean_abs": 1.43294788098761e-07,
+        "rms_error": 7.5137038196055796e-06
+      },
+      "full_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 0.006956836135941558,
+        "mean_abs": 0.0001278589482831195,
+        "rms_error": 0.0002747243088544403
+      },
+      "single_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 0.006956836135941558,
+        "mean_abs": 0.00012785895633908806,
+        "rms_error": 0.0002747242805484337
+      },
+      "full_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 7,
+        "max_abs": 0.00048828125,
+        "mean_abs": 1.1921760493091176e-07,
+        "rms_error": 7.209100242834134e-06
+      },
+      "single_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 17,
+        "max_abs": 0.000244140625,
+        "mean_abs": 5.8153610942619187e-08,
+        "rms_error": 2.939780575832578e-06
+      },
+      "full_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.3899368544554976,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "single_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.3899368544554976,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "full_repeat_stable": true,
+      "single_repeat_stable": true,
+      "max_sum_absolute_terms": 57.398507987483754
+    },
+    {
+      "dtype": "torch.float16",
+      "bias": false,
+      "operation": "linear_2d",
+      "full_vs_single": {
+        "finite": true,
+        "different_values": 16,
+        "max_abs": 0.00048828125,
+        "mean_abs": 1.43294788098761e-07,
+        "rms_error": 7.5137038196055796e-06
+      },
+      "full_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 0.006956836135941558,
+        "mean_abs": 0.0001278589482831195,
+        "rms_error": 0.0002747243088544403
+      },
+      "single_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 0.006956836135941558,
+        "mean_abs": 0.00012785895633908806,
+        "rms_error": 0.0002747242805484337
+      },
+      "full_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 7,
+        "max_abs": 0.00048828125,
+        "mean_abs": 1.1921760493091176e-07,
+        "rms_error": 7.209100242834134e-06
+      },
+      "single_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 17,
+        "max_abs": 0.000244140625,
+        "mean_abs": 5.8153610942619187e-08,
+        "rms_error": 2.939780575832578e-06
+      },
+      "full_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.3899368544554976,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "single_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.3899368544554976,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "full_repeat_stable": true,
+      "single_repeat_stable": true,
+      "max_sum_absolute_terms": 57.398507987483754
+    },
+    {
+      "dtype": "torch.float16",
+      "bias": false,
+      "operation": "addmm",
+      "full_vs_single": {
+        "finite": true,
+        "different_values": 16,
+        "max_abs": 0.00048828125,
+        "mean_abs": 1.43294788098761e-07,
+        "rms_error": 7.5137038196055796e-06
+      },
+      "full_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 0.006956836135941558,
+        "mean_abs": 0.0001278589482831195,
+        "rms_error": 0.0002747243088544403
+      },
+      "single_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 0.006956836135941558,
+        "mean_abs": 0.00012785895633908806,
+        "rms_error": 0.0002747242805484337
+      },
+      "full_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 7,
+        "max_abs": 0.00048828125,
+        "mean_abs": 1.1921760493091176e-07,
+        "rms_error": 7.209100242834134e-06
+      },
+      "single_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 17,
+        "max_abs": 0.000244140625,
+        "mean_abs": 5.8153610942619187e-08,
+        "rms_error": 2.939780575832578e-06
+      },
+      "full_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.3899368544554976,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "single_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.3899368544554976,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "full_repeat_stable": true,
+      "single_repeat_stable": true,
+      "max_sum_absolute_terms": 57.398507987483754
+    },
+    {
+      "dtype": "torch.float16",
+      "bias": false,
+      "operation": "mm_then_bias",
+      "full_vs_single": {
+        "finite": true,
+        "different_values": 16,
+        "max_abs": 0.00048828125,
+        "mean_abs": 1.43294788098761e-07,
+        "rms_error": 7.5137038196055796e-06
+      },
+      "full_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 0.006956836135941558,
+        "mean_abs": 0.0001278589482831195,
+        "rms_error": 0.0002747243088544403
+      },
+      "single_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 0.006956836135941558,
+        "mean_abs": 0.00012785895633908806,
+        "rms_error": 0.0002747242805484337
+      },
+      "full_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 7,
+        "max_abs": 0.00048828125,
+        "mean_abs": 1.1921760493091176e-07,
+        "rms_error": 7.209100242834134e-06
+      },
+      "single_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 17,
+        "max_abs": 0.000244140625,
+        "mean_abs": 5.8153610942619187e-08,
+        "rms_error": 2.939780575832578e-06
+      },
+      "full_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.3899368544554976,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "single_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.3899368544554976,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "full_repeat_stable": true,
+      "single_repeat_stable": true,
+      "max_sum_absolute_terms": 57.398507987483754
+    },
+    {
+      "dtype": "torch.float16",
+      "bias": false,
+      "operation": "fp32_linear_then_cast",
+      "full_vs_single": {
+        "finite": true,
+        "different_values": 20,
+        "max_abs": 0.00048828125,
+        "mean_abs": 1.6307291973914418e-07,
+        "rms_error": 8.307106956097345e-06
+      },
+      "full_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 0.006956836135941558,
+        "mean_abs": 0.0001278589482831195,
+        "rms_error": 0.0002747243088544403
+      },
+      "single_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 0.006956836135941558,
+        "mean_abs": 0.00012785897848267662,
+        "rms_error": 0.00027472429170488297
+      },
+      "full_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 7,
+        "max_abs": 0.00048828125,
+        "mean_abs": 1.1921760493091176e-07,
+        "rms_error": 7.209100242834134e-06
+      },
+      "single_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 13,
+        "max_abs": 0.00048828125,
+        "mean_abs": 4.3855314808232445e-08,
+        "rms_error": 4.127577942184705e-06
+      },
+      "full_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.3899368544554976,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "single_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.3899368544554976,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "full_repeat_stable": true,
+      "single_repeat_stable": true,
+      "max_sum_absolute_terms": 57.398507987483754
+    },
+    {
+      "dtype": "torch.float16",
+      "bias": true,
+      "operation": "linear_3d",
+      "full_vs_single": {
+        "finite": true,
+        "different_values": 8,
+        "max_abs": 0.00048828125,
+        "mean_abs": 3.9980347667421615e-08,
+        "rms_error": 4.111972278256138e-06
+      },
+      "full_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 0.01547081951139262,
+        "mean_abs": 0.00021424396089105087,
+        "rms_error": 0.0007052195916035835
+      },
+      "single_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 0.01547081951139262,
+        "mean_abs": 0.00021424393095286403,
+        "rms_error": 0.0007052195863908377
+      },
+      "full_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 11,
+        "max_abs": 0.00048828125,
+        "mean_abs": 6.206599729401724e-08,
+        "rms_error": 4.446777863168156e-06
+      },
+      "single_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 7,
+        "max_abs": 0.0001220703125,
+        "mean_abs": 3.113278320857457e-08,
+        "rms_error": 1.8404506859662136e-06
+      },
+      "full_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.37387837597556123,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "single_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.37387837597556123,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "full_repeat_stable": true,
+      "single_repeat_stable": true,
+      "max_sum_absolute_terms": 76.82722272712999,
+      "full_matches_fixture_capture": true,
+      "single_matches_fixture_capture": true,
+      "exact_rational_dot_checks": [
+        {
+          "row": 0,
+          "column": 2711,
+          "exact_reference_numerator": "-96501989",
+          "exact_reference_denominator": "68719476736",
+          "exact_reference_approx": -0.0014042887632967904,
+          "nearest_even_fp16": -0.0014047622680664062,
+          "full": -0.00140380859375,
+          "single": -0.0014047622680664062,
+          "full_matches_nearest": false,
+          "single_matches_nearest": true,
+          "note": "Exact dot plus bias, then one rounding. Linear need not promise this scheme."
+        },
+        {
+          "row": 1,
+          "column": 1548,
+          "exact_reference_numerator": "-3808561764991",
+          "exact_reference_denominator": "4398046511104",
+          "exact_reference_approx": -0.8659666866585667,
+          "nearest_even_fp16": -0.86572265625,
+          "full": -0.8662109375,
+          "single": -0.86572265625,
+          "full_matches_nearest": false,
+          "single_matches_nearest": true,
+          "note": "Exact dot plus bias, then one rounding. Linear need not promise this scheme."
+        },
+        {
+          "row": 1,
+          "column": 1645,
+          "exact_reference_numerator": "48671932749",
+          "exact_reference_denominator": "17592186044416",
+          "exact_reference_approx": 0.002766679060016486,
+          "nearest_even_fp16": 0.0027675628662109375,
+          "full": 0.002765655517578125,
+          "single": 0.0027675628662109375,
+          "full_matches_nearest": false,
+          "single_matches_nearest": true,
+          "note": "Exact dot plus bias, then one rounding. Linear need not promise this scheme."
+        },
+        {
+          "row": 1,
+          "column": 2611,
+          "exact_reference_numerator": "7296038167",
+          "exact_reference_denominator": "1099511627776",
+          "exact_reference_approx": 0.006635708056819567,
+          "nearest_even_fp16": 0.0066375732421875,
+          "full": 0.0066375732421875,
+          "single": 0.006633758544921875,
+          "full_matches_nearest": true,
+          "single_matches_nearest": false,
+          "note": "Exact dot plus bias, then one rounding. Linear need not promise this scheme."
+        },
+        {
+          "row": 1,
+          "column": 3475,
+          "exact_reference_numerator": "-135056510505",
+          "exact_reference_denominator": "4398046511104",
+          "exact_reference_approx": -0.03070829518605933,
+          "nearest_even_fp16": -0.03070068359375,
+          "full": -0.0307159423828125,
+          "single": -0.03070068359375,
+          "full_matches_nearest": false,
+          "single_matches_nearest": true,
+          "note": "Exact dot plus bias, then one rounding. Linear need not promise this scheme."
+        },
+        {
+          "row": 2,
+          "column": 2,
+          "exact_reference_numerator": "1015766343",
+          "exact_reference_denominator": "549755813888",
+          "exact_reference_approx": 0.0018476682143955259,
+          "nearest_even_fp16": 0.0018472671508789062,
+          "full": 0.0018482208251953125,
+          "single": 0.0018472671508789062,
+          "full_matches_nearest": false,
+          "single_matches_nearest": true,
+          "note": "Exact dot plus bias, then one rounding. Linear need not promise this scheme."
+        },
+        {
+          "row": 2,
+          "column": 3100,
+          "exact_reference_numerator": "-61454955163",
+          "exact_reference_denominator": "549755813888",
+          "exact_reference_approx": -0.11178591223688272,
+          "nearest_even_fp16": -0.11181640625,
+          "full": -0.11181640625,
+          "single": -0.11175537109375,
+          "full_matches_nearest": true,
+          "single_matches_nearest": false,
+          "note": "Exact dot plus bias, then one rounding. Linear need not promise this scheme."
+        },
+        {
+          "row": 3,
+          "column": 2711,
+          "exact_reference_numerator": "-96501989",
+          "exact_reference_denominator": "68719476736",
+          "exact_reference_approx": -0.0014042887632967904,
+          "nearest_even_fp16": -0.0014047622680664062,
+          "full": -0.00140380859375,
+          "single": -0.0014047622680664062,
+          "full_matches_nearest": false,
+          "single_matches_nearest": true,
+          "note": "Exact dot plus bias, then one rounding. Linear need not promise this scheme."
+        }
+      ]
+    },
+    {
+      "dtype": "torch.float16",
+      "bias": true,
+      "operation": "linear_2d",
+      "full_vs_single": {
+        "finite": true,
+        "different_values": 8,
+        "max_abs": 0.00048828125,
+        "mean_abs": 3.9980347667421615e-08,
+        "rms_error": 4.111972278256138e-06
+      },
+      "full_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 0.01547081951139262,
+        "mean_abs": 0.00021424396089105087,
+        "rms_error": 0.0007052195916035835
+      },
+      "single_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 0.01547081951139262,
+        "mean_abs": 0.00021424393095286403,
+        "rms_error": 0.0007052195863908377
+      },
+      "full_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 11,
+        "max_abs": 0.00048828125,
+        "mean_abs": 6.206599729401724e-08,
+        "rms_error": 4.446777863168156e-06
+      },
+      "single_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 7,
+        "max_abs": 0.0001220703125,
+        "mean_abs": 3.113278320857457e-08,
+        "rms_error": 1.8404506859662136e-06
+      },
+      "full_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.37387837597556123,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "single_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.37387837597556123,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "full_repeat_stable": true,
+      "single_repeat_stable": true,
+      "max_sum_absolute_terms": 76.82722272712999
+    },
+    {
+      "dtype": "torch.float16",
+      "bias": true,
+      "operation": "addmm",
+      "full_vs_single": {
+        "finite": true,
+        "different_values": 8,
+        "max_abs": 0.00048828125,
+        "mean_abs": 3.9980347667421615e-08,
+        "rms_error": 4.111972278256138e-06
+      },
+      "full_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 0.01547081951139262,
+        "mean_abs": 0.00021424396089105087,
+        "rms_error": 0.0007052195916035835
+      },
+      "single_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 0.01547081951139262,
+        "mean_abs": 0.00021424393095286403,
+        "rms_error": 0.0007052195863908377
+      },
+      "full_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 11,
+        "max_abs": 0.00048828125,
+        "mean_abs": 6.206599729401724e-08,
+        "rms_error": 4.446777863168156e-06
+      },
+      "single_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 7,
+        "max_abs": 0.0001220703125,
+        "mean_abs": 3.113278320857457e-08,
+        "rms_error": 1.8404506859662136e-06
+      },
+      "full_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.37387837597556123,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "single_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.37387837597556123,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "full_repeat_stable": true,
+      "single_repeat_stable": true,
+      "max_sum_absolute_terms": 76.82722272712999
+    },
+    {
+      "dtype": "torch.float16",
+      "bias": true,
+      "operation": "mm_then_bias",
+      "full_vs_single": {
+        "finite": true,
+        "different_values": 8,
+        "max_abs": 0.0009765625,
+        "mean_abs": 1.830714089529855e-07,
+        "rms_error": 1.1834787031164987e-05
+      },
+      "full_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 0.016351252681488404,
+        "mean_abs": 0.0002565593600848991,
+        "rms_error": 0.000758873959942173
+      },
+      "single_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 0.016351252681488404,
+        "mean_abs": 0.00025655881615200036,
+        "rms_error": 0.0007588732346112372
+      },
+      "full_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 3448,
+        "max_abs": 0.03125,
+        "mean_abs": 0.00012656887494293706,
+        "rms_error": 0.0008016014178239787
+      },
+      "single_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 3448,
+        "max_abs": 0.03125,
+        "mean_abs": 0.00012656461746831025,
+        "rms_error": 0.0008015999590548587
+      },
+      "full_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.4893299689274122,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "single_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.4893299689274122,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "full_repeat_stable": true,
+      "single_repeat_stable": true,
+      "max_sum_absolute_terms": 76.82722272712999
+    },
+    {
+      "dtype": "torch.float16",
+      "bias": true,
+      "operation": "fp32_linear_then_cast",
+      "full_vs_single": {
+        "finite": true,
+        "different_values": 16,
+        "max_abs": 0.000244140625,
+        "mean_abs": 6.086858255522592e-08,
+        "rms_error": 2.8511049123177887e-06
+      },
+      "full_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 0.01547081951139262,
+        "mean_abs": 0.00021424396089105087,
+        "rms_error": 0.0007052195916035835
+      },
+      "single_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 0.01547081951139262,
+        "mean_abs": 0.0002142440517739394,
+        "rms_error": 0.0007052195973448354
+      },
+      "full_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 11,
+        "max_abs": 0.00048828125,
+        "mean_abs": 6.206599729401724e-08,
+        "rms_error": 4.446777863168156e-06
+      },
+      "single_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 11,
+        "max_abs": 0.00048828125,
+        "mean_abs": 8.421816996165684e-08,
+        "rms_error": 4.8678371934372485e-06
+      },
+      "full_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.37387837597556123,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "single_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.37387837597556123,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "full_repeat_stable": true,
+      "single_repeat_stable": true,
+      "max_sum_absolute_terms": 76.82722272712999
+    },
+    {
+      "dtype": "torch.float32",
+      "bias": false,
+      "operation": "linear_3d",
+      "full_vs_single": {
+        "finite": true,
+        "different_values": 10800,
+        "max_abs": 3.814697265625e-06,
+        "mean_abs": 8.004904624872974e-08,
+        "rms_error": 1.7682206776075721e-07
+      },
+      "full_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 3.5353514249436557e-06,
+        "mean_abs": 4.9854071860586894e-08,
+        "rms_error": 1.0700682486269282e-07
+      },
+      "single_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 2.70172404270852e-06,
+        "mean_abs": 7.116350832300183e-08,
+        "rms_error": 1.3886796520837537e-07
+      },
+      "full_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 9656,
+        "max_abs": 3.814697265625e-06,
+        "mean_abs": 4.720628662572121e-08,
+        "rms_error": 1.1541669326569584e-07
+      },
+      "single_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 10809,
+        "max_abs": 2.86102294921875e-06,
+        "mean_abs": 6.930894410775831e-08,
+        "rms_error": 1.4376343990019035e-07
+      },
+      "full_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.00028730011157620297,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "single_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.0004923851028350516,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "full_repeat_stable": true,
+      "single_repeat_stable": true,
+      "max_sum_absolute_terms": 57.398507987483754
+    },
+    {
+      "dtype": "torch.float32",
+      "bias": false,
+      "operation": "linear_2d",
+      "full_vs_single": {
+        "finite": true,
+        "different_values": 10800,
+        "max_abs": 3.814697265625e-06,
+        "mean_abs": 8.004904624872974e-08,
+        "rms_error": 1.7682206776075721e-07
+      },
+      "full_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 3.5353514249436557e-06,
+        "mean_abs": 4.9854071860586894e-08,
+        "rms_error": 1.0700682486269282e-07
+      },
+      "single_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 2.70172404270852e-06,
+        "mean_abs": 7.116350832300183e-08,
+        "rms_error": 1.3886796520837537e-07
+      },
+      "full_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 9656,
+        "max_abs": 3.814697265625e-06,
+        "mean_abs": 4.720628662572121e-08,
+        "rms_error": 1.1541669326569584e-07
+      },
+      "single_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 10809,
+        "max_abs": 2.86102294921875e-06,
+        "mean_abs": 6.930894410775831e-08,
+        "rms_error": 1.4376343990019035e-07
+      },
+      "full_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.00028730011157620297,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "single_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.0004923851028350516,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "full_repeat_stable": true,
+      "single_repeat_stable": true,
+      "max_sum_absolute_terms": 57.398507987483754
+    },
+    {
+      "dtype": "torch.float32",
+      "bias": false,
+      "operation": "addmm",
+      "full_vs_single": {
+        "finite": true,
+        "different_values": 10800,
+        "max_abs": 3.814697265625e-06,
+        "mean_abs": 8.004904624872974e-08,
+        "rms_error": 1.7682206776075721e-07
+      },
+      "full_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 3.5353514249436557e-06,
+        "mean_abs": 4.9854071860586894e-08,
+        "rms_error": 1.0700682486269282e-07
+      },
+      "single_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 2.70172404270852e-06,
+        "mean_abs": 7.116350832300183e-08,
+        "rms_error": 1.3886796520837537e-07
+      },
+      "full_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 9656,
+        "max_abs": 3.814697265625e-06,
+        "mean_abs": 4.720628662572121e-08,
+        "rms_error": 1.1541669326569584e-07
+      },
+      "single_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 10809,
+        "max_abs": 2.86102294921875e-06,
+        "mean_abs": 6.930894410775831e-08,
+        "rms_error": 1.4376343990019035e-07
+      },
+      "full_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.00028730011157620297,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "single_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.0004923851028350516,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "full_repeat_stable": true,
+      "single_repeat_stable": true,
+      "max_sum_absolute_terms": 57.398507987483754
+    },
+    {
+      "dtype": "torch.float32",
+      "bias": false,
+      "operation": "mm_then_bias",
+      "full_vs_single": {
+        "finite": true,
+        "different_values": 10800,
+        "max_abs": 3.814697265625e-06,
+        "mean_abs": 8.004904624872974e-08,
+        "rms_error": 1.7682206776075721e-07
+      },
+      "full_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 3.5353514249436557e-06,
+        "mean_abs": 4.9854071860586894e-08,
+        "rms_error": 1.0700682486269282e-07
+      },
+      "single_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 2.70172404270852e-06,
+        "mean_abs": 7.116350832300183e-08,
+        "rms_error": 1.3886796520837537e-07
+      },
+      "full_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 9656,
+        "max_abs": 3.814697265625e-06,
+        "mean_abs": 4.720628662572121e-08,
+        "rms_error": 1.1541669326569584e-07
+      },
+      "single_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 10809,
+        "max_abs": 2.86102294921875e-06,
+        "mean_abs": 6.930894410775831e-08,
+        "rms_error": 1.4376343990019035e-07
+      },
+      "full_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.00028730011157620297,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "single_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.0004923851028350516,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "full_repeat_stable": true,
+      "single_repeat_stable": true,
+      "max_sum_absolute_terms": 57.398507987483754
+    },
+    {
+      "dtype": "torch.float32",
+      "bias": false,
+      "operation": "fp32_linear_then_cast",
+      "full_vs_single": {
+        "finite": true,
+        "different_values": 10800,
+        "max_abs": 3.814697265625e-06,
+        "mean_abs": 8.004904624872974e-08,
+        "rms_error": 1.7682206776075721e-07
+      },
+      "full_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 3.5353514249436557e-06,
+        "mean_abs": 4.9854071860586894e-08,
+        "rms_error": 1.0700682486269282e-07
+      },
+      "single_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 2.70172404270852e-06,
+        "mean_abs": 7.116350832300183e-08,
+        "rms_error": 1.3886796520837537e-07
+      },
+      "full_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 9656,
+        "max_abs": 3.814697265625e-06,
+        "mean_abs": 4.720628662572121e-08,
+        "rms_error": 1.1541669326569584e-07
+      },
+      "single_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 10809,
+        "max_abs": 2.86102294921875e-06,
+        "mean_abs": 6.930894410775831e-08,
+        "rms_error": 1.4376343990019035e-07
+      },
+      "full_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.00028730011157620297,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "single_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.0004923851028350516,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "full_repeat_stable": true,
+      "single_repeat_stable": true,
+      "max_sum_absolute_terms": 57.398507987483754
+    },
+    {
+      "dtype": "torch.float32",
+      "bias": true,
+      "operation": "linear_3d",
+      "full_vs_single": {
+        "finite": true,
+        "different_values": 9422,
+        "max_abs": 3.814697265625e-06,
+        "mean_abs": 8.042752597248182e-08,
+        "rms_error": 1.9573797687281043e-07
+      },
+      "full_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 3.5353514249436557e-06,
+        "mean_abs": 5.8298981410019006e-08,
+        "rms_error": 1.3341532240532907e-07
+      },
+      "single_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 3.65539835911477e-06,
+        "mean_abs": 7.856542575317546e-08,
+        "rms_error": 1.604798487543497e-07
+      },
+      "full_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 8634,
+        "max_abs": 3.814697265625e-06,
+        "mean_abs": 4.8016007804717124e-08,
+        "rms_error": 1.3433493163685245e-07
+      },
+      "single_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 9798,
+        "max_abs": 3.814697265625e-06,
+        "mean_abs": 7.117069942909535e-08,
+        "rms_error": 1.7275789512568704e-07
+      },
+      "full_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.0002758876149248123,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "single_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.0003698156107865258,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "full_repeat_stable": true,
+      "single_repeat_stable": true,
+      "max_sum_absolute_terms": 76.82722272712999
+    },
+    {
+      "dtype": "torch.float32",
+      "bias": true,
+      "operation": "linear_2d",
+      "full_vs_single": {
+        "finite": true,
+        "different_values": 9422,
+        "max_abs": 3.814697265625e-06,
+        "mean_abs": 8.042752597248182e-08,
+        "rms_error": 1.9573797687281043e-07
+      },
+      "full_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 3.5353514249436557e-06,
+        "mean_abs": 5.8298981410019006e-08,
+        "rms_error": 1.3341532240532907e-07
+      },
+      "single_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 3.65539835911477e-06,
+        "mean_abs": 7.856542575317546e-08,
+        "rms_error": 1.604798487543497e-07
+      },
+      "full_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 8634,
+        "max_abs": 3.814697265625e-06,
+        "mean_abs": 4.8016007804717124e-08,
+        "rms_error": 1.3433493163685245e-07
+      },
+      "single_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 9798,
+        "max_abs": 3.814697265625e-06,
+        "mean_abs": 7.117069942909535e-08,
+        "rms_error": 1.7275789512568704e-07
+      },
+      "full_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.0002758876149248123,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "single_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.0003698156107865258,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "full_repeat_stable": true,
+      "single_repeat_stable": true,
+      "max_sum_absolute_terms": 76.82722272712999
+    },
+    {
+      "dtype": "torch.float32",
+      "bias": true,
+      "operation": "addmm",
+      "full_vs_single": {
+        "finite": true,
+        "different_values": 9422,
+        "max_abs": 3.814697265625e-06,
+        "mean_abs": 8.042752597248182e-08,
+        "rms_error": 1.9573797687281043e-07
+      },
+      "full_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 3.5353514249436557e-06,
+        "mean_abs": 5.8298981410019006e-08,
+        "rms_error": 1.3341532240532907e-07
+      },
+      "single_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 3.65539835911477e-06,
+        "mean_abs": 7.856542575317546e-08,
+        "rms_error": 1.604798487543497e-07
+      },
+      "full_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 8634,
+        "max_abs": 3.814697265625e-06,
+        "mean_abs": 4.8016007804717124e-08,
+        "rms_error": 1.3433493163685245e-07
+      },
+      "single_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 9798,
+        "max_abs": 3.814697265625e-06,
+        "mean_abs": 7.117069942909535e-08,
+        "rms_error": 1.7275789512568704e-07
+      },
+      "full_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.0002758876149248123,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "single_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.0003698156107865258,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "full_repeat_stable": true,
+      "single_repeat_stable": true,
+      "max_sum_absolute_terms": 76.82722272712999
+    },
+    {
+      "dtype": "torch.float32",
+      "bias": true,
+      "operation": "mm_then_bias",
+      "full_vs_single": {
+        "finite": true,
+        "different_values": 9422,
+        "max_abs": 3.814697265625e-06,
+        "mean_abs": 8.042752597248182e-08,
+        "rms_error": 1.9573797687281043e-07
+      },
+      "full_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 3.5353514249436557e-06,
+        "mean_abs": 5.8298981410019006e-08,
+        "rms_error": 1.3341532240532907e-07
+      },
+      "single_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 3.65539835911477e-06,
+        "mean_abs": 7.856542575317546e-08,
+        "rms_error": 1.604798487543497e-07
+      },
+      "full_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 8634,
+        "max_abs": 3.814697265625e-06,
+        "mean_abs": 4.8016007804717124e-08,
+        "rms_error": 1.3433493163685245e-07
+      },
+      "single_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 9798,
+        "max_abs": 3.814697265625e-06,
+        "mean_abs": 7.117069942909535e-08,
+        "rms_error": 1.7275789512568704e-07
+      },
+      "full_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.0002758876149248123,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "single_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.0003698156107865258,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "full_repeat_stable": true,
+      "single_repeat_stable": true,
+      "max_sum_absolute_terms": 76.82722272712999
+    },
+    {
+      "dtype": "torch.float32",
+      "bias": true,
+      "operation": "fp32_linear_then_cast",
+      "full_vs_single": {
+        "finite": true,
+        "different_values": 9422,
+        "max_abs": 3.814697265625e-06,
+        "mean_abs": 8.042752597248182e-08,
+        "rms_error": 1.9573797687281043e-07
+      },
+      "full_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 3.5353514249436557e-06,
+        "mean_abs": 5.8298981410019006e-08,
+        "rms_error": 1.3341532240532907e-07
+      },
+      "single_vs_cpu_fp64": {
+        "finite": true,
+        "different_values": 14336,
+        "max_abs": 3.65539835911477e-06,
+        "mean_abs": 7.856542575317546e-08,
+        "rms_error": 1.604798487543497e-07
+      },
+      "full_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 8634,
+        "max_abs": 3.814697265625e-06,
+        "mean_abs": 4.8016007804717124e-08,
+        "rms_error": 1.3433493163685245e-07
+      },
+      "single_vs_rounded_cpu_fp64": {
+        "finite": true,
+        "different_values": 9798,
+        "max_abs": 3.814697265625e-06,
+        "mean_abs": 7.117069942909535e-08,
+        "rms_error": 1.7275789512568704e-07
+      },
+      "full_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.0002758876149248123,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "single_conditional_bound": {
+        "violating_values": 0,
+        "finite": true,
+        "max_error_over_bound": 0.0003698156107865258,
+        "classification": "conditional FP32-accumulation model only; not a published PyTorch contract"
+      },
+      "full_repeat_stable": true,
+      "single_repeat_stable": true,
+      "max_sum_absolute_terms": 76.82722272712999
+    }
+  ],
+  "bias_rounding_control": {
+    "fp64_final_rounding_vs_separate_half_bias": {
+      "finite": true,
+      "different_values": 3446,
+      "max_abs": 0.03125,
+      "mean_abs": 0.0001265518450444298,
+      "rms_error": 0.0008016001211404477
+    }
+  },
+  "summary": {
+    "exact_arithmetic_failures": 0,
+    "conditional_bound_failures": 0,
+    "unstable_real_cases": 0,
+    "finding": "no_correctness_violation_demonstrated",
+    "original_operator_outputs_reproduced": true
+  }
+}

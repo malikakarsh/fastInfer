@@ -1,0 +1,155 @@
+{
+  "status": "complete",
+  "created_utc": "20261106T220622139568Z",
+  "environment": {
+    "torch": "2.15.0",
+    "transformers": "5.22.1",
+    "python": "3.13.12",
+    "platform": "macOS-26.4.1-arm64-arm-64bit-Mach-O",
+    "device": "cpu",
+    "dtype": "torch.bfloat16",
+    "cpu_threads": 8
+  },
+  "settings": {
+    "target": "Qwen/Qwen2.5-7B",
+    "draft": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "mode": "compare",
+    "data": "/Users/akarsh/Documents/projects/fastInfer/fastinfer/benchmarks/data/mt_bench/raw/question.jsonl",
+    "device": "cpu",
+    "dtype": "bfloat16",
+    "max_new_tokens": 8,
+    "gamma": 3,
+    "pairs": 1,
+    "limit": 1,
+    "prompt_format": "qa",
+    "output": null
+  },
+  "dataset_sha256": "420ae1d63cbf0f499d8afc3b28d86714e77f13e44c133eedf942ed16c544dd34",
+  "category_counts": {
+    "writing": 1
+  },
+  "scope": "First-turn MT-Bench latency workload, not official quality scoring. Greedy, batch one, EOS enabled, fresh DynamicCaches, both models resident. Total includes prefill and speculative draft work; loading/tokenization excluded. Decode timings exclude first-token prefill, which includes draft prefill on candidate. No quantization, sampling, compilation, custom kernels or prompt truncation.",
+  "cases": [
+    {
+      "id": 81,
+      "category": "writing",
+      "prompt": "Compose an engaging travel blog post about a recent trip to Hawaii, highlighting cultural experiences and must-see attractions.",
+      "input_tokens": 27,
+      "samples": [
+        {
+          "order": [
+            "baseline",
+            "speculative"
+          ],
+          "baseline": {
+            "total_s": 1.651495749829337,
+            "prefill_s": 1.1372669588308781,
+            "decode_s": 0.5142287909984589,
+            "decode_tokens": 7,
+            "generated": [
+              10869,
+              25,
+              362,
+              42580,
+              16904,
+              279,
+              94454,
+              4223
+            ],
+            "target_calls": 8,
+            "draft_calls": 0,
+            "proposed": 0,
+            "accepted": 0
+          },
+          "speculative": {
+            "total_s": 2.8528359590563923,
+            "prefill_s": 1.395964209223166,
+            "decode_s": 1.4568717498332262,
+            "decode_tokens": 7,
+            "generated": [
+              10869,
+              25,
+              362,
+              42580,
+              16904,
+              279,
+              94454,
+              4223
+            ],
+            "target_calls": 7,
+            "draft_calls": 16,
+            "proposed": 15,
+            "accepted": 2
+          }
+        }
+      ],
+      "validation": {
+        "baseline": {
+          "generated": [
+            10869,
+            25,
+            362,
+            42580,
+            16904,
+            279,
+            94454,
+            4223
+          ],
+          "target_calls": 8,
+          "draft_calls": 0,
+          "proposed": 0,
+          "accepted": 0
+        },
+        "speculative": {
+          "generated": [
+            10869,
+            25,
+            362,
+            42580,
+            16904,
+            279,
+            94454,
+            4223
+          ],
+          "target_calls": 7,
+          "draft_calls": 16,
+          "proposed": 15,
+          "accepted": 2
+        }
+      },
+      "baseline_repeat_matches": true,
+      "correctness_passed": true,
+      "generated_text": " Title: A Journey Through the Aloha",
+      "generated_tokens": 8,
+      "total_speedup": 0.578896148790689,
+      "acceptance_rate": 0.13333333333333333
+    }
+  ],
+  "summary": {
+    "cases": 1,
+    "timed_cases": 1,
+    "failed_cases": [],
+    "sum_baseline_prompt_medians_s": 1.651495749829337,
+    "sum_speculative_prompt_medians_s": 2.8528359590563923,
+    "aggregate_speedup": 0.578896148790689,
+    "prompts_faster": 0,
+    "median_prompt_speedup": 0.578896148790689
+  },
+  "by_category": {
+    "writing": {
+      "cases": 1,
+      "timed_cases": 1,
+      "failed_cases": [],
+      "sum_baseline_prompt_medians_s": 1.651495749829337,
+      "sum_speculative_prompt_medians_s": 2.8528359590563923,
+      "aggregate_speedup": 0.578896148790689,
+      "prompts_faster": 0,
+      "median_prompt_speedup": 0.578896148790689
+    }
+  },
+  "target_snapshot": "/Users/akarsh/.cache/huggingface/hub/models--Qwen--Qwen2.5-7B/snapshots/d149729398750b98c0af14eb82c78cfe92750796",
+  "draft_snapshot": "/Users/akarsh/.cache/huggingface/hub/models--Qwen--Qwen2.5-Coder-1.5B-Instruct/snapshots/2e1fd397ee46e1388853d2af2c993145b0f1098a",
+  "eos_token_ids": [
+    151643
+  ]
+}

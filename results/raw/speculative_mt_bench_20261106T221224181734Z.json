@@ -1,0 +1,1897 @@
+{
+  "status": "correctness_failed",
+  "created_utc": "20261106T221224181734Z",
+  "environment": {
+    "torch": "2.15.0",
+    "transformers": "5.22.1",
+    "python": "3.13.12",
+    "platform": "macOS-26.4.1-arm64-arm-64bit-Mach-O",
+    "device": "mps",
+    "dtype": "torch.bfloat16",
+    "cpu_threads": 8
+  },
+  "settings": {
+    "target": "Qwen/Qwen2.5-7B",
+    "draft": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "mode": "compare",
+    "data": "/Users/akarsh/Documents/projects/fastInfer/fastinfer/benchmarks/data/mt_bench/raw/question.jsonl",
+    "device": "auto",
+    "dtype": "bfloat16",
+    "max_new_tokens": 16,
+    "gamma": 3,
+    "pairs": 3,
+    "limit": 8,
+    "prompt_format": "qa",
+    "output": null
+  },
+  "dataset_sha256": "420ae1d63cbf0f499d8afc3b28d86714e77f13e44c133eedf942ed16c544dd34",
+  "source_sha256": {
+    "speculative_cached.py": "91e94c8672f8500e5b94adb00b898ff484f021cfbf8c386c3bce86e4b3d20e7b",
+    "speculative.py": "55f49bb2760e91095136f90d3a490e9e1fb8f383c0fb6e3bc2360a9058735e7b",
+    "benchmarks/speculative_mt_bench.py": "74c43ed615f03aef9c4fe29c3bd66fba60ae30f22563ad807602017dc8d0d366"
+  },
+  "category_counts": {
+    "writing": 1,
+    "roleplay": 1,
+    "reasoning": 1,
+    "math": 1,
+    "coding": 1,
+    "extraction": 1,
+    "stem": 1,
+    "humanities": 1
+  },
+  "scope": "First-turn MT-Bench latency workload, not official quality scoring. Greedy, batch one, EOS enabled, fresh DynamicCaches, both models resident. Total includes prefill and speculative draft work; loading/tokenization excluded. Decode timings exclude first-token prefill, which includes draft prefill on candidate. No quantization, sampling, compilation, custom kernels or prompt truncation.",
+  "cases": [
+    {
+      "id": 81,
+      "category": "writing",
+      "prompt": "Compose an engaging travel blog post about a recent trip to Hawaii, highlighting cultural experiences and must-see attractions.",
+      "input_tokens": 27,
+      "samples": [
+        {
+          "order": [
+            "baseline",
+            "speculative"
+          ],
+          "baseline": {
+            "total_s": 1.0529746250249445,
+            "prefill_s": 0.11737037496641278,
+            "decode_s": 0.9356042500585318,
+            "decode_tokens": 15,
+            "generated": [
+              10869,
+              25,
+              362,
+              42580,
+              16904,
+              279,
+              94454,
+              4223,
+              3234,
+              25,
+              18006,
+              5503,
+              27521,
+              594,
+              8107,
+              20397
+            ],
+            "target_calls": 16,
+            "draft_calls": 0,
+            "proposed": 0,
+            "accepted": 0
+          },
+          "speculative": {
+            "total_s": 1.1627435418777168,
+            "prefill_s": 0.19104162487201393,
+            "decode_s": 0.9717019170057029,
+            "decode_tokens": 15,
+            "generated": [
+              10869,
+              25,
+              362,
+              42580,
+              16904,
+              279,
+              94454,
+              4223,
+              3234,
+              25,
+              18006,
+              5503,
+              27521,
+              594,
+              8107,
+              20397
+            ],
+            "target_calls": 9,
+            "draft_calls": 23,
+            "proposed": 22,
+            "accepted": 8
+          }
+        },
+        {
+          "order": [
+            "speculative",
+            "baseline"
+          ],
+          "speculative": {
+            "total_s": 1.1218227080535144,
+            "prefill_s": 0.16043962514959276,
+            "decode_s": 0.9613830829039216,
+            "decode_tokens": 15,
+            "generated": [
+              10869,
+              25,
+              362,
+              42580,
+              16904,
+              279,
+              94454,
+              4223,
+              3234,
+              25,
+              18006,
+              5503,
+              27521,
+              594,
+              8107,
+              20397
+            ],
+            "target_calls": 9,
+            "draft_calls": 23,
+            "proposed": 22,
+            "accepted": 8
+          },
+          "baseline": {
+            "total_s": 1.0617751250974834,
+            "prefill_s": 0.11855870811268687,
+            "decode_s": 0.9432164169847965,
+            "decode_tokens": 15,
+            "generated": [
+              10869,
+              25,
+              362,
+              42580,
+              16904,
+              279,
+              94454,
+              4223,
+              3234,
+              25,
+              18006,
+              5503,
+              27521,
+              594,
+              8107,
+              20397
+            ],
+            "target_calls": 16,
+            "draft_calls": 0,
+            "proposed": 0,
+            "accepted": 0
+          }
+        },
+        {
+          "order": [
+            "baseline",
+            "speculative"
+          ],
+          "baseline": {
+            "total_s": 1.0640533338300884,
+            "prefill_s": 0.11852204194292426,
+            "decode_s": 0.9455312918871641,
+            "decode_tokens": 15,
+            "generated": [
+              10869,
+              25,
+              362,
+              42580,
+              16904,
+              279,
+              94454,
+              4223,
+              3234,
+              25,
+              18006,
+              5503,
+              27521,
+              594,
+              8107,
+              20397
+            ],
+            "target_calls": 16,
+            "draft_calls": 0,
+            "proposed": 0,
+            "accepted": 0
+          },
+          "speculative": {
+            "total_s": 1.146736124996096,
+            "prefill_s": 0.18801479111425579,
+            "decode_s": 0.9587213338818401,
+            "decode_tokens": 15,
+            "generated": [
+              10869,
+              25,
+              362,
+              42580,
+              16904,
+              279,
+              94454,
+              4223,
+              3234,
+              25,
+              18006,
+              5503,
+              27521,
+              594,
+              8107,
+              20397
+            ],
+            "target_calls": 9,
+            "draft_calls": 23,
+            "proposed": 22,
+            "accepted": 8
+          }
+        }
+      ],
+      "validation": {
+        "baseline": {
+          "generated": [
+            10869,
+            25,
+            362,
+            42580,
+            16904,
+            279,
+            94454,
+            4223,
+            3234,
+            25,
+            18006,
+            5503,
+            27521,
+            594,
+            8107,
+            20397
+          ],
+          "target_calls": 16,
+          "draft_calls": 0,
+          "proposed": 0,
+          "accepted": 0
+        },
+        "speculative": {
+          "generated": [
+            10869,
+            25,
+            362,
+            42580,
+            16904,
+            279,
+            94454,
+            4223,
+            3234,
+            25,
+            18006,
+            5503,
+            27521,
+            594,
+            8107,
+            20397
+          ],
+          "target_calls": 9,
+          "draft_calls": 23,
+          "proposed": 22,
+          "accepted": 8
+        }
+      },
+      "baseline_repeat_matches": true,
+      "correctness_passed": true,
+      "generated_text": " Title: A Journey Through the Aloha State: Exploring Hawaii's Rich Culture",
+      "generated_tokens": 16,
+      "paired_total_savings_s": [
+        -0.10976891685277224,
+        -0.060047582956030965,
+        -0.08268279116600752
+      ],
+      "speculative_faster_pairs": 0,
+      "total_speedup": 0.9259105926405679,
+      "decode_speedup": 0.981103613905654,
+      "acceptance_rate": 0.36363636363636365
+    },
+    {
+      "id": 91,
+      "category": "roleplay",
+      "prompt": "Pretend yourself to be Elon Musk in all the following conversations. Speak like Elon Musk as much as possible. Why do we need to go to Mars?",
+      "input_tokens": 35,
+      "samples": [
+        {
+          "order": [
+            "baseline",
+            "speculative"
+          ],
+          "baseline": {
+            "total_s": 1.0840052501298487,
+            "prefill_s": 0.15198249998502433,
+            "decode_s": 0.9320227501448244,
+            "decode_tokens": 15,
+            "generated": [
+              1634,
+              458,
+              15235,
+              4128,
+              1614,
+              11,
+              358,
+              1513,
+              944,
+              614,
+              4345,
+              17979,
+              476,
+              20799,
+              11,
+              714
+            ],
+            "target_calls": 16,
+            "draft_calls": 0,
+            "proposed": 0,
+            "accepted": 0
+          },
+          "speculative": {
+            "total_s": 0.8177904591429979,
+            "prefill_s": 0.21675670915283263,
+            "decode_s": 0.6010337499901652,
+            "decode_tokens": 15,
+            "generated": [
+              1634,
+              458,
+              15235,
+              4128,
+              1614,
+              11,
+              358,
+              1513,
+              944,
+              614,
+              4345,
+              17979,
+              476,
+              20799,
+              11,
+              714
+            ],
+            "target_calls": 6,
+            "draft_calls": 15,
+            "proposed": 14,
+            "accepted": 11
+          }
+        },
+        {
+          "order": [
+            "speculative",
+            "baseline"
+          ],
+          "speculative": {
+            "total_s": 0.7958263331092894,
+            "prefill_s": 0.19332191604189575,
+            "decode_s": 0.6025044170673937,
+            "decode_tokens": 15,
+            "generated": [
+              1634,
+              458,
+              15235,
+              4128,
+              1614,
+              11,
+              358,
+              1513,
+              944,
+              614,
+              4345,
+              17979,
+              476,
+              20799,
+              11,
+              714
+            ],
+            "target_calls": 6,
+            "draft_calls": 15,
+            "proposed": 14,
+            "accepted": 11
+          },
+          "baseline": {
+            "total_s": 1.0744961670134217,
+            "prefill_s": 0.1488224589265883,
+            "decode_s": 0.9256737080868334,
+            "decode_tokens": 15,
+            "generated": [
+              1634,
+              458,
+              15235,
+              4128,
+              1614,
+              11,
+              358,
+              1513,
+              944,
+              614,
+              4345,
+              17979,
+              476,
+              20799,
+              11,
+              714
+            ],
+            "target_calls": 16,
+            "draft_calls": 0,
+            "proposed": 0,
+            "accepted": 0
+          }
+        },
+        {
+          "order": [
+            "baseline",
+            "speculative"
+          ],
+          "baseline": {
+            "total_s": 1.0767051670700312,
+            "prefill_s": 0.14870770904235542,
+            "decode_s": 0.9279974580276757,
+            "decode_tokens": 15,
+            "generated": [
+              1634,
+              458,
+              15235,
+              4128,
+              1614,
+              11,
+              358,
+              1513,
+              944,
+              614,
+              4345,
+              17979,
+              476,
+              20799,
+              11,
+              714
+            ],
+            "target_calls": 16,
+            "draft_calls": 0,
+            "proposed": 0,
+            "accepted": 0
+          },
+          "speculative": {
+            "total_s": 0.882164082955569,
+            "prefill_s": 0.2195279998704791,
+            "decode_s": 0.6626360830850899,
+            "decode_tokens": 15,
+            "generated": [
+              1634,
+              458,
+              15235,
+              4128,
+              1614,
+              11,
+              358,
+              1513,
+              944,
+              614,
+              4345,
+              17979,
+              476,
+              20799,
+              11,
+              714
+            ],
+            "target_calls": 6,
+            "draft_calls": 15,
+            "proposed": 14,
+            "accepted": 11
+          }
+        }
+      ],
+      "validation": {
+        "baseline": {
+          "generated": [
+            1634,
+            458,
+            15235,
+            4128,
+            1614,
+            11,
+            358,
+            1513,
+            944,
+            614,
+            4345,
+            17979,
+            476,
+            20799,
+            11,
+            714
+          ],
+          "target_calls": 16,
+          "draft_calls": 0,
+          "proposed": 0,
+          "accepted": 0
+        },
+        "speculative": {
+          "generated": [
+            1634,
+            458,
+            15235,
+            4128,
+            1614,
+            11,
+            358,
+            1513,
+            944,
+            614,
+            4345,
+            17979,
+            476,
+            20799,
+            11,
+            714
+          ],
+          "target_calls": 6,
+          "draft_calls": 15,
+          "proposed": 14,
+          "accepted": 11
+        }
+      },
+      "baseline_repeat_matches": true,
+      "correctness_passed": true,
+      "generated_text": " As an AI language model, I don't have personal opinions or beliefs, but",
+      "generated_tokens": 16,
+      "paired_total_savings_s": [
+        0.26621479098685086,
+        0.27866983390413225,
+        0.19454108411446214
+      ],
+      "speculative_faster_pairs": 3,
+      "total_speedup": 1.3166027495580745,
+      "decode_speedup": 1.5402334518053398,
+      "acceptance_rate": 0.7857142857142857
+    },
+    {
+      "id": 101,
+      "category": "reasoning",
+      "prompt": "Imagine you are participating in a race with a group of people. If you have just overtaken the second person, what's your current position? Where is the person you just overtook?",
+      "input_tokens": 42,
+      "samples": [
+        {
+          "order": [
+            "baseline",
+            "speculative"
+          ],
+          "baseline": {
+            "total_s": 0.33744470798410475,
+            "prefill_s": 0.15044979192316532,
+            "decode_s": 0.18699491606093943,
+            "decode_tokens": 3,
+            "generated": [
+              4843,
+              26,
+              2086,
+              151643
+            ],
+            "target_calls": 4,
+            "draft_calls": 0,
+            "proposed": 0,
+            "accepted": 0
+          },
+          "speculative": {
+            "total_s": 0.44244037522003055,
+            "prefill_s": 0.19603933300822973,
+            "decode_s": 0.2464010422118008,
+            "decode_tokens": 3,
+            "generated": [
+              4843,
+              26,
+              2086,
+              151643
+            ],
+            "target_calls": 3,
+            "draft_calls": 7,
+            "proposed": 6,
+            "accepted": 1
+          }
+        },
+        {
+          "order": [
+            "speculative",
+            "baseline"
+          ],
+          "speculative": {
+            "total_s": 0.4414161660242826,
+            "prefill_s": 0.19603291596286,
+            "decode_s": 0.2453832500614226,
+            "decode_tokens": 3,
+            "generated": [
+              4843,
+              26,
+              2086,
+              151643
+            ],
+            "target_calls": 3,
+            "draft_calls": 7,
+            "proposed": 6,
+            "accepted": 1
+          },
+          "baseline": {
+            "total_s": 0.3372750408016145,
+            "prefill_s": 0.1516585408244282,
+            "decode_s": 0.18561649997718632,
+            "decode_tokens": 3,
+            "generated": [
+              4843,
+              26,
+              2086,
+              151643
+            ],
+            "target_calls": 4,
+            "draft_calls": 0,
+            "proposed": 0,
+            "accepted": 0
+          }
+        },
+        {
+          "order": [
+            "baseline",
+            "speculative"
+          ],
+          "baseline": {
+            "total_s": 0.3356711668893695,
+            "prefill_s": 0.15079524996690452,
+            "decode_s": 0.18487591692246497,
+            "decode_tokens": 3,
+            "generated": [
+              4843,
+              26,
+              2086,
+              151643
+            ],
+            "target_calls": 4,
+            "draft_calls": 0,
+            "proposed": 0,
+            "accepted": 0
+          },
+          "speculative": {
+            "total_s": 0.44204191700555384,
+            "prefill_s": 0.19647058402188122,
+            "decode_s": 0.24557133298367262,
+            "decode_tokens": 3,
+            "generated": [
+              4843,
+              26,
+              2086,
+              151643
+            ],
+            "target_calls": 3,
+            "draft_calls": 7,
+            "proposed": 6,
+            "accepted": 1
+          }
+        }
+      ],
+      "validation": {
+        "baseline": {
+          "generated": [
+            4843,
+            26,
+            2086,
+            151643
+          ],
+          "target_calls": 4,
+          "draft_calls": 0,
+          "proposed": 0,
+          "accepted": 0
+        },
+        "speculative": {
+          "generated": [
+            4843,
+            26,
+            2086,
+            151643
+          ],
+          "target_calls": 3,
+          "draft_calls": 7,
+          "proposed": 6,
+          "accepted": 1
+        }
+      },
+      "baseline_repeat_matches": true,
+      "correctness_passed": true,
+      "generated_text": " third; second<|endoftext|>",
+      "generated_tokens": 4,
+      "paired_total_savings_s": [
+        -0.1049956672359258,
+        -0.10414112522266805,
+        -0.10637075011618435
+      ],
+      "speculative_faster_pairs": 0,
+      "total_speedup": 0.7629933448084675,
+      "decode_speedup": 0.7558557333299464,
+      "acceptance_rate": 0.16666666666666666
+    },
+    {
+      "id": 111,
+      "category": "math",
+      "prompt": "The vertices of a triangle are at points (0, 0), (-1, 1), and (3, 3). What is the area of the triangle?",
+      "input_tokens": 39,
+      "samples": [
+        {
+          "order": [
+            "baseline",
+            "speculative"
+          ],
+          "baseline": {
+            "total_s": 1.0786469588056207,
+            "prefill_s": 0.15055983397178352,
+            "decode_s": 0.9280871248338372,
+            "decode_tokens": 15,
+            "generated": [
+              576,
+              2331,
+              315,
+              279,
+              21495,
+              374,
+              279,
+              6010,
+              1948,
+              279,
+              3501,
+              320,
+              15,
+              11,
+              220,
+              15
+            ],
+            "target_calls": 16,
+            "draft_calls": 0,
+            "proposed": 0,
+            "accepted": 0
+          },
+          "speculative": {
+            "total_s": 0.837602874962613,
+            "prefill_s": 0.21634620893746614,
+            "decode_s": 0.6212566660251468,
+            "decode_tokens": 15,
+            "generated": [
+              576,
+              2331,
+              315,
+              279,
+              21495,
+              374,
+              279,
+              6010,
+              1948,
+              279,
+              3501,
+              320,
+              15,
+              11,
+              220,
+              15
+            ],
+            "target_calls": 6,
+            "draft_calls": 16,
+            "proposed": 15,
+            "accepted": 10
+          }
+        },
+        {
+          "order": [
+            "speculative",
+            "baseline"
+          ],
+          "speculative": {
+            "total_s": 0.8146813749335706,
+            "prefill_s": 0.1957615411374718,
+            "decode_s": 0.6189198337960988,
+            "decode_tokens": 15,
+            "generated": [
+              576,
+              2331,
+              315,
+              279,
+              21495,
+              374,
+              279,
+              6010,
+              1948,
+              279,
+              3501,
+              320,
+              15,
+              11,
+              220,
+              15
+            ],
+            "target_calls": 6,
+            "draft_calls": 16,
+            "proposed": 15,
+            "accepted": 10
+          },
+          "baseline": {
+            "total_s": 1.0931725830305368,
+            "prefill_s": 0.1501255421899259,
+            "decode_s": 0.9430470408406109,
+            "decode_tokens": 15,
+            "generated": [
+              576,
+              2331,
+              315,
+              279,
+              21495,
+              374,
+              279,
+              6010,
+              1948,
+              279,
+              3501,
+              320,
+              15,
+              11,
+              220,
+              15
+            ],
+            "target_calls": 16,
+            "draft_calls": 0,
+            "proposed": 0,
+            "accepted": 0
+          }
+        },
+        {
+          "order": [
+            "baseline",
+            "speculative"
+          ],
+          "baseline": {
+            "total_s": 1.0747239999473095,
+            "prefill_s": 0.1503887919243425,
+            "decode_s": 0.924335208022967,
+            "decode_tokens": 15,
+            "generated": [
+              576,
+              2331,
+              315,
+              279,
+              21495,
+              374,
+              279,
+              6010,
+              1948,
+              279,
+              3501,
+              320,
+              15,
+              11,
+              220,
+              15
+            ],
+            "target_calls": 16,
+            "draft_calls": 0,
+            "proposed": 0,
+            "accepted": 0
+          },
+          "speculative": {
+            "total_s": 0.8361326670274138,
+            "prefill_s": 0.2163431248627603,
+            "decode_s": 0.6197895421646535,
+            "decode_tokens": 15,
+            "generated": [
+              576,
+              2331,
+              315,
+              279,
+              21495,
+              374,
+              279,
+              6010,
+              1948,
+              279,
+              3501,
+              320,
+              15,
+              11,
+              220,
+              15
+            ],
+            "target_calls": 6,
+            "draft_calls": 16,
+            "proposed": 15,
+            "accepted": 10
+          }
+        }
+      ],
+      "validation": {
+        "baseline": {
+          "generated": [
+            576,
+            2331,
+            315,
+            279,
+            21495,
+            374,
+            279,
+            6010,
+            1948,
+            279,
+            3501,
+            320,
+            15,
+            11,
+            220,
+            15
+          ],
+          "target_calls": 16,
+          "draft_calls": 0,
+          "proposed": 0,
+          "accepted": 0
+        },
+        "speculative": {
+          "generated": [
+            576,
+            2331,
+            315,
+            279,
+            21495,
+            374,
+            279,
+            6010,
+            1948,
+            279,
+            3501,
+            320,
+            15,
+            11,
+            220,
+            15
+          ],
+          "target_calls": 6,
+          "draft_calls": 16,
+          "proposed": 15,
+          "accepted": 10
+        }
+      },
+      "baseline_repeat_matches": true,
+      "correctness_passed": true,
+      "generated_text": " The base of the triangle is the distance between the points (0, 0",
+      "generated_tokens": 16,
+      "paired_total_savings_s": [
+        0.24104408384300768,
+        0.27849120809696615,
+        0.23859133291989565
+      ],
+      "speculative_faster_pairs": 3,
+      "total_speedup": 1.290042838106522,
+      "decode_speedup": 1.4974230149034704,
+      "acceptance_rate": 0.6666666666666666
+    },
+    {
+      "id": 121,
+      "category": "coding",
+      "prompt": "Develop a Python program that reads all the text files under a directory and reprompt top-5 words with the most number of occurrences.",
+      "input_tokens": 31,
+      "samples": [
+        {
+          "order": [
+            "baseline",
+            "speculative"
+          ],
+          "baseline": {
+            "total_s": 1.0429216250777245,
+            "prefill_s": 0.1187344160862267,
+            "decode_s": 0.9241872089914978,
+            "decode_tokens": 15,
+            "generated": [
+              2014,
+              11625,
+              419,
+              3491,
+              11,
+              582,
+              646,
+              990,
+              279,
+              1565,
+              436,
+              63,
+              4688,
+              311,
+              37546,
+              279
+            ],
+            "target_calls": 16,
+            "draft_calls": 0,
+            "proposed": 0,
+            "accepted": 0
+          },
+          "speculative": {
+            "total_s": 0.7621198748238385,
+            "prefill_s": 0.1769170828629285,
+            "decode_s": 0.58520279196091,
+            "decode_tokens": 15,
+            "generated": [
+              2014,
+              11625,
+              419,
+              3491,
+              11,
+              582,
+              646,
+              990,
+              279,
+              1565,
+              436,
+              63,
+              4688,
+              311,
+              37546,
+              279
+            ],
+            "target_calls": 6,
+            "draft_calls": 14,
+            "proposed": 13,
+            "accepted": 11
+          }
+        },
+        {
+          "order": [
+            "speculative",
+            "baseline"
+          ],
+          "speculative": {
+            "total_s": 0.7429352919571102,
+            "prefill_s": 0.1558016249909997,
+            "decode_s": 0.5871336669661105,
+            "decode_tokens": 15,
+            "generated": [
+              2014,
+              11625,
+              419,
+              3491,
+              11,
+              582,
+              646,
+              990,
+              279,
+              1565,
+              436,
+              63,
+              4688,
+              311,
+              37546,
+              279
+            ],
+            "target_calls": 6,
+            "draft_calls": 14,
+            "proposed": 13,
+            "accepted": 11
+          },
+          "baseline": {
+            "total_s": 1.0751053330022842,
+            "prefill_s": 0.11840975005179644,
+            "decode_s": 0.9566955829504877,
+            "decode_tokens": 15,
+            "generated": [
+              2014,
+              11625,
+              419,
+              3491,
+              11,
+              582,
+              646,
+              990,
+              279,
+              1565,
+              436,
+              63,
+              4688,
+              311,
+              37546,
+              279
+            ],
+            "target_calls": 16,
+            "draft_calls": 0,
+            "proposed": 0,
+            "accepted": 0
+          }
+        },
+        {
+          "order": [
+            "baseline",
+            "speculative"
+          ],
+          "baseline": {
+            "total_s": 1.0474565420299768,
+            "prefill_s": 0.11843929206952453,
+            "decode_s": 0.9290172499604523,
+            "decode_tokens": 15,
+            "generated": [
+              2014,
+              11625,
+              419,
+              3491,
+              11,
+              582,
+              646,
+              990,
+              279,
+              1565,
+              436,
+              63,
+              4688,
+              311,
+              37546,
+              279
+            ],
+            "target_calls": 16,
+            "draft_calls": 0,
+            "proposed": 0,
+            "accepted": 0
+          },
+          "speculative": {
+            "total_s": 0.7623592920135707,
+            "prefill_s": 0.1780203750822693,
+            "decode_s": 0.5843389169313014,
+            "decode_tokens": 15,
+            "generated": [
+              2014,
+              11625,
+              419,
+              3491,
+              11,
+              582,
+              646,
+              990,
+              279,
+              1565,
+              436,
+              63,
+              4688,
+              311,
+              37546,
+              279
+            ],
+            "target_calls": 6,
+            "draft_calls": 14,
+            "proposed": 13,
+            "accepted": 11
+          }
+        }
+      ],
+      "validation": {
+        "baseline": {
+          "generated": [
+            2014,
+            11625,
+            419,
+            3491,
+            11,
+            582,
+            646,
+            990,
+            279,
+            1565,
+            436,
+            63,
+            4688,
+            311,
+            37546,
+            279
+          ],
+          "target_calls": 16,
+          "draft_calls": 0,
+          "proposed": 0,
+          "accepted": 0
+        },
+        "speculative": {
+          "generated": [
+            2014,
+            11625,
+            419,
+            3491,
+            11,
+            582,
+            646,
+            990,
+            279,
+            1565,
+            436,
+            63,
+            4688,
+            311,
+            37546,
+            279
+          ],
+          "target_calls": 6,
+          "draft_calls": 14,
+          "proposed": 13,
+          "accepted": 11
+        }
+      },
+      "baseline_repeat_matches": true,
+      "correctness_passed": true,
+      "generated_text": " To solve this problem, we can use the `os` module to traverse the",
+      "generated_tokens": 16,
+      "paired_total_savings_s": [
+        0.280801750253886,
+        0.332170041045174,
+        0.2850972500164062
+      ],
+      "speculative_faster_pairs": 3,
+      "total_speedup": 1.3743986695952433,
+      "decode_speedup": 1.587513358997283,
+      "acceptance_rate": 0.8461538461538461
+    },
+    {
+      "id": 131,
+      "category": "extraction",
+      "prompt": "Evaluate the following movie reviews on a scale of 1 to 5, with 1 being very negative, 3 being neutral, and 5 being very positive:\n1. This movie released on Nov. 18, 2019, was phenomenal. The cinematography, the acting, the plot - everything was top-notch.\n2. Never before have I been so disappointed with a movie. The plot was predictable and the characters were one-dimensional. In my opinion, this movie is the worst one to have been released in 2022.\n3. The movie was okay. There were some parts I  enjoyed, but there were also parts that felt lackluster. This is a movie that was released in Feb 2018 and seems to be quite ordinary.\nReturn the answer as a JSON array of integers.",
+      "input_tokens": 176,
+      "samples": [
+        {
+          "order": [
+            "baseline",
+            "speculative"
+          ],
+          "baseline": {
+            "total_s": 1.3635623750742525,
+            "prefill_s": 0.49753620801493526,
+            "decode_s": 0.8660261670593172,
+            "decode_tokens": 14,
+            "generated": [
+              2278,
+              220,
+              220,
+              20,
+              345,
+              220,
+              220,
+              16,
+              345,
+              220,
+              220,
+              18,
+              198,
+              60,
+              151643
+            ],
+            "target_calls": 15,
+            "draft_calls": 0,
+            "proposed": 0,
+            "accepted": 0
+          },
+          "speculative": {
+            "total_s": 1.1146147090476006,
+            "prefill_s": 0.6075963340699673,
+            "decode_s": 0.5070183749776334,
+            "decode_tokens": 14,
+            "generated": [
+              2278,
+              220,
+              220,
+              20,
+              345,
+              220,
+              220,
+              16,
+              345,
+              220,
+              220,
+              18,
+              198,
+              60,
+              151643
+            ],
+            "target_calls": 5,
+            "draft_calls": 13,
+            "proposed": 12,
+            "accepted": 10
+          }
+        },
+        {
+          "order": [
+            "speculative",
+            "baseline"
+          ],
+          "speculative": {
+            "total_s": 1.1111920000985265,
+            "prefill_s": 0.6067517909687012,
+            "decode_s": 0.5044402091298252,
+            "decode_tokens": 14,
+            "generated": [
+              2278,
+              220,
+              220,
+              20,
+              345,
+              220,
+              220,
+              16,
+              345,
+              220,
+              220,
+              18,
+              198,
+              60,
+              151643
+            ],
+            "target_calls": 5,
+            "draft_calls": 13,
+            "proposed": 12,
+            "accepted": 10
+          },
+          "baseline": {
+            "total_s": 1.3561482499353588,
+            "prefill_s": 0.49007912492379546,
+            "decode_s": 0.8660691250115633,
+            "decode_tokens": 14,
+            "generated": [
+              2278,
+              220,
+              220,
+              20,
+              345,
+              220,
+              220,
+              16,
+              345,
+              220,
+              220,
+              18,
+              198,
+              60,
+              151643
+            ],
+            "target_calls": 15,
+            "draft_calls": 0,
+            "proposed": 0,
+            "accepted": 0
+          }
+        },
+        {
+          "order": [
+            "baseline",
+            "speculative"
+          ],
+          "baseline": {
+            "total_s": 1.35706941713579,
+            "prefill_s": 0.4884248331654817,
+            "decode_s": 0.8686445839703083,
+            "decode_tokens": 14,
+            "generated": [
+              2278,
+              220,
+              220,
+              20,
+              345,
+              220,
+              220,
+              16,
+              345,
+              220,
+              220,
+              18,
+              198,
+              60,
+              151643
+            ],
+            "target_calls": 15,
+            "draft_calls": 0,
+            "proposed": 0,
+            "accepted": 0
+          },
+          "speculative": {
+            "total_s": 1.1227236250415444,
+            "prefill_s": 0.6172486250288785,
+            "decode_s": 0.505475000012666,
+            "decode_tokens": 14,
+            "generated": [
+              2278,
+              220,
+              220,
+              20,
+              345,
+              220,
+              220,
+              16,
+              345,
+              220,
+              220,
+              18,
+              198,
+              60,
+              151643
+            ],
+            "target_calls": 5,
+            "draft_calls": 13,
+            "proposed": 12,
+            "accepted": 10
+          }
+        }
+      ],
+      "validation": {
+        "baseline": {
+          "generated": [
+            2278,
+            220,
+            220,
+            20,
+            345,
+            220,
+            220,
+            16,
+            345,
+            220,
+            220,
+            18,
+            198,
+            60,
+            151643
+          ],
+          "target_calls": 15,
+          "draft_calls": 0,
+          "proposed": 0,
+          "accepted": 0
+        },
+        "speculative": {
+          "generated": [
+            2278,
+            220,
+            220,
+            20,
+            345,
+            220,
+            220,
+            16,
+            345,
+            220,
+            220,
+            18,
+            198,
+            60,
+            151643
+          ],
+          "target_calls": 5,
+          "draft_calls": 13,
+          "proposed": 12,
+          "accepted": 10
+        }
+      },
+      "baseline_repeat_matches": true,
+      "correctness_passed": true,
+      "generated_text": " [\n  5,\n  1,\n  3\n]<|endoftext|>",
+      "generated_tokens": 15,
+      "paired_total_savings_s": [
+        0.24894766602665186,
+        0.24495624983683228,
+        0.23434579209424555
+      ],
+      "speculative_faster_pairs": 3,
+      "total_speedup": 1.2175233344043688,
+      "decode_speedup": 1.7133767743011261,
+      "acceptance_rate": 0.8333333333333334
+    },
+    {
+      "id": 141,
+      "category": "stem",
+      "prompt": "In the field of quantum physics, what is superposition, and how does it relate to the phenomenon of quantum entanglement?",
+      "input_tokens": 30,
+      "samples": [
+        {
+          "order": [
+            "baseline",
+            "speculative"
+          ],
+          "baseline": {
+            "total_s": 1.087891916045919,
+            "prefill_s": 0.15706729097291827,
+            "decode_s": 0.9308246250730008,
+            "decode_tokens": 15,
+            "generated": [
+              7297,
+              3487,
+              374,
+              264,
+              15811,
+              17508,
+              304,
+              30128,
+              29026,
+              429,
+              16555,
+              279,
+              1584,
+              315,
+              264,
+              30128
+            ],
+            "target_calls": 16,
+            "draft_calls": 0,
+            "proposed": 0,
+            "accepted": 0
+          },
+          "speculative": {
+            "total_s": 0.8976747079286724,
+            "prefill_s": 0.17861275002360344,
+            "decode_s": 0.719061957905069,
+            "decode_tokens": 15,
+            "generated": [
+              7297,
+              3487,
+              374,
+              264,
+              15811,
+              17508,
+              304,
+              30128,
+              29026,
+              429,
+              16555,
+              279,
+              1584,
+              315,
+              264,
+              30128
+            ],
+            "target_calls": 7,
+            "draft_calls": 17,
+            "proposed": 16,
+            "accepted": 10
+          }
+        },
+        {
+          "order": [
+            "speculative",
+            "baseline"
+          ],
+          "speculative": {
+            "total_s": 0.8729304170701653,
+            "prefill_s": 0.15669054188765585,
+            "decode_s": 0.7162398751825094,
+            "decode_tokens": 15,
+            "generated": [
+              7297,
+              3487,
+              374,
+              264,
+              15811,
+              17508,
+              304,
+              30128,
+              29026,
+              429,
+              16555,
+              279,
+              1584,
+              315,
+              264,
+              30128
+            ],
+            "target_calls": 7,
+            "draft_calls": 17,
+            "proposed": 16,
+            "accepted": 10
+          },
+          "baseline": {
+            "total_s": 1.051080791046843,
+            "prefill_s": 0.11881320807151496,
+            "decode_s": 0.932267582975328,
+            "decode_tokens": 15,
+            "generated": [
+              7297,
+              3487,
+              374,
+              264,
+              15811,
+              17508,
+              304,
+              30128,
+              29026,
+              429,
+              16555,
+              279,
+              1584,
+              315,
+              264,
+              30128
+            ],
+            "target_calls": 16,
+            "draft_calls": 0,
+            "proposed": 0,
+            "accepted": 0
+          }
+        },
+        {
+          "order": [
+            "baseline",
+            "speculative"
+          ],
+          "baseline": {
+            "total_s": 1.0493957081343979,
+            "prefill_s": 0.11810612492263317,
+            "decode_s": 0.9312895832117647,
+            "decode_tokens": 15,
+            "generated": [
+              7297,
+              3487,
+              374,
+              264,
+              15811,
+              17508,
+              304,
+              30128,
+              29026,
+              429,
+              16555,
+              279,
+              1584,
+              315,
+              264,
+              30128
+            ],
+            "target_calls": 16,
+            "draft_calls": 0,
+            "proposed": 0,
+            "accepted": 0
+          },
+          "speculative": {
+            "total_s": 0.8917675830889493,
+            "prefill_s": 0.17904650000855327,
+            "decode_s": 0.7127210830803961,
+            "decode_tokens": 15,
+            "generated": [
+              7297,
+              3487,
+              374,
+              264,
+              15811,
+              17508,
+              304,
+              30128,
+              29026,
+              429,
+              16555,
+              279,
+              1584,
+              315,
+              264,
+              30128
+            ],
+            "target_calls": 7,
+            "draft_calls": 17,
+            "proposed": 16,
+            "accepted": 10
+          }
+        }
+      ],
+      "validation": {
+        "baseline": {
+          "generated": [
+            7297,
+            3487,
+            374,
+            264,
+            15811,
+            17508,
+            304,
+            30128,
+            29026,
+            429,
+            16555,
+            279,
+            1584,
+            315,
+            264,
+            30128
+          ],
+          "target_calls": 16,
+          "draft_calls": 0,
+          "proposed": 0,
+          "accepted": 0
+        },
+        "speculative": {
+          "generated": [
+            7297,
+            3487,
+            374,
+            264,
+            15811,
+            17508,
+            304,
+            30128,
+            29026,
+            429,
+            16555,
+            279,
+            1584,
+            315,
+            264,
+            30128
+          ],
+          "target_calls": 7,
+          "draft_calls": 17,
+          "proposed": 16,
+          "accepted": 10
+        }
+      },
+      "baseline_repeat_matches": true,
+      "correctness_passed": true,
+      "generated_text": " Superposition is a fundamental principle in quantum mechanics that describes the state of a quantum",
+      "generated_tokens": 16,
+      "paired_total_savings_s": [
+        0.19021720811724663,
+        0.17815037397667766,
+        0.15762812504544854
+      ],
+      "speculative_faster_pairs": 3,
+      "total_speedup": 1.1786487992824952,
+      "decode_speedup": 1.3002481647289703,
+      "acceptance_rate": 0.625
+    },
+    {
+      "id": 151,
+      "category": "humanities",
+      "prompt": "Provide insights into the correlation between economic indicators such as GDP, inflation, and unemployment rates. Explain how fiscal and monetary policies affect those indicators.",
+      "input_tokens": 32,
+      "samples": [],
+      "validation": {
+        "baseline": {
+          "generated": [
+            22546,
+            33724,
+            1075,
+            29730,
+            11,
+            24527,
+            11,
+            323,
+            25608,
+            7813,
+            525,
+            16587,
+            369,
+            8660,
+            279,
+            2820
+          ],
+          "target_calls": 16,
+          "draft_calls": 0,
+          "proposed": 0,
+          "accepted": 0
+        },
+        "speculative": {
+          "generated": [
+            22546,
+            33724,
+            1741,
+            438,
+            29730,
+            11,
+            24527,
+            11,
+            323,
+            25608,
+            7813,
+            525,
+            16587,
+            369,
+            8660,
+            279
+          ],
+          "target_calls": 5,
+          "draft_calls": 13,
+          "proposed": 12,
+          "accepted": 12
+        }
+      },
+      "baseline_repeat_matches": true,
+      "correctness_passed": false,
+      "generated_text": " Economic indicators like GDP, inflation, and unemployment rates are crucial for understanding the health"
+    }
+  ],
+  "summary": {
+    "cases": 8,
+    "timed_cases": 7,
+    "failed_cases": [
+      151
+    ],
+    "sum_baseline_prompt_medians_s": 7.0100090419873595,
+    "sum_speculative_prompt_medians_s": 6.01120333513245,
+    "aggregate_speedup": 1.1661573650349497,
+    "prompts_faster": 5,
+    "median_prompt_speedup": 1.2175233344043688
+  },
+  "by_category": {
+    "writing": {
+      "cases": 1,
+      "timed_cases": 1,
+      "failed_cases": [],
+      "sum_baseline_prompt_medians_s": 1.0617751250974834,
+      "sum_speculative_prompt_medians_s": 1.146736124996096,
+      "aggregate_speedup": 0.9259105926405679,
+      "prompts_faster": 0,
+      "median_prompt_speedup": 0.9259105926405679
+    },
+    "roleplay": {
+      "cases": 1,
+      "timed_cases": 1,
+      "failed_cases": [],
+      "sum_baseline_prompt_medians_s": 1.0767051670700312,
+      "sum_speculative_prompt_medians_s": 0.8177904591429979,
+      "aggregate_speedup": 1.3166027495580745,
+      "prompts_faster": 1,
+      "median_prompt_speedup": 1.3166027495580745
+    },
+    "reasoning": {
+      "cases": 1,
+      "timed_cases": 1,
+      "failed_cases": [],
+      "sum_baseline_prompt_medians_s": 0.3372750408016145,
+      "sum_speculative_prompt_medians_s": 0.44204191700555384,
+      "aggregate_speedup": 0.7629933448084675,
+      "prompts_faster": 0,
+      "median_prompt_speedup": 0.7629933448084675
+    },
+    "math": {
+      "cases": 1,
+      "timed_cases": 1,
+      "failed_cases": [],
+      "sum_baseline_prompt_medians_s": 1.0786469588056207,
+      "sum_speculative_prompt_medians_s": 0.8361326670274138,
+      "aggregate_speedup": 1.290042838106522,
+      "prompts_faster": 1,
+      "median_prompt_speedup": 1.290042838106522
+    },
+    "coding": {
+      "cases": 1,
+      "timed_cases": 1,
+      "failed_cases": [],
+      "sum_baseline_prompt_medians_s": 1.0474565420299768,
+      "sum_speculative_prompt_medians_s": 0.7621198748238385,
+      "aggregate_speedup": 1.3743986695952433,
+      "prompts_faster": 1,
+      "median_prompt_speedup": 1.3743986695952433
+    },
+    "extraction": {
+      "cases": 1,
+      "timed_cases": 1,
+      "failed_cases": [],
+      "sum_baseline_prompt_medians_s": 1.35706941713579,
+      "sum_speculative_prompt_medians_s": 1.1146147090476006,
+      "aggregate_speedup": 1.2175233344043688,
+      "prompts_faster": 1,
+      "median_prompt_speedup": 1.2175233344043688
+    },
+    "stem": {
+      "cases": 1,
+      "timed_cases": 1,
+      "failed_cases": [],
+      "sum_baseline_prompt_medians_s": 1.051080791046843,
+      "sum_speculative_prompt_medians_s": 0.8917675830889493,
+      "aggregate_speedup": 1.1786487992824952,
+      "prompts_faster": 1,
+      "median_prompt_speedup": 1.1786487992824952
+    },
+    "humanities": {
+      "cases": 1,
+      "timed_cases": 0,
+      "failed_cases": [
+        151
+      ]
+    }
+  },
+  "target_snapshot": "/Users/akarsh/.cache/huggingface/hub/models--Qwen--Qwen2.5-7B/snapshots/d149729398750b98c0af14eb82c78cfe92750796",
+  "draft_snapshot": "/Users/akarsh/.cache/huggingface/hub/models--Qwen--Qwen2.5-Coder-1.5B-Instruct/snapshots/2e1fd397ee46e1388853d2af2c993145b0f1098a",
+  "eos_token_ids": [
+    151643
+  ]
+}

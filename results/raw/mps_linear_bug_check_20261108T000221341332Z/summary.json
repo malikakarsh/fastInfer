@@ -1,0 +1,50 @@
+{
+  "status": "complete",
+  "source_sha256": "c8ff4f82b6051b1a2c53f50c3ef770c2e9d30e821af3e645476713c29fa5a6c5",
+  "workers": [
+    {
+      "configuration": "inherited",
+      "returncode": 0,
+      "report": "/Users/akarsh/Documents/projects/fastInfer/fastinfer/results/raw/mps_linear_bug_check_20261108T000221341332Z/inherited.json",
+      "summary": {
+        "exact_arithmetic_failures": 0,
+        "conditional_bound_failures": 0,
+        "unstable_real_cases": 0,
+        "finding": "no_correctness_violation_demonstrated",
+        "original_operator_outputs_reproduced": true
+      },
+      "status": "complete"
+    },
+    {
+      "configuration": "fast_math_off",
+      "returncode": 0,
+      "report": "/Users/akarsh/Documents/projects/fastInfer/fastinfer/results/raw/mps_linear_bug_check_20261108T000221341332Z/fast_math_off.json",
+      "summary": {
+        "exact_arithmetic_failures": 0,
+        "conditional_bound_failures": 0,
+        "unstable_real_cases": 0,
+        "finding": "no_correctness_violation_demonstrated",
+        "original_operator_outputs_reproduced": true
+      },
+      "status": "complete"
+    },
+    {
+      "configuration": "prefer_metal_fast_math_off",
+      "returncode": 0,
+      "report": "/Users/akarsh/Documents/projects/fastInfer/fastinfer/results/raw/mps_linear_bug_check_20261108T000221341332Z/prefer_metal_fast_math_off.json",
+      "summary": {
+        "exact_arithmetic_failures": 0,
+        "conditional_bound_failures": 0,
+        "unstable_real_cases": 0,
+        "finding": "no_correctness_violation_demonstrated",
+        "original_operator_outputs_reproduced": true
+      },
+      "status": "complete"
+    }
+  ],
+  "scope": "Operator-only diagnostics. No full model or generation. Exact arithmetic can expose a clear defect; passing cannot certify the whole backend.",
+  "captured_output_fingerprint_matches": true,
+  "fixture": "/Users/akarsh/Documents/projects/fastInfer/fastinfer/results/raw/mps_linear_bug_check_20261108T000221341332Z/q_proj_fixture.pt",
+  "fixture_sha256": "f77def2b05e9654dfdc5603a8e9417770f4d93c934eb176035e7a86be68e1753",
+  "finding": "no_correctness_violation_demonstrated"
+}

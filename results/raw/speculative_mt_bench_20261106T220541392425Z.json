@@ -1,0 +1,99 @@
+{
+  "status": "complete",
+  "created_utc": "20261106T220541392425Z",
+  "environment": {
+    "torch": "2.15.0",
+    "transformers": "5.22.1",
+    "python": "3.13.12",
+    "platform": "macOS-26.4.1-arm64-arm-64bit-Mach-O",
+    "device": "cpu",
+    "dtype": "torch.bfloat16",
+    "cpu_threads": 8
+  },
+  "settings": {
+    "target": "Qwen/Qwen2.5-7B",
+    "draft": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "mode": "baseline",
+    "data": "/Users/akarsh/Documents/projects/fastInfer/fastinfer/benchmarks/data/mt_bench/raw/question.jsonl",
+    "device": "cpu",
+    "dtype": "bfloat16",
+    "max_new_tokens": 4,
+    "gamma": 3,
+    "pairs": 1,
+    "limit": 1,
+    "prompt_format": "qa",
+    "output": null
+  },
+  "dataset_sha256": "420ae1d63cbf0f499d8afc3b28d86714e77f13e44c133eedf942ed16c544dd34",
+  "category_counts": {
+    "writing": 1
+  },
+  "scope": "First-turn MT-Bench latency workload, not official quality scoring. Greedy, batch one, EOS enabled, fresh DynamicCaches, both models resident. Total includes prefill and speculative draft work; loading/tokenization excluded. Decode timings exclude first-token prefill, which includes draft prefill on candidate. No quantization, sampling, compilation, custom kernels or prompt truncation.",
+  "cases": [
+    {
+      "id": 81,
+      "category": "writing",
+      "prompt": "Compose an engaging travel blog post about a recent trip to Hawaii, highlighting cultural experiences and must-see attractions.",
+      "input_tokens": 27,
+      "samples": [
+        {
+          "order": [
+            "baseline"
+          ],
+          "baseline": {
+            "total_s": 1.3833300420083106,
+            "prefill_s": 1.1603534170426428,
+            "decode_s": 0.22297662496566772,
+            "decode_tokens": 3,
+            "generated": [
+              10869,
+              25,
+              362,
+              42580
+            ],
+            "target_calls": 4,
+            "draft_calls": 0,
+            "proposed": 0,
+            "accepted": 0
+          }
+        }
+      ],
+      "validation": {
+        "baseline": {
+          "generated": [
+            10869,
+            25,
+            362,
+            42580
+          ],
+          "target_calls": 4,
+          "draft_calls": 0,
+          "proposed": 0,
+          "accepted": 0
+        }
+      },
+      "baseline_repeat_matches": true,
+      "correctness_passed": true,
+      "generated_text": " Title: A Journey",
+      "generated_tokens": 4
+    }
+  ],
+  "summary": {
+    "cases": 1,
+    "timed_cases": 1,
+    "failed_cases": [],
+    "sum_baseline_prompt_medians_s": 1.3833300420083106
+  },
+  "by_category": {
+    "writing": {
+      "cases": 1,
+      "timed_cases": 1,
+      "failed_cases": [],
+      "sum_baseline_prompt_medians_s": 1.3833300420083106
+    }
+  },
+  "target_snapshot": "/Users/akarsh/.cache/huggingface/hub/models--Qwen--Qwen2.5-7B/snapshots/d149729398750b98c0af14eb82c78cfe92750796",
+  "eos_token_ids": [
+    151643
+  ]
+}

@@ -1,0 +1,1036 @@
+{
+  "status": "complete",
+  "source_report": "/Users/akarsh/Documents/projects/fastInfer/fastinfer/results/raw/speculative_mt_bench_20261106T221224181734Z.json",
+  "source_report_sha256": "fd56008301848ca081866602b026ea4cb1260759a52abc769ef15e57f1368b08",
+  "diagnostic_sha256": "c1d1bd10db694573e8be3284f2ea86f9afdc065747bfc0e48ddf150302d1bd8d",
+  "case_id": 151,
+  "divergent_generated_token_1_based": 3,
+  "recovered_first_verification_block": [
+    22546,
+    33724,
+    1741,
+    438
+  ],
+  "common_generated_history": [
+    22546,
+    33724
+  ],
+  "original_baseline_repeat_matches": true,
+  "original_target_snapshot": "/Users/akarsh/.cache/huggingface/hub/models--Qwen--Qwen2.5-7B/snapshots/d149729398750b98c0af14eb82c78cfe92750796",
+  "original_environment": {
+    "torch": "2.15.0",
+    "transformers": "5.22.1",
+    "python": "3.13.12",
+    "platform": "macOS-26.4.1-arm64-arm-64bit-Mach-O",
+    "device": "mps",
+    "dtype": "torch.bfloat16",
+    "cpu_threads": 8
+  },
+  "environment": {
+    "device": "mps",
+    "dtype": "torch.float16",
+    "attention": "sdpa",
+    "torch": "2.15.0",
+    "transformers": "5.22.1",
+    "python": "3.13.12"
+  },
+  "scope": "Accuracy replay, no performance measurements. Target-only resident, unlike original two-model benchmark. No draft calls or cache rollback. Future-token perturbation tests causal masking at fixed input shape. Exact logits and top-token gaps diagnose ranking, not task quality.",
+  "paths": {
+    "sequential_cached": [
+      {
+        "prefill_argmax": 22546,
+        "cache_length_after_prefill": 32,
+        "cache_length_after_forward": 34,
+        "original_dtype": "torch.float16",
+        "vocabulary_size": 152064,
+        "argmax_id": 1741,
+        "argmax_text": " such",
+        "top_two_gap": 0.09375,
+        "baseline_token_score": 28.6875,
+        "speculative_token_score": 28.78125,
+        "baseline_minus_speculative_score": -0.09375,
+        "top10": [
+          {
+            "id": 1741,
+            "text": " such",
+            "logit": 28.78125
+          },
+          {
+            "id": 1075,
+            "text": " like",
+            "logit": 28.6875
+          },
+          {
+            "id": 525,
+            "text": " are",
+            "logit": 27.46875
+          },
+          {
+            "id": 11,
+            "text": ",",
+            "logit": 27.3125
+          },
+          {
+            "id": 3410,
+            "text": " provide",
+            "logit": 26.1875
+          },
+          {
+            "id": 1486,
+            "text": " play",
+            "logit": 25.640625
+          },
+          {
+            "id": 8683,
+            "text": " serve",
+            "logit": 24.921875
+          },
+          {
+            "id": 646,
+            "text": " can",
+            "logit": 23.703125
+          },
+          {
+            "id": 3010,
+            "text": " offer",
+            "logit": 23.609375
+          },
+          {
+            "id": 1492,
+            "text": " help",
+            "logit": 23.359375
+          }
+        ]
+      },
+      {
+        "prefill_argmax": 22546,
+        "cache_length_after_prefill": 32,
+        "cache_length_after_forward": 34,
+        "original_dtype": "torch.float16",
+        "vocabulary_size": 152064,
+        "argmax_id": 1741,
+        "argmax_text": " such",
+        "top_two_gap": 0.09375,
+        "baseline_token_score": 28.6875,
+        "speculative_token_score": 28.78125,
+        "baseline_minus_speculative_score": -0.09375,
+        "top10": [
+          {
+            "id": 1741,
+            "text": " such",
+            "logit": 28.78125
+          },
+          {
+            "id": 1075,
+            "text": " like",
+            "logit": 28.6875
+          },
+          {
+            "id": 525,
+            "text": " are",
+            "logit": 27.46875
+          },
+          {
+            "id": 11,
+            "text": ",",
+            "logit": 27.3125
+          },
+          {
+            "id": 3410,
+            "text": " provide",
+            "logit": 26.1875
+          },
+          {
+            "id": 1486,
+            "text": " play",
+            "logit": 25.640625
+          },
+          {
+            "id": 8683,
+            "text": " serve",
+            "logit": 24.921875
+          },
+          {
+            "id": 646,
+            "text": " can",
+            "logit": 23.703125
+          },
+          {
+            "id": 3010,
+            "text": " offer",
+            "logit": 23.609375
+          },
+          {
+            "id": 1492,
+            "text": " help",
+            "logit": 23.359375
+          }
+        ]
+      }
+    ],
+    "verification_block": [
+      {
+        "prefill_argmax": 22546,
+        "cache_length_after_prefill": 32,
+        "forward_token_ids": [
+          22546,
+          33724,
+          1741,
+          438
+        ],
+        "cache_length_after_forward": 36,
+        "selected_row": 1,
+        "lm_head_rows": 4,
+        "original_dtype": "torch.float16",
+        "vocabulary_size": 152064,
+        "argmax_id": 1741,
+        "argmax_text": " such",
+        "top_two_gap": 0.09375,
+        "baseline_token_score": 28.6875,
+        "speculative_token_score": 28.78125,
+        "baseline_minus_speculative_score": -0.09375,
+        "top10": [
+          {
+            "id": 1741,
+            "text": " such",
+            "logit": 28.78125
+          },
+          {
+            "id": 1075,
+            "text": " like",
+            "logit": 28.6875
+          },
+          {
+            "id": 525,
+            "text": " are",
+            "logit": 27.46875
+          },
+          {
+            "id": 11,
+            "text": ",",
+            "logit": 27.3125
+          },
+          {
+            "id": 3410,
+            "text": " provide",
+            "logit": 26.1875
+          },
+          {
+            "id": 1486,
+            "text": " play",
+            "logit": 25.640625
+          },
+          {
+            "id": 8683,
+            "text": " serve",
+            "logit": 24.921875
+          },
+          {
+            "id": 646,
+            "text": " can",
+            "logit": 23.703125
+          },
+          {
+            "id": 3010,
+            "text": " offer",
+            "logit": 23.609375
+          },
+          {
+            "id": 1492,
+            "text": " help",
+            "logit": 23.359375
+          }
+        ]
+      },
+      {
+        "prefill_argmax": 22546,
+        "cache_length_after_prefill": 32,
+        "forward_token_ids": [
+          22546,
+          33724,
+          1741,
+          438
+        ],
+        "cache_length_after_forward": 36,
+        "selected_row": 1,
+        "lm_head_rows": 4,
+        "original_dtype": "torch.float16",
+        "vocabulary_size": 152064,
+        "argmax_id": 1741,
+        "argmax_text": " such",
+        "top_two_gap": 0.09375,
+        "baseline_token_score": 28.6875,
+        "speculative_token_score": 28.78125,
+        "baseline_minus_speculative_score": -0.09375,
+        "top10": [
+          {
+            "id": 1741,
+            "text": " such",
+            "logit": 28.78125
+          },
+          {
+            "id": 1075,
+            "text": " like",
+            "logit": 28.6875
+          },
+          {
+            "id": 525,
+            "text": " are",
+            "logit": 27.46875
+          },
+          {
+            "id": 11,
+            "text": ",",
+            "logit": 27.3125
+          },
+          {
+            "id": 3410,
+            "text": " provide",
+            "logit": 26.1875
+          },
+          {
+            "id": 1486,
+            "text": " play",
+            "logit": 25.640625
+          },
+          {
+            "id": 8683,
+            "text": " serve",
+            "logit": 24.921875
+          },
+          {
+            "id": 646,
+            "text": " can",
+            "logit": 23.703125
+          },
+          {
+            "id": 3010,
+            "text": " offer",
+            "logit": 23.609375
+          },
+          {
+            "id": 1492,
+            "text": " help",
+            "logit": 23.359375
+          }
+        ]
+      }
+    ],
+    "cached_prefix_block": [
+      {
+        "prefill_argmax": 22546,
+        "cache_length_after_prefill": 32,
+        "forward_token_ids": [
+          22546,
+          33724
+        ],
+        "cache_length_after_forward": 34,
+        "selected_row": 1,
+        "lm_head_rows": 2,
+        "original_dtype": "torch.float16",
+        "vocabulary_size": 152064,
+        "argmax_id": 1741,
+        "argmax_text": " such",
+        "top_two_gap": 0.09375,
+        "baseline_token_score": 28.6875,
+        "speculative_token_score": 28.78125,
+        "baseline_minus_speculative_score": -0.09375,
+        "top10": [
+          {
+            "id": 1741,
+            "text": " such",
+            "logit": 28.78125
+          },
+          {
+            "id": 1075,
+            "text": " like",
+            "logit": 28.6875
+          },
+          {
+            "id": 525,
+            "text": " are",
+            "logit": 27.46875
+          },
+          {
+            "id": 11,
+            "text": ",",
+            "logit": 27.3125
+          },
+          {
+            "id": 3410,
+            "text": " provide",
+            "logit": 26.1875
+          },
+          {
+            "id": 1486,
+            "text": " play",
+            "logit": 25.640625
+          },
+          {
+            "id": 8683,
+            "text": " serve",
+            "logit": 24.921875
+          },
+          {
+            "id": 646,
+            "text": " can",
+            "logit": 23.703125
+          },
+          {
+            "id": 3010,
+            "text": " offer",
+            "logit": 23.609375
+          },
+          {
+            "id": 1492,
+            "text": " help",
+            "logit": 23.359375
+          }
+        ]
+      },
+      {
+        "prefill_argmax": 22546,
+        "cache_length_after_prefill": 32,
+        "forward_token_ids": [
+          22546,
+          33724
+        ],
+        "cache_length_after_forward": 34,
+        "selected_row": 1,
+        "lm_head_rows": 2,
+        "original_dtype": "torch.float16",
+        "vocabulary_size": 152064,
+        "argmax_id": 1741,
+        "argmax_text": " such",
+        "top_two_gap": 0.09375,
+        "baseline_token_score": 28.6875,
+        "speculative_token_score": 28.78125,
+        "baseline_minus_speculative_score": -0.09375,
+        "top10": [
+          {
+            "id": 1741,
+            "text": " such",
+            "logit": 28.78125
+          },
+          {
+            "id": 1075,
+            "text": " like",
+            "logit": 28.6875
+          },
+          {
+            "id": 525,
+            "text": " are",
+            "logit": 27.46875
+          },
+          {
+            "id": 11,
+            "text": ",",
+            "logit": 27.3125
+          },
+          {
+            "id": 3410,
+            "text": " provide",
+            "logit": 26.1875
+          },
+          {
+            "id": 1486,
+            "text": " play",
+            "logit": 25.640625
+          },
+          {
+            "id": 8683,
+            "text": " serve",
+            "logit": 24.921875
+          },
+          {
+            "id": 646,
+            "text": " can",
+            "logit": 23.703125
+          },
+          {
+            "id": 3010,
+            "text": " offer",
+            "logit": 23.609375
+          },
+          {
+            "id": 1492,
+            "text": " help",
+            "logit": 23.359375
+          }
+        ]
+      }
+    ],
+    "changed_future_block": [
+      {
+        "prefill_argmax": 22546,
+        "cache_length_after_prefill": 32,
+        "forward_token_ids": [
+          22546,
+          33724,
+          0,
+          0
+        ],
+        "cache_length_after_forward": 36,
+        "selected_row": 1,
+        "lm_head_rows": 4,
+        "original_dtype": "torch.float16",
+        "vocabulary_size": 152064,
+        "argmax_id": 1741,
+        "argmax_text": " such",
+        "top_two_gap": 0.09375,
+        "baseline_token_score": 28.6875,
+        "speculative_token_score": 28.78125,
+        "baseline_minus_speculative_score": -0.09375,
+        "top10": [
+          {
+            "id": 1741,
+            "text": " such",
+            "logit": 28.78125
+          },
+          {
+            "id": 1075,
+            "text": " like",
+            "logit": 28.6875
+          },
+          {
+            "id": 525,
+            "text": " are",
+            "logit": 27.46875
+          },
+          {
+            "id": 11,
+            "text": ",",
+            "logit": 27.3125
+          },
+          {
+            "id": 3410,
+            "text": " provide",
+            "logit": 26.1875
+          },
+          {
+            "id": 1486,
+            "text": " play",
+            "logit": 25.640625
+          },
+          {
+            "id": 8683,
+            "text": " serve",
+            "logit": 24.921875
+          },
+          {
+            "id": 646,
+            "text": " can",
+            "logit": 23.703125
+          },
+          {
+            "id": 3010,
+            "text": " offer",
+            "logit": 23.609375
+          },
+          {
+            "id": 1492,
+            "text": " help",
+            "logit": 23.359375
+          }
+        ]
+      },
+      {
+        "prefill_argmax": 22546,
+        "cache_length_after_prefill": 32,
+        "forward_token_ids": [
+          22546,
+          33724,
+          0,
+          0
+        ],
+        "cache_length_after_forward": 36,
+        "selected_row": 1,
+        "lm_head_rows": 4,
+        "original_dtype": "torch.float16",
+        "vocabulary_size": 152064,
+        "argmax_id": 1741,
+        "argmax_text": " such",
+        "top_two_gap": 0.09375,
+        "baseline_token_score": 28.6875,
+        "speculative_token_score": 28.78125,
+        "baseline_minus_speculative_score": -0.09375,
+        "top10": [
+          {
+            "id": 1741,
+            "text": " such",
+            "logit": 28.78125
+          },
+          {
+            "id": 1075,
+            "text": " like",
+            "logit": 28.6875
+          },
+          {
+            "id": 525,
+            "text": " are",
+            "logit": 27.46875
+          },
+          {
+            "id": 11,
+            "text": ",",
+            "logit": 27.3125
+          },
+          {
+            "id": 3410,
+            "text": " provide",
+            "logit": 26.1875
+          },
+          {
+            "id": 1486,
+            "text": " play",
+            "logit": 25.640625
+          },
+          {
+            "id": 8683,
+            "text": " serve",
+            "logit": 24.921875
+          },
+          {
+            "id": 646,
+            "text": " can",
+            "logit": 23.703125
+          },
+          {
+            "id": 3010,
+            "text": " offer",
+            "logit": 23.609375
+          },
+          {
+            "id": 1492,
+            "text": " help",
+            "logit": 23.359375
+          }
+        ]
+      }
+    ],
+    "verification_single_head_row": [
+      {
+        "prefill_argmax": 22546,
+        "cache_length_after_prefill": 32,
+        "forward_token_ids": [
+          22546,
+          33724,
+          1741,
+          438
+        ],
+        "cache_length_after_forward": 36,
+        "selected_row": 1,
+        "lm_head_rows": 1,
+        "original_dtype": "torch.float16",
+        "vocabulary_size": 152064,
+        "argmax_id": 1741,
+        "argmax_text": " such",
+        "top_two_gap": 0.09375,
+        "baseline_token_score": 28.6875,
+        "speculative_token_score": 28.78125,
+        "baseline_minus_speculative_score": -0.09375,
+        "top10": [
+          {
+            "id": 1741,
+            "text": " such",
+            "logit": 28.78125
+          },
+          {
+            "id": 1075,
+            "text": " like",
+            "logit": 28.6875
+          },
+          {
+            "id": 525,
+            "text": " are",
+            "logit": 27.46875
+          },
+          {
+            "id": 11,
+            "text": ",",
+            "logit": 27.3125
+          },
+          {
+            "id": 3410,
+            "text": " provide",
+            "logit": 26.1875
+          },
+          {
+            "id": 1486,
+            "text": " play",
+            "logit": 25.640625
+          },
+          {
+            "id": 8683,
+            "text": " serve",
+            "logit": 24.921875
+          },
+          {
+            "id": 646,
+            "text": " can",
+            "logit": 23.703125
+          },
+          {
+            "id": 3010,
+            "text": " offer",
+            "logit": 23.609375
+          },
+          {
+            "id": 1492,
+            "text": " help",
+            "logit": 23.359375
+          }
+        ]
+      },
+      {
+        "prefill_argmax": 22546,
+        "cache_length_after_prefill": 32,
+        "forward_token_ids": [
+          22546,
+          33724,
+          1741,
+          438
+        ],
+        "cache_length_after_forward": 36,
+        "selected_row": 1,
+        "lm_head_rows": 1,
+        "original_dtype": "torch.float16",
+        "vocabulary_size": 152064,
+        "argmax_id": 1741,
+        "argmax_text": " such",
+        "top_two_gap": 0.09375,
+        "baseline_token_score": 28.6875,
+        "speculative_token_score": 28.78125,
+        "baseline_minus_speculative_score": -0.09375,
+        "top10": [
+          {
+            "id": 1741,
+            "text": " such",
+            "logit": 28.78125
+          },
+          {
+            "id": 1075,
+            "text": " like",
+            "logit": 28.6875
+          },
+          {
+            "id": 525,
+            "text": " are",
+            "logit": 27.46875
+          },
+          {
+            "id": 11,
+            "text": ",",
+            "logit": 27.3125
+          },
+          {
+            "id": 3410,
+            "text": " provide",
+            "logit": 26.1875
+          },
+          {
+            "id": 1486,
+            "text": " play",
+            "logit": 25.640625
+          },
+          {
+            "id": 8683,
+            "text": " serve",
+            "logit": 24.921875
+          },
+          {
+            "id": 646,
+            "text": " can",
+            "logit": 23.703125
+          },
+          {
+            "id": 3010,
+            "text": " offer",
+            "logit": 23.609375
+          },
+          {
+            "id": 1492,
+            "text": " help",
+            "logit": 23.359375
+          }
+        ]
+      }
+    ],
+    "uncached_prefix": [
+      {
+        "cache": false,
+        "input_tokens": 34,
+        "original_dtype": "torch.float16",
+        "vocabulary_size": 152064,
+        "argmax_id": 1741,
+        "argmax_text": " such",
+        "top_two_gap": 0.109375,
+        "baseline_token_score": 28.6875,
+        "speculative_token_score": 28.796875,
+        "baseline_minus_speculative_score": -0.109375,
+        "top10": [
+          {
+            "id": 1741,
+            "text": " such",
+            "logit": 28.796875
+          },
+          {
+            "id": 1075,
+            "text": " like",
+            "logit": 28.6875
+          },
+          {
+            "id": 525,
+            "text": " are",
+            "logit": 27.46875
+          },
+          {
+            "id": 11,
+            "text": ",",
+            "logit": 27.3125
+          },
+          {
+            "id": 3410,
+            "text": " provide",
+            "logit": 26.1875
+          },
+          {
+            "id": 1486,
+            "text": " play",
+            "logit": 25.640625
+          },
+          {
+            "id": 8683,
+            "text": " serve",
+            "logit": 24.9375
+          },
+          {
+            "id": 646,
+            "text": " can",
+            "logit": 23.703125
+          },
+          {
+            "id": 3010,
+            "text": " offer",
+            "logit": 23.609375
+          },
+          {
+            "id": 1492,
+            "text": " help",
+            "logit": 23.359375
+          }
+        ]
+      },
+      {
+        "cache": false,
+        "input_tokens": 34,
+        "original_dtype": "torch.float16",
+        "vocabulary_size": 152064,
+        "argmax_id": 1741,
+        "argmax_text": " such",
+        "top_two_gap": 0.109375,
+        "baseline_token_score": 28.6875,
+        "speculative_token_score": 28.796875,
+        "baseline_minus_speculative_score": -0.109375,
+        "top10": [
+          {
+            "id": 1741,
+            "text": " such",
+            "logit": 28.796875
+          },
+          {
+            "id": 1075,
+            "text": " like",
+            "logit": 28.6875
+          },
+          {
+            "id": 525,
+            "text": " are",
+            "logit": 27.46875
+          },
+          {
+            "id": 11,
+            "text": ",",
+            "logit": 27.3125
+          },
+          {
+            "id": 3410,
+            "text": " provide",
+            "logit": 26.1875
+          },
+          {
+            "id": 1486,
+            "text": " play",
+            "logit": 25.640625
+          },
+          {
+            "id": 8683,
+            "text": " serve",
+            "logit": 24.9375
+          },
+          {
+            "id": 646,
+            "text": " can",
+            "logit": 23.703125
+          },
+          {
+            "id": 3010,
+            "text": " offer",
+            "logit": 23.609375
+          },
+          {
+            "id": 1492,
+            "text": " help",
+            "logit": 23.359375
+          }
+        ]
+      }
+    ]
+  },
+  "prompt_token_ids": [
+    14582,
+    25,
+    39565,
+    25709,
+    1119,
+    279,
+    25588,
+    1948,
+    6955,
+    33724,
+    1741,
+    438,
+    29730,
+    11,
+    24527,
+    11,
+    323,
+    25608,
+    7813,
+    13,
+    81917,
+    1246,
+    19743,
+    323,
+    32284,
+    10186,
+    7802,
+    1846,
+    33724,
+    624,
+    16141,
+    25
+  ],
+  "watched_tokens": [
+    {
+      "id": 1075,
+      "text": " like"
+    },
+    {
+      "id": 1741,
+      "text": " such"
+    }
+  ],
+  "repeat_comparisons": {
+    "sequential_cached": [
+      {
+        "max_abs_logit_difference": 0.0,
+        "mean_abs_logit_difference": 0.0,
+        "different_logit_values": 0,
+        "argmax_matches": true
+      }
+    ],
+    "verification_block": [
+      {
+        "max_abs_logit_difference": 0.0,
+        "mean_abs_logit_difference": 0.0,
+        "different_logit_values": 0,
+        "argmax_matches": true
+      }
+    ],
+    "cached_prefix_block": [
+      {
+        "max_abs_logit_difference": 0.0,
+        "mean_abs_logit_difference": 0.0,
+        "different_logit_values": 0,
+        "argmax_matches": true
+      }
+    ],
+    "changed_future_block": [
+      {
+        "max_abs_logit_difference": 0.0,
+        "mean_abs_logit_difference": 0.0,
+        "different_logit_values": 0,
+        "argmax_matches": true
+      }
+    ],
+    "verification_single_head_row": [
+      {
+        "max_abs_logit_difference": 0.0,
+        "mean_abs_logit_difference": 0.0,
+        "different_logit_values": 0,
+        "argmax_matches": true
+      }
+    ],
+    "uncached_prefix": [
+      {
+        "max_abs_logit_difference": 0.0,
+        "mean_abs_logit_difference": 0.0,
+        "different_logit_values": 0,
+        "argmax_matches": true
+      }
+    ]
+  },
+  "versus_sequential": {
+    "sequential_cached": {
+      "max_abs_logit_difference": 0.0,
+      "mean_abs_logit_difference": 0.0,
+      "different_logit_values": 0,
+      "argmax_matches": true
+    },
+    "verification_block": {
+      "max_abs_logit_difference": 0.0234375,
+      "mean_abs_logit_difference": 0.004619350656867027,
+      "different_logit_values": 117801,
+      "argmax_matches": true
+    },
+    "cached_prefix_block": {
+      "max_abs_logit_difference": 0.0234375,
+      "mean_abs_logit_difference": 0.004619350656867027,
+      "different_logit_values": 117801,
+      "argmax_matches": true
+    },
+    "changed_future_block": {
+      "max_abs_logit_difference": 0.0234375,
+      "mean_abs_logit_difference": 0.004619350656867027,
+      "different_logit_values": 117801,
+      "argmax_matches": true
+    },
+    "verification_single_head_row": {
+      "max_abs_logit_difference": 0.0234375,
+      "mean_abs_logit_difference": 0.004619216080754995,
+      "different_logit_values": 117803,
+      "argmax_matches": true
+    },
+    "uncached_prefix": {
+      "max_abs_logit_difference": 0.01953125,
+      "mean_abs_logit_difference": 0.004173023626208305,
+      "different_logit_values": 117703,
+      "argmax_matches": true
+    }
+  },
+  "future_token_perturbation": {
+    "max_abs_logit_difference": 0.0,
+    "mean_abs_logit_difference": 0.0,
+    "different_logit_values": 0,
+    "argmax_matches": true
+  },
+  "findings": {
+    "original_ranking_flip_reproduced": false,
+    "all_paths_repeat_exactly": true,
+    "same_shape_future_tokens_change_logits": false,
+    "single_head_row_changes_block_winner": false,
+    "uncached_winner_matches_sequential": true,
+    "note": "A reproduced stable flip with unchanged same-shape future-token logits supports execution-shape numerical sensitivity. It does not prove the exact operator/layer responsible. If perturbation changes logits, investigate causality and repeat noise before attributing it to rounding."
+  }
+}
