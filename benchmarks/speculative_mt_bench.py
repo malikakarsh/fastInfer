@@ -1,6 +1,6 @@
 """Paired ordinary/speculative greedy timing on first-turn MT-Bench prompts.
 
-Local cached, unquantized Hugging Face Qwen2 checkpoints only. No downloads,
+Local cached Hugging Face Qwen2 checkpoints; optional bitsandbytes 4-bit target. No downloads,
 chat template, compilation, or custom Triton kernels. Both models stay resident.
 """
 
@@ -9,6 +9,7 @@ from collections import Counter, defaultdict
 from dataclasses import asdict
 from datetime import datetime, timezone
 import hashlib
+from importlib.metadata import version, PackageNotFoundError
 import json
 from pathlib import Path
 import platform
@@ -21,7 +22,7 @@ sys.path.insert(0, str(ROOT.parent))
 import torch
 import transformers
 from huggingface_hub import snapshot_download
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoConfig, AutoModelForCausalLM, AutoTokenizer
 
 from fastinfer.speculative_cached import cached_decode
 
@@ -60,6 +61,56 @@ def resolve_model(identifier):
     return Path(snapshot_download(identifier, local_files_only=True)).resolve()
 
 
+
+def load_target(path, device, dtype, quantization):
+    """Keep prequantized weights packed and place the whole target on one device."""
+    config = AutoConfig.from_pretrained(path, local_files_only=True)
+    raw = getattr(config, "quantization_config", None)
+    if quantization == "none":
+        if raw:
+            raise ValueError("quantized checkpoint requires --target-quantization bnb-4bit")
+        model = AutoModelForCausalLM.from_pretrained(
+            path, config=config, local_files_only=True, dtype=dtype,
+            attn_implementation="sdpa").to(device).eval()
+        return model, {"method": "none"}
+    if not isinstance(raw, dict) or raw.get("quant_method") != "bitsandbytes" or not raw.get("load_in_4bit"):
+        raise ValueError("bnb-4bit requires a prequantized bitsandbytes 4-bit checkpoint")
+    try:
+        import bitsandbytes as bnb
+        import accelerate  # noqa: F401 -- required by the Transformers quantized loader
+    except ImportError as exc:
+        raise ImportError("Quantized target requires bitsandbytes and accelerate; install them in this environment") from exc
+    supported = getattr(bnb, "supported_torch_devices", set())
+    if device.type not in supported:
+        raise ValueError(f"Installed bitsandbytes does not advertise {device.type} support: {supported}. "
+                         "Use a build supporting this backend; no CPU fallback is enabled.")
+    # Override the checkpoint's BF16 compute default to match the requested dtype.
+    # Supplying only a separate quantization_config can be ignored during HF config merging.
+    config.quantization_config = {**raw, "bnb_4bit_compute_dtype": str(dtype).removeprefix("torch.")}
+    model = AutoModelForCausalLM.from_pretrained(
+        path, config=config, local_files_only=True, dtype=dtype,
+        attn_implementation="sdpa", device_map={"": str(device)}).eval()
+    layers = [module for module in model.modules() if isinstance(module, bnb.nn.Linear4bit)]
+    if not getattr(model, "is_loaded_in_4bit", False) or not layers:
+        raise RuntimeError("Target did not load as bitsandbytes Linear4bit; refusing an unquantized comparison")
+    if any(parameter.device.type != device.type or
+           (device.index is not None and parameter.device.index != device.index)
+           for parameter in model.parameters()):
+        raise RuntimeError("Target parameters are off the requested device; refusing offloaded timing")
+    if any(layer.compute_dtype != dtype or layer.weight.quant_state is None for layer in layers):
+        raise RuntimeError("Quantized layers do not have the requested compute dtype and packed quantization state")
+    return model, {"method": "bitsandbytes_4bit", "linear4bit_layers": len(layers),
+                   "checkpoint_config": raw, "effective_config": {**raw, "bnb_4bit_compute_dtype": str(dtype).removeprefix("torch.")},
+                   "compute_dtype": str(dtype), "device_map": {"": str(device)}}
+
+
+def package_version(name):
+    try:
+        return version(name)
+    except PackageNotFoundError:
+        return None
+
+
 def summarize(cases):
     valid = [case for case in cases if case.get("correctness_passed") and case.get("samples")]
     result = {"cases": len(cases), "timed_cases": len(valid),
@@ -82,6 +133,7 @@ def summarize(cases):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--target", default="Qwen/Qwen2.5-7B")
+    parser.add_argument("--target-quantization", choices=("none", "bnb-4bit"), default="none")
     parser.add_argument("--draft", default="Qwen/Qwen2.5-Coder-1.5B-Instruct")
     parser.add_argument("--mode", choices=("baseline", "compare"), default="compare")
     parser.add_argument("--data", type=Path, default=ROOT / "benchmarks/data/mt_bench/raw/question.jsonl")
@@ -111,7 +163,9 @@ def main():
     report = {"status": "running", "created_utc": stamp,
               "environment": {"torch": torch.__version__, "transformers": transformers.__version__,
                               "python": platform.python_version(), "platform": platform.platform(),
-                              "device": str(device), "dtype": str(dtype), "cpu_threads": torch.get_num_threads()},
+                              "device": str(device), "dtype": str(dtype), "cpu_threads": torch.get_num_threads(),
+                              "bitsandbytes": package_version("bitsandbytes"),
+                              "accelerate": package_version("accelerate")},
               "settings": {key: str(value) if isinstance(value, Path) else value for key, value in vars(args).items()},
               "dataset_sha256": hashlib.sha256(args.data.read_bytes()).hexdigest(),
               "source_sha256": {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
@@ -122,7 +176,9 @@ def main():
                        "Greedy, batch one, EOS enabled, fresh DynamicCaches, both models resident. "
                        "Total includes prefill and speculative draft work; loading/tokenization excluded. "
                        "Decode timings exclude first-token prefill, which includes draft prefill on candidate. "
-                       "No quantization, sampling, compilation, custom kernels or prompt truncation.", "cases": []}
+                       "Optional prequantized 4-bit target; draft stays unquantized. "
+                       "Correctness compares speculation with the same target, not with FP16 target outputs. "
+                       "No sampling, compilation, custom kernels or prompt truncation.", "cases": []}
 
     def save():
         report["summary"] = summarize(report["cases"])
@@ -138,10 +194,10 @@ def main():
         tokenizer = AutoTokenizer.from_pretrained(target_path, local_files_only=True)
         report["target_snapshot"] = str(target_path)
         print(f"Loading target {target_path.name} on {device} as {dtype}", flush=True)
-        target = AutoModelForCausalLM.from_pretrained(target_path, local_files_only=True,
-                    dtype=dtype, attn_implementation="sdpa").to(device).eval()
-        if getattr(target.config, "quantization_config", None):
-            raise ValueError("this first experiment requires an unquantized target")
+        target, report["target_quantization"] = load_target(
+            target_path, device, dtype, args.target_quantization)
+        print(f"Target quantization: {report['target_quantization']['method']}", flush=True)
+        save()
         draft = None
         if args.mode == "compare":
             draft_path = resolve_model(args.draft)
@@ -149,6 +205,9 @@ def main():
             if tokenizer.get_vocab() != draft_tokenizer.get_vocab():
                 raise ValueError("draft/target token-to-ID mappings differ")
             report["draft_snapshot"] = str(draft_path)
+            draft_config = AutoConfig.from_pretrained(draft_path, local_files_only=True)
+            if getattr(draft_config, "quantization_config", None):
+                raise ValueError("draft must remain unquantized for this comparison")
             print(f"Loading draft {draft_path.name}", flush=True)
             draft = AutoModelForCausalLM.from_pretrained(draft_path, local_files_only=True,
                         dtype=dtype, attn_implementation="sdpa").to(device).eval()

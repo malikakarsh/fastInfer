@@ -539,3 +539,49 @@ It does not by itself prove a violation of the backend's accuracy contract or
 identify the precise accumulation algorithm. An upstream report should preserve
 that distinction and use an isolated operator reproducer if available. The
 agent inspected saved JSON and updated notes only; no new inference occurred.
+
+
+## Quantized target comparison (prepared; execution pending)
+
+Use the locally cached `unsloth/Qwen2.5-7B-bnb-4bit` target and keep
+`Qwen/Qwen2.5-Coder-1.5B-Instruct` as the unquantized FP16 draft. The target
+checkpoint uses NF4 with double quantization; `--dtype float16` overrides its
+BF16 compute default while preserving packed 4-bit weights. Nonquantized target
+modules also use the requested dtype. KV caches are not quantized by this change.
+
+The runner requires an installed bitsandbytes build advertising the requested
+backend and Accelerate. It loads the entire target directly onto that device;
+it does not fall back to CPU offload or dequantize the whole model to FP16.
+Before generation, it checks that Linear4bit modules and quantization state are
+present and that their compute dtype matches. These checks do not establish
+kernel compatibility or performance; user execution is still required. Current
+bitsandbytes upstream lists Apple Silicon 4-bit support; individual installed
+builds may differ. See [backend support](https://github.com/bitsandbytes-foundation/bitsandbytes).
+
+Install the two additional dependencies in the environment you intend to test.
+Preserve the existing Torch and Transformers versions for comparisons:
+
+```bash
+python -m pip install accelerate bitsandbytes
+```
+
+Start with the same eight-category, 16-token pilot:
+
+```bash
+python benchmarks/speculative_mt_bench.py \
+  --target unsloth/Qwen2.5-7B-bnb-4bit \
+  --target-quantization bnb-4bit \
+  --draft Qwen/Qwen2.5-Coder-1.5B-Instruct \
+  --device mps --dtype float16 --mode compare \
+  --limit 8 --max-new-tokens 16 --gamma 3 --pairs 3
+```
+
+Then remove `--limit 8` and set `--max-new-tokens 128` for all 80 first turns.
+Both paths use the same quantized target. Exact-token checks compare ordinary
+quantized decoding against speculative quantized decoding, not against the
+original FP16 target. Quantization may change that target's outputs and draft
+acceptance. Speedups are relative to quantized ordinary decoding; they do not
+measure quantization speedup over the earlier FP16 run. The report records
+checkpoint paths, quantization configuration, compute dtype, library versions
+and passing-subset timings while retaining all failures. No quantized model
+execution or timing has been performed by the agent.

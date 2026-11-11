@@ -27,6 +27,29 @@ FastInfer is an experimental LLM inference runtime centered on custom Triton GPU
 
 Measured results cover the [PyTorch matmul baseline](notes/matmul_baseline_analysis.md) and an initial [paired PyTorch–Triton comparison](notes/matmul_triton_comparison.md).
 
+## Speculative decoding: current computation versus cached history
+
+Two FP16 MPS failures exposed different sources of numerical sensitivity:
+
+- **Case 148 — current computation:** from an identical starting KV cache and
+  identical continuation tokens, sequential evaluation chose `Install` while
+  block evaluation chose `Design`. Substituting eight sequential query-projection
+  values into the block forward pass restored `Install`. This was a diagnostic
+  substitution, not an FP32 fix, and establishes a causal contribution rather
+  than a sole cause.
+- **Case 115 — cached history:** using the captured speculative cache, both
+  sequential and block evaluation chose a space instead of ` half`. Rebuilding
+  the cache from the same preceding tokens through fresh sequential execution
+  restored ` half`, even with block evaluation of the current continuation.
+  Changing only the current execution shape was insufficient.
+
+Matching token histories do not necessarily imply identical KV-cache values.
+These observations motivate testing whether a repair should target the current
+forward pass or recompute earlier cached history. An adaptive repair policy
+remains a hypothesis; neither a universal remedy nor a PyTorch bug is established.
+See [findings and evidence](notes/speculative_decoding.md) and
+[replay methodology](notes/speculative_mt_bench.md#case-148-layer-trace-from-the-identical-captured-cache).
+
 ## Specialized matrix–vector result
 
 Implemented a specialized FP16 matrix–vector kernel achieving approximately 1.11–1.20× speedup over PyTorch 2.5.1 across five tested widths on a T4, using CUDA-graph timing and passing FP32-reference accuracy checks.
