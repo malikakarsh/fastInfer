@@ -316,7 +316,11 @@ The user-run all80/128-token FP16 MPS report
 and3failures: math115 first differs at generated token15, STEM148 at41, and
 extraction139 at58. All three original baseline repeats match. The ratio of
 aggregate timings on the successful subset is1.3853x; that subset excludes the
-failures and is not an accepted all80correct speedup result. The earlier BF16
+failures and is not an accepted all80correct speedup result. Reporting this
+matching-subset speedup is valid when paired with the full 77/80 (96.25%)
+agreement count and explicit exclusions. It does not predict which future
+prompts will match. See the [reporting policy and next analysis](speculative_decoding.md#reporting-the-existing-fp16-run).
+The earlier BF16
 first-block diagnosis must not be assumed to explain these later FP16 failures.
 
 Trace the actual later rounds, using only these selected prompts:

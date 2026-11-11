@@ -10,7 +10,7 @@ FastInfer is an experimental LLM inference runtime centered on custom Triton GPU
 
 ## Implemented
 
-- A greedy speculative-decoding reference and cached Qwen2 implementation with paired MT-Bench benchmarking. The full FP16 MPS run found exact-token differences on 3/80 prompts; no correct all-80 speedup is established. See [numerical equivalence findings](notes/speculative_decoding.md) and [benchmark instructions](notes/speculative_mt_bench.md).
+- A greedy speculative-decoding reference and cached Qwen2 implementation with paired MT-Bench benchmarking. The full FP16 MPS run matched tokens on 77/80 prompts (96.25%); aggregate speedup on those matching prompts was 1.3853x, excluding three divergent cases. No correct all-80 speedup is established. See [numerical equivalence findings](notes/speculative_decoding.md) and [benchmark instructions](notes/speculative_mt_bench.md).
 
 - An elementwise SwiGLU reference and fused Triton kernel: seven tests and five initial FP16 benchmark accuracy checks passed on T4. The initial kernel beat eager PyTorch but was slightly slower than the compiled reference; scheduling experiments are pending.
 

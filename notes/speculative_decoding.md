@@ -51,8 +51,26 @@ Increasing only the final projection's precision cannot ensure agreement when
 its input hidden vectors already differ. Higher precision and batch-invariant
 kernels are candidates for further evaluation, not validated remedies here.
 
-The 77 passing prompts measured an aggregate 1.3853x speedup, but this excludes
-the failures and does not establish a correct all-80 speedup.
+## Reporting the existing FP16 run
+
+Exact baseline/speculative agreement was **77/80 prompts (96.25%)**. On those
+77 matching prompts, aggregate speedup was **1.3853x**, computed as the sum of
+baseline per-prompt median times divided by the sum of speculative per-prompt
+median times. This is a valid descriptive result for the matching subset;
+it is not the average of individual speedup ratios.
+
+Keep all three failures visible in the full-dataset correctness count, and
+explicitly exclude them from the timing aggregate. This does not establish
+exact correctness or a correct speedup across all 80 prompts. Exclusions were
+identified after generating both outputs; no cheap advance detector or fallback
+has been validated. Successful-subset performance need not represent other
+prompts or workloads.
+
+Next, summarize the saved FP16 report without new inference: per-category
+agreement counts, aggregate speedups on matching prompts, draft acceptance,
+and matching prompts that slowed down. Use that analysis to select a targeted
+follow-up such as changing gamma; FP32 generation is not required for this
+reporting step. These category and slowdown summaries remain pending.
 
 ## Evidence and follow-up
 
