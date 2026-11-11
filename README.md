@@ -27,6 +27,42 @@ FastInfer is an experimental LLM inference runtime centered on custom Triton GPU
 
 Measured results cover the [PyTorch matmul baseline](notes/matmul_baseline_analysis.md) and an initial [paired PyTorch–Triton comparison](notes/matmul_triton_comparison.md).
 
+## Quantized-target speculative decoding result
+
+On all 80 first-turn MT-Bench prompts, the bitsandbytes NF4 target
+`unsloth/Qwen2.5-7B-bnb-4bit` with FP16 compute and the unquantized FP16
+`Qwen/Qwen2.5-Coder-1.5B-Instruct` draft passed exact-token checks on **46/80
+prompts (57.5%)**; **34 failed**. Ordinary-target repeats were stable on all 80.
+The run used MPS, PyTorch 2.15.0, Transformers 5.22.1, bitsandbytes 0.50.2,
+Accelerate 1.15.0, gamma=3, up to 128 new tokens with EOS stopping, and three
+timed pairs per passing prompt. Both models remained resident.
+
+On the **46 passing prompts only**, aggregate ordinary/speculative speedup was
+**2.3191x**: summed per-prompt median times were **1103.9024 s versus 476.0001 s**
+(56.88% less total time). All 46 had lower speculative median latency;
+per-prompt speedups ranged from 1.018x to 2.861x. Timings include prefill and
+draft work, excluding model loading and tokenization. The aggregate is a ratio
+of summed medians, not an average of per-prompt speedup ratios.
+
+| Category | Passed / tested | Aggregate speedup on passing prompts |
+| --- | ---: | ---: |
+| Writing | 3/10 | 2.166x |
+| Roleplay | 5/10 | 2.190x |
+| Reasoning | 8/10 | 1.890x |
+| Math | 5/10 | 2.356x |
+| Coding | 8/10 | 2.724x |
+| Extraction | 9/10 | 2.429x |
+| STEM | 4/10 | 2.357x |
+| Humanities | 4/10 | 2.086x |
+
+The 34 failures received no timing and remain in the full-dataset correctness
+count. This is a descriptive speedup on the matching subset, not an all-80
+correctness or speedup claim. Both methods used the same quantized target;
+these numbers do not measure quantization speedup over the original FP16
+model. The new failures have not been individually diagnosed; the earlier
+unquantized case studies below do not establish their causes. See the
+[full raw report](results/raw/speculative_mt_bench_20261111T072715614993Z.json).
+
 ## Speculative decoding: current computation versus cached history
 
 Two FP16 MPS failures exposed different sources of numerical sensitivity:
