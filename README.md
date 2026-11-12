@@ -63,6 +63,12 @@ model. The new failures have not been individually diagnosed; the earlier
 unquantized case studies below do not establish their causes. See the
 [full raw report](results/raw/speculative_mt_bench_20261111T072715614993Z.json).
 
+On the same 46 prompts passing in both target configurations, FP16 speculative
+decoding took **214.47 s** versus **476.00 s** for 4-bit: quantized execution
+was **2.22x slower**, despite a larger speedup over its own baseline (2.32x
+versus 1.42x). Outputs and lengths differed across targets. See the
+[FP16 versus 4-bit comparison, linked runs and diagnostic evidence](notes/speculative_comparison/README.md).
+
 ## Speculative decoding: current computation versus cached history
 
 Two FP16 MPS failures exposed different sources of numerical sensitivity:
