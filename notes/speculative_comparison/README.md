@@ -68,6 +68,54 @@ The FP16 report's top-level speedup is 1.3853x over all 77 passing prompts.
 The 1.4225x above is recomputed on the common 46, so it differs intentionally.
 All 46 quantized passing prompts also passed in the FP16 run.
 
+## Repeated NF4 reconstruction overhead in MPS projections
+
+To investigate the slowdown, we isolated real layer-0 query, MLP up and MLP down
+projections using the same controlled synthetic inputs for each implementation.
+An untimed dispatch trace observed this path for both one-token and four-token
+inputs in all six cases:
+
+```text
+Packed NF4 weights → reconstruct full weights → ordinary FP16 multiplication
+```
+
+The optional `kernels` distribution was absent and specialized Hub kernels were
+unavailable in this diagnostic. We compared normal bitsandbytes execution with
+explicit reconstruction on every call, and with the same quantized weights
+reconstructed once before timing. Original FP16 checkpoint weights provided a
+separate latency reference.
+
+Expanded-run medians, in milliseconds per call:
+
+| Projection | Token rows | Normal 4-bit | Reconstruct each call + linear | Predecoded FP16 | Original FP16 | Normal / predecoded |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `q_proj` | 1 | 0.5278 | 0.5256 | 0.1535 | 0.1438 | 3.44x |
+| `q_proj` | 4 | 0.5618 | 0.5645 | 0.1743 | 0.1621 | 3.22x |
+| `up_proj` | 1 | 2.3930 | 2.3847 | 0.5983 | 0.5974 | 4.00x |
+| `up_proj` | 4 | 2.4130 | 2.4012 | 0.6078 | 0.6054 | 3.97x |
+| `down_proj` | 1 | 2.3928 | 2.3805 | 0.5994 | 0.5954 | 3.99x |
+| `down_proj` | 4 | 2.4202 | 2.4101 | 0.6089 | 0.6066 | 3.97x |
+
+Normal quantized execution closely matched reconstructing on every call.
+Moving reconstruction outside timing made the projections **3.22–4.00x faster**.
+All six cases passed controls: normal quantized, explicitly reconstructed and
+predecoded paths produced **exactly identical outputs**, with stable repeats and
+no trace-induced changes. This controlled intervention establishes substantial
+latency from repeated reconstruction and its associated temporary-memory work.
+It does not isolate unpacking arithmetic from allocation, memory traffic or
+other dispatch costs. Keeping predecoded FP16 matrices resident also gives up
+the compressed weight-storage benefit; it is a diagnostic, not a production fix.
+
+Evidence: [initial query-projection run](../../results/raw/mps_quantized_projection_20261113T051301196956Z.json)
+and [expanded six-case run](../../results/raw/mps_quantized_projection_20261113T051721845333Z.json).
+The [full test methodology and related research](quantized_projection_tests.md)
+include commands, individual timing samples and interpretation limits.
+
+These results strongly support reconstruction overhead as a contributor to the
+model-level slowdown. They do not establish how much of the entire **2.22x**
+inference slowdown it explains: these are isolated offline measurements, and
+the earlier generation run's exact backend dispatch was not recorded.
+
 ## Interpretation and limits
 
 These are separate runs on the same prompts, not identical-output workloads.
@@ -76,8 +124,7 @@ subset; only 5/46 prompts produced identical sequences across targets. Agreement
 within each configuration does not require agreement between the two targets.
 Neither run establishes exact correctness across all 80 prompts.
 
-Smaller weight storage does not guarantee faster execution. Dequantization and
-backend kernel selection are plausible contributors to the quantized slowdown,
-but their costs have not been profiled in these runs. The measurements establish
-a slowdown for this tested configuration, not an inherent disadvantage of 4-bit
-inference. No new model execution was used to prepare this comparison.
+Smaller weight storage does not guarantee faster execution. The reconstruction
+finding above is an engineering diagnosis of a known performance mechanism,
+not a new quantization method or evidence that 4-bit inference is inherently
+slower. See the [related papers and research significance](quantized_projection_tests.md#related-work-and-research-significance).

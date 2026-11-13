@@ -1,0 +1,1636 @@
+{
+  "status": "complete",
+  "created_utc": "20261113T051721845333Z",
+  "environment": {
+    "torch": "2.15.0",
+    "python": "3.13.12",
+    "platform": "macOS-26.4.1-arm64-arm-64bit-Mach-O",
+    "bitsandbytes": "0.50.2",
+    "kernels": null,
+    "device": "mps",
+    "dtype": "float16",
+    "cpu_threads": 8,
+    "HF_HUB_OFFLINE": "1"
+  },
+  "settings": {
+    "target": "unsloth/Qwen2.5-7B-bnb-4bit",
+    "original": "Qwen/Qwen2.5-7B",
+    "module": [
+      "model.layers.0.self_attn.q_proj",
+      "model.layers.0.mlp.up_proj",
+      "model.layers.0.mlp.down_proj"
+    ],
+    "rows": [
+      1,
+      4
+    ],
+    "warmup": 3,
+    "samples": 15,
+    "ops_per_sample": 3,
+    "output": null
+  },
+  "target_snapshot": "/Users/akarsh/.cache/huggingface/hub/models--unsloth--Qwen2.5-7B-bnb-4bit/snapshots/8664e5c8c25614048aec0b89415a5986053fde5c",
+  "original_snapshot": "/Users/akarsh/.cache/huggingface/hub/models--Qwen--Qwen2.5-7B/snapshots/d149729398750b98c0af14eb82c78cfe92750796",
+  "backend_file": "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/bitsandbytes/backends/mps/ops.py",
+  "backend_sha256": "d93a6ceb2d03359d061f61abd70d152ffed4af26bf2693d7c6d47f8470bd0770",
+  "source_sha256": "8d9fc0d0c9033445f2ba30b9b753f703ce5bba09c31a84c3fce4841ec159056e",
+  "scope": "Real isolated projection weights, controlled synthetic inputs; no full model, KV cache, draft or generation. Synchronized wall time includes launch/allocation overhead. Offline backend availability may differ from the earlier run. No whole-model causal attribution.",
+  "cases": [
+    {
+      "module": "model.layers.0.self_attn.q_proj",
+      "rows": 1,
+      "input_shape": [
+        1,
+        1,
+        3584
+      ],
+      "weight_shape": [
+        3584,
+        3584
+      ],
+      "packed_weight_bytes": 6422528,
+      "decoded_weight_bytes": 25690112,
+      "quant_type": "nf4",
+      "blocksize": 64,
+      "double_quantization": true,
+      "checkpoint_reconstruction_dtype": "torch.bfloat16",
+      "compute_and_explicit_reconstruction_dtype": "torch.float16",
+      "dispatch_trace": {
+        "available": true,
+        "counts": {
+          "hub_kernel_lookup": 2,
+          "hub_kernel_unavailable": 2,
+          "weight_reconstruction": 1,
+          "linear": 1
+        },
+        "path": "weight_reconstruction_then_linear_observed"
+      },
+      "controls": {
+        "normal_vs_predecoded": {
+          "finite": true,
+          "different_values": 0,
+          "max_abs": 0.0,
+          "within_tolerance": true
+        },
+        "reconstruct_each_vs_predecoded": {
+          "finite": true,
+          "different_values": 0,
+          "max_abs": 0.0,
+          "within_tolerance": true
+        },
+        "normal_repeat": {
+          "finite": true,
+          "different_values": 0,
+          "max_abs": 0.0,
+          "within_tolerance": true
+        },
+        "trace_vs_normal": {
+          "finite": true,
+          "different_values": 0,
+          "max_abs": 0.0,
+          "within_tolerance": true
+        }
+      },
+      "controls_passed": true,
+      "timing": {
+        "samples_ms_per_call": {
+          "normal_4bit": [
+            0.5395693394045035,
+            0.5312363306681315,
+            0.5542223031322161,
+            0.5278056487441063,
+            0.5293053109198809,
+            0.5200416004906098,
+            0.5407917002836863,
+            0.5269583004216353,
+            0.507805651674668,
+            0.5270139469454685,
+            0.5177223744491736,
+            0.5274030069510142,
+            0.5514582929511865,
+            0.5300280172377825,
+            0.5220832924048106
+          ],
+          "reconstruct_each_call": [
+            0.5208610091358423,
+            0.5266803006331126,
+            0.5266390119989713,
+            0.5255973276992639,
+            0.5463053627560536,
+            0.5478333526601394,
+            0.5320416918645302,
+            0.526653059447805,
+            0.5171390560766062,
+            0.5234583125760158,
+            0.5250696558505297,
+            0.5166806901494662,
+            0.5162640009075403,
+            0.5237360019236803,
+            0.5338750003526608
+          ],
+          "predecoded_fp16": [
+            0.1443750225007534,
+            0.15120836906135082,
+            0.15358331923683485,
+            0.15581934712827206,
+            0.18151368324955305,
+            0.1535416425516208,
+            0.17177771466473737,
+            0.15324998336533704,
+            0.150833356504639,
+            0.14965267231067023,
+            0.15298634146650633,
+            0.1539026852697134,
+            0.17740298062562943,
+            0.15187496319413185,
+            0.18062496868272623
+          ],
+          "original_fp16": [
+            0.1437639972815911,
+            0.1413886590550343,
+            0.14562501261631647,
+            0.15262498830755553,
+            0.1538886378208796,
+            0.14151368911067644,
+            0.1520139630883932,
+            0.14254163640240827,
+            0.15013866747419038,
+            0.1415697236855825,
+            0.14194434819122156,
+            0.14201396455367407,
+            0.14199999471505484,
+            0.14461134560406208,
+            0.1503473613411188
+          ],
+          "reconstruction_only": [
+            0.4231110215187073,
+            0.41777795801560086,
+            0.41924999095499516,
+            0.4397499530265729,
+            0.44474999109903973,
+            0.41116665427883464,
+            0.4158053391923507,
+            0.41829166002571583,
+            0.41098597769935924,
+            0.4307083630313476,
+            0.4344303160905838,
+            0.41679168740908307,
+            0.4149443314721187,
+            0.41716669996579486,
+            0.41677771757046383
+          ]
+        },
+        "orders": [
+          [
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only"
+          ],
+          [
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit"
+          ],
+          [
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call"
+          ],
+          [
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16"
+          ],
+          [
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16"
+          ],
+          [
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only"
+          ],
+          [
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit"
+          ],
+          [
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call"
+          ],
+          [
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16"
+          ],
+          [
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16"
+          ],
+          [
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only"
+          ],
+          [
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit"
+          ],
+          [
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call"
+          ],
+          [
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16"
+          ],
+          [
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16"
+          ]
+        ],
+        "median_ms_per_call": {
+          "normal_4bit": 0.5278056487441063,
+          "reconstruct_each_call": 0.5255973276992639,
+          "predecoded_fp16": 0.1535416425516208,
+          "original_fp16": 0.1437639972815911,
+          "reconstruction_only": 0.41777795801560086
+        }
+      },
+      "ratios": {
+        "normal_4bit_over_predecoded": 3.437540721675279,
+        "reconstruct_each_over_predecoded": 3.423158167156885,
+        "normal_4bit_over_original_fp16": 3.67133398294631,
+        "reconstruction_only_over_reconstruct_each": 0.7948631699563071
+      }
+    },
+    {
+      "module": "model.layers.0.self_attn.q_proj",
+      "rows": 4,
+      "input_shape": [
+        1,
+        4,
+        3584
+      ],
+      "weight_shape": [
+        3584,
+        3584
+      ],
+      "packed_weight_bytes": 6422528,
+      "decoded_weight_bytes": 25690112,
+      "quant_type": "nf4",
+      "blocksize": 64,
+      "double_quantization": true,
+      "checkpoint_reconstruction_dtype": "torch.bfloat16",
+      "compute_and_explicit_reconstruction_dtype": "torch.float16",
+      "dispatch_trace": {
+        "available": true,
+        "counts": {
+          "weight_reconstruction": 1,
+          "hub_kernel_lookup": 1,
+          "hub_kernel_unavailable": 1,
+          "linear": 1
+        },
+        "path": "weight_reconstruction_then_linear_observed"
+      },
+      "controls": {
+        "normal_vs_predecoded": {
+          "finite": true,
+          "different_values": 0,
+          "max_abs": 0.0,
+          "within_tolerance": true
+        },
+        "reconstruct_each_vs_predecoded": {
+          "finite": true,
+          "different_values": 0,
+          "max_abs": 0.0,
+          "within_tolerance": true
+        },
+        "normal_repeat": {
+          "finite": true,
+          "different_values": 0,
+          "max_abs": 0.0,
+          "within_tolerance": true
+        },
+        "trace_vs_normal": {
+          "finite": true,
+          "different_values": 0,
+          "max_abs": 0.0,
+          "within_tolerance": true
+        }
+      },
+      "controls_passed": true,
+      "timing": {
+        "samples_ms_per_call": {
+          "normal_4bit": [
+            0.5599860257158676,
+            0.5748056961844364,
+            0.5627082816014687,
+            0.5599583188692728,
+            0.5601806721339623,
+            0.550874974578619,
+            0.5538193508982658,
+            0.5654166452586651,
+            0.5804859877874454,
+            0.5786806189765533,
+            0.5721249617636204,
+            0.5523193006714185,
+            0.56124998567005,
+            0.561750028282404,
+            0.5884859710931778
+          ],
+          "reconstruct_each_call": [
+            0.5599029827862978,
+            0.5721666384488344,
+            0.5865279429902633,
+            0.554597315688928,
+            0.556319331129392,
+            0.577500012392799,
+            0.553749967366457,
+            0.5833057221025229,
+            0.5782363004982471,
+            0.5645416676998138,
+            0.558097381144762,
+            0.575721962377429,
+            0.5547916516661644,
+            0.5563056717316309,
+            0.5827499553561211
+          ],
+          "predecoded_fp16": [
+            0.17318067451318106,
+            0.17416663467884064,
+            0.17931933204332987,
+            0.17424998804926872,
+            0.1730000755439202,
+            0.17444432402650514,
+            0.17343065701425076,
+            0.16473598467806974,
+            0.19319433098038039,
+            0.1755276850114266,
+            0.17427800533672175,
+            0.20333332940936089,
+            0.17551394800345102,
+            0.1759999431669712,
+            0.17327768728137016
+          ],
+          "original_fp16": [
+            0.16129172096649805,
+            0.16152765601873398,
+            0.16066672590871653,
+            0.17231966679294905,
+            0.16177763851980367,
+            0.1620833451549212,
+            0.16193060825268427,
+            0.1626807109763225,
+            0.1743749404946963,
+            0.1626530041297277,
+            0.1622640217343966,
+            0.1753473188728094,
+            0.16170833259820938,
+            0.1743333414196968,
+            0.16161100938916206
+          ],
+          "reconstruction_only": [
+            0.4165696445852518,
+            0.42133335955441,
+            0.4218469839543104,
+            0.42170837211112183,
+            0.4249860066920519,
+            0.4205553171535333,
+            0.41818067741890746,
+            0.4212222993373871,
+            0.41933334432542324,
+            0.45369464593629044,
+            0.4189723016073306,
+            0.4129026395579179,
+            0.42129168286919594,
+            0.43958332389593124,
+            0.42087499362727004
+          ]
+        },
+        "orders": [
+          [
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only"
+          ],
+          [
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit"
+          ],
+          [
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call"
+          ],
+          [
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16"
+          ],
+          [
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16"
+          ],
+          [
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only"
+          ],
+          [
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit"
+          ],
+          [
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call"
+          ],
+          [
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16"
+          ],
+          [
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16"
+          ],
+          [
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only"
+          ],
+          [
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit"
+          ],
+          [
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call"
+          ],
+          [
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16"
+          ],
+          [
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16"
+          ]
+        ],
+        "median_ms_per_call": {
+          "normal_4bit": 0.561750028282404,
+          "reconstruct_each_call": 0.5645416676998138,
+          "predecoded_fp16": 0.17427800533672175,
+          "original_fp16": 0.1620833451549212,
+          "reconstruction_only": 0.4212222993373871
+        }
+      },
+      "ratios": {
+        "normal_4bit_over_predecoded": 3.223298471869983,
+        "reconstruct_each_over_predecoded": 3.239316783601381,
+        "normal_4bit_over_original_fp16": 3.4658096903508286,
+        "reconstruction_only_over_reconstruct_each": 0.7461314610374613
+      }
+    },
+    {
+      "module": "model.layers.0.mlp.up_proj",
+      "rows": 1,
+      "input_shape": [
+        1,
+        1,
+        3584
+      ],
+      "weight_shape": [
+        18944,
+        3584
+      ],
+      "packed_weight_bytes": 33947648,
+      "decoded_weight_bytes": 135790592,
+      "quant_type": "nf4",
+      "blocksize": 64,
+      "double_quantization": true,
+      "checkpoint_reconstruction_dtype": "torch.bfloat16",
+      "compute_and_explicit_reconstruction_dtype": "torch.float16",
+      "dispatch_trace": {
+        "available": true,
+        "counts": {
+          "hub_kernel_lookup": 2,
+          "hub_kernel_unavailable": 2,
+          "weight_reconstruction": 1,
+          "linear": 1
+        },
+        "path": "weight_reconstruction_then_linear_observed"
+      },
+      "controls": {
+        "normal_vs_predecoded": {
+          "finite": true,
+          "different_values": 0,
+          "max_abs": 0.0,
+          "within_tolerance": true
+        },
+        "reconstruct_each_vs_predecoded": {
+          "finite": true,
+          "different_values": 0,
+          "max_abs": 0.0,
+          "within_tolerance": true
+        },
+        "normal_repeat": {
+          "finite": true,
+          "different_values": 0,
+          "max_abs": 0.0,
+          "within_tolerance": true
+        },
+        "trace_vs_normal": {
+          "finite": true,
+          "different_values": 0,
+          "max_abs": 0.0,
+          "within_tolerance": true
+        }
+      },
+      "controls_passed": true,
+      "timing": {
+        "samples_ms_per_call": {
+          "normal_4bit": [
+            2.3915000104655824,
+            2.3968889533231654,
+            2.38975005534788,
+            2.4074860072384276,
+            2.3930276899288097,
+            2.386833308264613,
+            2.3848890171696744,
+            2.3891249826798835,
+            2.3987500462681055,
+            2.396125035981337,
+            2.3793887036542096,
+            2.3896386846899986,
+            2.395013657708963,
+            2.408402661482493,
+            2.3985416628420353
+          ],
+          "reconstruct_each_call": [
+            2.3964723416914544,
+            2.379694643119971,
+            2.3861390072852373,
+            2.4016109916071096,
+            2.389680671816071,
+            2.3823333128045,
+            2.38812497506539,
+            2.3791807082792125,
+            2.3916526697576046,
+            2.3913890278587737,
+            2.384680633743604,
+            2.37399999362727,
+            2.381472305084268,
+            2.379458397626877,
+            2.378930648167928
+          ],
+          "predecoded_fp16": [
+            0.6001389895876249,
+            0.5968333377192417,
+            0.597347350170215,
+            0.5983193404972553,
+            0.598833275338014,
+            0.6095693291475376,
+            0.5979166987041632,
+            0.5964723726113638,
+            0.6079166196286678,
+            0.6039723133047422,
+            0.5995276539276043,
+            0.5935416556894779,
+            0.5857083791246017,
+            0.6170833172897497,
+            0.589083336914579
+          ],
+          "original_fp16": [
+            0.5919859589387974,
+            0.5932499965031942,
+            0.6075693139185508,
+            0.5974446733792623,
+            0.6001110499103864,
+            0.5915139336138964,
+            0.6035557016730309,
+            0.6050696441282829,
+            0.5954719769457976,
+            0.5931109966089329,
+            0.5916803299138943,
+            0.5975139793008566,
+            0.5851666598270336,
+            0.5993056887139877,
+            0.6100280055155357
+          ],
+          "reconstruction_only": [
+            1.877305641149481,
+            1.872333309923609,
+            1.8767639994621277,
+            1.8826806917786598,
+            1.8755693454295397,
+            1.8753053154796362,
+            1.8730276885131996,
+            1.8821250026424725,
+            1.8763053230941296,
+            1.8670972591886918,
+            1.8629860132932663,
+            1.8742776786287625,
+            1.870624953880906,
+            1.8708473071455956,
+            1.871888991445303
+          ]
+        },
+        "orders": [
+          [
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only"
+          ],
+          [
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit"
+          ],
+          [
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call"
+          ],
+          [
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16"
+          ],
+          [
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16"
+          ],
+          [
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only"
+          ],
+          [
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit"
+          ],
+          [
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call"
+          ],
+          [
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16"
+          ],
+          [
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16"
+          ],
+          [
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only"
+          ],
+          [
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit"
+          ],
+          [
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call"
+          ],
+          [
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16"
+          ],
+          [
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16"
+          ]
+        ],
+        "median_ms_per_call": {
+          "normal_4bit": 2.3930276899288097,
+          "reconstruct_each_call": 2.384680633743604,
+          "predecoded_fp16": 0.5983193404972553,
+          "original_fp16": 0.5974446733792623,
+          "reconstruction_only": 1.8742776786287625
+        }
+      },
+      "ratios": {
+        "normal_4bit_over_predecoded": 3.9995827110318642,
+        "reconstruct_each_over_predecoded": 3.9856318730424585,
+        "normal_4bit_over_original_fp16": 4.005438154454342,
+        "reconstruction_only_over_reconstruct_each": 0.7859659075967825
+      }
+    },
+    {
+      "module": "model.layers.0.mlp.up_proj",
+      "rows": 4,
+      "input_shape": [
+        1,
+        4,
+        3584
+      ],
+      "weight_shape": [
+        18944,
+        3584
+      ],
+      "packed_weight_bytes": 33947648,
+      "decoded_weight_bytes": 135790592,
+      "quant_type": "nf4",
+      "blocksize": 64,
+      "double_quantization": true,
+      "checkpoint_reconstruction_dtype": "torch.bfloat16",
+      "compute_and_explicit_reconstruction_dtype": "torch.float16",
+      "dispatch_trace": {
+        "available": true,
+        "counts": {
+          "weight_reconstruction": 1,
+          "hub_kernel_lookup": 1,
+          "hub_kernel_unavailable": 1,
+          "linear": 1
+        },
+        "path": "weight_reconstruction_then_linear_observed"
+      },
+      "controls": {
+        "normal_vs_predecoded": {
+          "finite": true,
+          "different_values": 0,
+          "max_abs": 0.0,
+          "within_tolerance": true
+        },
+        "reconstruct_each_vs_predecoded": {
+          "finite": true,
+          "different_values": 0,
+          "max_abs": 0.0,
+          "within_tolerance": true
+        },
+        "normal_repeat": {
+          "finite": true,
+          "different_values": 0,
+          "max_abs": 0.0,
+          "within_tolerance": true
+        },
+        "trace_vs_normal": {
+          "finite": true,
+          "different_values": 0,
+          "max_abs": 0.0,
+          "within_tolerance": true
+        }
+      },
+      "controls_passed": true,
+      "timing": {
+        "samples_ms_per_call": {
+          "normal_4bit": [
+            2.4272780089328685,
+            2.4151113660385213,
+            2.4129863207538924,
+            2.4181249706695476,
+            2.3989720114817223,
+            2.4313473453124366,
+            2.4366386545201144,
+            2.389013689632217,
+            2.409319315726558,
+            2.399736006433765,
+            2.4142639401058354,
+            2.4079306361575923,
+            2.4168193340301514,
+            2.409250009804964,
+            2.405402638639013
+          ],
+          "reconstruct_each_call": [
+            2.4125276443858943,
+            2.401194302365184,
+            2.4011110266049704,
+            2.394569649671515,
+            2.3990973519782224,
+            2.402722369879484,
+            2.4089859798550606,
+            2.4069583353896937,
+            2.402208357428511,
+            2.3861249598364034,
+            2.4109582882374525,
+            2.3913056744883456,
+            2.4025000166147947,
+            2.39762500859797,
+            2.4006526606778302
+          ],
+          "predecoded_fp16": [
+            0.6091527175158262,
+            0.6088750281681617,
+            0.6288610553989807,
+            0.5984723878403505,
+            0.5973609319577614,
+            0.606833336253961,
+            0.6134167003134886,
+            0.6246943958103657,
+            0.6019303109496832,
+            0.5937916381905476,
+            0.6114447023719549,
+            0.6160279735922813,
+            0.6077780077854792,
+            0.606846995651722,
+            0.6069999653846025
+          ],
+          "original_fp16": [
+            0.6123750160137812,
+            0.6243056462456783,
+            0.5928333072612683,
+            0.6140139885246754,
+            0.5871943819026152,
+            0.6052639801055193,
+            0.6020553410053253,
+            0.5991110422958931,
+            0.6062223110347986,
+            0.6010276265442371,
+            0.6054167170077562,
+            0.6046666918943325,
+            0.6064442762484153,
+            0.6070553790777922,
+            0.6076946544150511
+          ],
+          "reconstruction_only": [
+            1.8813333008438349,
+            1.8792639796932538,
+            1.8682916803906362,
+            1.8780833731094997,
+            1.869833329692483,
+            1.8726666457951069,
+            1.8701249888787668,
+            1.8668056776126225,
+            1.870430385073026,
+            1.8657083467890818,
+            1.8749306133637826,
+            1.8735556708027918,
+            1.8687780636052291,
+            1.8719719567646582,
+            1.874097002049287
+          ]
+        },
+        "orders": [
+          [
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only"
+          ],
+          [
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit"
+          ],
+          [
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call"
+          ],
+          [
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16"
+          ],
+          [
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16"
+          ],
+          [
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only"
+          ],
+          [
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit"
+          ],
+          [
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call"
+          ],
+          [
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16"
+          ],
+          [
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16"
+          ],
+          [
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only"
+          ],
+          [
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit"
+          ],
+          [
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call"
+          ],
+          [
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16"
+          ],
+          [
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16"
+          ]
+        ],
+        "median_ms_per_call": {
+          "normal_4bit": 2.4129863207538924,
+          "reconstruct_each_call": 2.401194302365184,
+          "predecoded_fp16": 0.6077780077854792,
+          "original_fp16": 0.6054167170077562,
+          "reconstruction_only": 1.8719719567646582
+        }
+      },
+      "ratios": {
+        "normal_4bit_over_predecoded": 3.970177087430215,
+        "reconstruct_each_over_predecoded": 3.9507752363634507,
+        "normal_4bit_over_original_fp16": 3.985661863914106,
+        "reconstruction_only_over_reconstruct_each": 0.7796003659182267
+      }
+    },
+    {
+      "module": "model.layers.0.mlp.down_proj",
+      "rows": 1,
+      "input_shape": [
+        1,
+        1,
+        18944
+      ],
+      "weight_shape": [
+        3584,
+        18944
+      ],
+      "packed_weight_bytes": 33947648,
+      "decoded_weight_bytes": 135790592,
+      "quant_type": "nf4",
+      "blocksize": 64,
+      "double_quantization": true,
+      "checkpoint_reconstruction_dtype": "torch.bfloat16",
+      "compute_and_explicit_reconstruction_dtype": "torch.float16",
+      "dispatch_trace": {
+        "available": true,
+        "counts": {
+          "hub_kernel_lookup": 2,
+          "hub_kernel_unavailable": 2,
+          "weight_reconstruction": 1,
+          "linear": 1
+        },
+        "path": "weight_reconstruction_then_linear_observed"
+      },
+      "controls": {
+        "normal_vs_predecoded": {
+          "finite": true,
+          "different_values": 0,
+          "max_abs": 0.0,
+          "within_tolerance": true
+        },
+        "reconstruct_each_vs_predecoded": {
+          "finite": true,
+          "different_values": 0,
+          "max_abs": 0.0,
+          "within_tolerance": true
+        },
+        "normal_repeat": {
+          "finite": true,
+          "different_values": 0,
+          "max_abs": 0.0,
+          "within_tolerance": true
+        },
+        "trace_vs_normal": {
+          "finite": true,
+          "different_values": 0,
+          "max_abs": 0.0,
+          "within_tolerance": true
+        }
+      },
+      "controls_passed": true,
+      "timing": {
+        "samples_ms_per_call": {
+          "normal_4bit": [
+            2.3850276290128627,
+            2.398749968657891,
+            2.411430701613426,
+            2.3818332701921463,
+            2.3892640601843596,
+            2.398402662947774,
+            2.396444712455074,
+            2.3894583185513816,
+            2.386305325975021,
+            2.3928333539515734,
+            2.3880970353881517,
+            2.3978193445752063,
+            2.391777622203032,
+            2.3949026751021543,
+            2.394778033097585
+          ],
+          "reconstruct_each_call": [
+            2.4197916500270367,
+            2.4356943710396686,
+            2.377028033758203,
+            2.384444698691368,
+            2.3789030189315477,
+            2.3818889943261943,
+            2.3840416688472033,
+            2.3936803142229715,
+            2.3749443547179303,
+            2.3795973199109235,
+            2.3804999267061553,
+            2.3805416810015836,
+            2.3820416536182165,
+            2.3779446880022683,
+            2.378749971588453
+          ],
+          "predecoded_fp16": [
+            0.6072362884879112,
+            0.5785970327754816,
+            0.6024030347665151,
+            0.5965973250567913,
+            0.601430656388402,
+            0.5931803801407417,
+            0.5996526839832464,
+            0.6021529746552309,
+            0.5998333605627219,
+            0.599416671320796,
+            0.5978056384871403,
+            0.5939166682461897,
+            0.5942363447199265,
+            0.586166667441527,
+            0.6091113512714704
+          ],
+          "original_fp16": [
+            0.5900970039268335,
+            0.5726109569271406,
+            0.5991943956663212,
+            0.6003750022500753,
+            0.5921526656796535,
+            0.5928333848714828,
+            0.6154583922276894,
+            0.5962359718978405,
+            0.5957780716319879,
+            0.5953609943389893,
+            0.595110934227705,
+            0.5940556681404511,
+            0.6119026026378075,
+            0.6227916261802117,
+            0.5814306593189636
+          ],
+          "reconstruction_only": [
+            1.8702083422491949,
+            1.868638675659895,
+            1.873902976512909,
+            1.8681943571815889,
+            1.8709859965989988,
+            1.870513738443454,
+            1.8729443351427715,
+            1.8715000090499718,
+            1.8632082889477413,
+            1.8826525968809922,
+            1.8582780224581559,
+            1.8604583262155454,
+            1.8751526561876137,
+            1.8733469769358635,
+            1.8770416888097923
+          ]
+        },
+        "orders": [
+          [
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only"
+          ],
+          [
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit"
+          ],
+          [
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call"
+          ],
+          [
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16"
+          ],
+          [
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16"
+          ],
+          [
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only"
+          ],
+          [
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit"
+          ],
+          [
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call"
+          ],
+          [
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16"
+          ],
+          [
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16"
+          ],
+          [
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only"
+          ],
+          [
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit"
+          ],
+          [
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call"
+          ],
+          [
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16"
+          ],
+          [
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16"
+          ]
+        ],
+        "median_ms_per_call": {
+          "normal_4bit": 2.3928333539515734,
+          "reconstruct_each_call": 2.3805416810015836,
+          "predecoded_fp16": 0.599416671320796,
+          "original_fp16": 0.5953609943389893,
+          "reconstruction_only": 1.8709859965989988
+        }
+      },
+      "ratios": {
+        "normal_4bit_over_predecoded": 3.991936608434729,
+        "reconstruct_each_over_predecoded": 3.9714305505653256,
+        "normal_4bit_over_original_fp16": 4.019130202858287,
+        "reconstruction_only_over_reconstruct_each": 0.7859496901611924
+      }
+    },
+    {
+      "module": "model.layers.0.mlp.down_proj",
+      "rows": 4,
+      "input_shape": [
+        1,
+        4,
+        18944
+      ],
+      "weight_shape": [
+        3584,
+        18944
+      ],
+      "packed_weight_bytes": 33947648,
+      "decoded_weight_bytes": 135790592,
+      "quant_type": "nf4",
+      "blocksize": 64,
+      "double_quantization": true,
+      "checkpoint_reconstruction_dtype": "torch.bfloat16",
+      "compute_and_explicit_reconstruction_dtype": "torch.float16",
+      "dispatch_trace": {
+        "available": true,
+        "counts": {
+          "weight_reconstruction": 1,
+          "hub_kernel_lookup": 1,
+          "hub_kernel_unavailable": 1,
+          "linear": 1
+        },
+        "path": "weight_reconstruction_then_linear_observed"
+      },
+      "controls": {
+        "normal_vs_predecoded": {
+          "finite": true,
+          "different_values": 0,
+          "max_abs": 0.0,
+          "within_tolerance": true
+        },
+        "reconstruct_each_vs_predecoded": {
+          "finite": true,
+          "different_values": 0,
+          "max_abs": 0.0,
+          "within_tolerance": true
+        },
+        "normal_repeat": {
+          "finite": true,
+          "different_values": 0,
+          "max_abs": 0.0,
+          "within_tolerance": true
+        },
+        "trace_vs_normal": {
+          "finite": true,
+          "different_values": 0,
+          "max_abs": 0.0,
+          "within_tolerance": true
+        }
+      },
+      "controls_passed": true,
+      "timing": {
+        "samples_ms_per_call": {
+          "normal_4bit": [
+            2.455569338053465,
+            2.434444303313891,
+            2.4033610243350267,
+            2.4161943389723697,
+            2.4342916440218687,
+            2.4109723356862864,
+            2.4209863816698394,
+            2.42561132957538,
+            2.4132083635777235,
+            2.4201803219815097,
+            2.42493061038355,
+            2.4051389967401824,
+            2.411680296063423,
+            2.417166717350483,
+            2.421388945852717
+          ],
+          "reconstruct_each_call": [
+            2.426152971262733,
+            2.4101390348126492,
+            2.4010693499197564,
+            2.4145416294535003,
+            2.4235416979839406,
+            2.405944357936581,
+            2.4067359821250043,
+            2.407139011969169,
+            2.4064306635409594,
+            2.411527714381615,
+            2.4100833106786013,
+            2.408902704094847,
+            2.418221983437737,
+            2.406291663646698,
+            2.417486005773147
+          ],
+          "predecoded_fp16": [
+            0.6112776851902405,
+            0.6049303337931633,
+            0.6089166272431612,
+            0.6125416451444229,
+            0.6117777278025945,
+            0.6268056264768044,
+            0.6150276555369297,
+            0.6065280176699162,
+            0.6452222975591818,
+            0.6023056339472532,
+            0.6073473487049341,
+            0.6004166789352894,
+            0.5904306502391895,
+            0.6286666418115298,
+            0.597319332882762
+          ],
+          "original_fp16": [
+            0.6106387202938398,
+            0.6162359689672788,
+            0.6061249878257513,
+            0.6105416299154361,
+            0.606374970326821,
+            0.627944323544701,
+            0.6050556742896637,
+            0.6038473608593146,
+            0.6066112934301296,
+            0.6123333393285671,
+            0.6105973540494839,
+            0.603958343466123,
+            0.5876387003809214,
+            0.6199443402389685,
+            0.5963333727171024
+          ],
+          "reconstruction_only": [
+            1.871930668130517,
+            1.8800140048066776,
+            1.8776666062573593,
+            1.8717780088384945,
+            1.8714723798135917,
+            1.8781667264799278,
+            1.893944339826703,
+            1.8707083072513342,
+            1.891514053568244,
+            1.8748749668399494,
+            1.875624991953373,
+            1.8948332872241735,
+            1.8774583004415035,
+            1.869833329692483,
+            1.8829723509649436
+          ]
+        },
+        "orders": [
+          [
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only"
+          ],
+          [
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit"
+          ],
+          [
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call"
+          ],
+          [
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16"
+          ],
+          [
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16"
+          ],
+          [
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only"
+          ],
+          [
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit"
+          ],
+          [
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call"
+          ],
+          [
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16"
+          ],
+          [
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16"
+          ],
+          [
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only"
+          ],
+          [
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit"
+          ],
+          [
+            "predecoded_fp16",
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call"
+          ],
+          [
+            "original_fp16",
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16"
+          ],
+          [
+            "reconstruction_only",
+            "normal_4bit",
+            "reconstruct_each_call",
+            "predecoded_fp16",
+            "original_fp16"
+          ]
+        ],
+        "median_ms_per_call": {
+          "normal_4bit": 2.4201803219815097,
+          "reconstruct_each_call": 2.4100833106786013,
+          "predecoded_fp16": 0.6089166272431612,
+          "original_fp16": 0.6066112934301296,
+          "reconstruction_only": 1.8774583004415035
+        }
+      },
+      "ratios": {
+        "normal_4bit_over_predecoded": 3.974567639807689,
+        "reconstruct_each_over_predecoded": 3.957985712412108,
+        "normal_4bit_over_original_fp16": 3.989672378660173,
+        "reconstruction_only_over_reconstruct_each": 0.7790014113299977
+      }
+    }
+  ]
+}

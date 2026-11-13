@@ -69,6 +69,13 @@ was **2.22x slower**, despite a larger speedup over its own baseline (2.32x
 versus 1.42x). Outputs and lengths differed across targets. See the
 [FP16 versus 4-bit comparison, linked runs and diagnostic evidence](notes/speculative_comparison/README.md).
 
+Subsequent MPS projection diagnostics observed repeated NF4 reconstruction
+followed by FP16 linear multiplication in all six tested query/up/down cases.
+Moving reconstruction outside timing reduced latency by **3.22–4.00x** with
+identical outputs. This establishes operator-level overhead; attribution of the
+entire inference slowdown remains unresolved. See the
+[measurements, linked raw runs and related work](notes/speculative_comparison/quantized_projection_tests.md#observed-results-november-13-2026).
+
 ## Speculative decoding: current computation versus cached history
 
 Two FP16 MPS failures exposed different sources of numerical sensitivity:
