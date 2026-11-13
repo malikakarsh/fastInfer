@@ -83,6 +83,11 @@ See [commands and detailed methodology](speculative_mt_bench.md). Any remedy
 must preserve token agreement across cache construction, sequential decode and
 block verification, then be measured for its performance cost.
 
+A [four-way history/execution diagnostic with passing controls](speculative_history_cases.md)
+is prepared for user execution on both FP16 and NF4 targets. It collects
+evidence for the history-aware repair hypothesis; it does not implement a
+predictor or establish a successful precision repair.
+
 Related reading: [finite-precision speculative losslessness](https://arxiv.org/abs/2609.15504),
 [numerical reproducibility and LayerCast](https://arxiv.org/abs/2506.09501), and
 [precision-sensitive greedy decoding](https://arxiv.org/abs/2609.26621).

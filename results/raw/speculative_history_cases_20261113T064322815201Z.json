@@ -1,0 +1,6571 @@
+{
+  "status": "complete",
+  "source_report": "/Users/akarsh/Documents/projects/fastInfer/fastinfer/results/raw/speculative_mt_bench_20261111T072715614993Z.json",
+  "source_report_sha256": "b81fea4f1de06ed30b8e952a94534e2d4374454ed2b159ee5ae1757def7a269f",
+  "plan": {
+    "entries": [
+      {
+        "id": 147,
+        "category": "stem",
+        "group": "saved_failure",
+        "decision_token_1_based": 4,
+        "selection": "evenly spaced ranks of first mismatch positions"
+      },
+      {
+        "id": 151,
+        "category": "humanities",
+        "group": "saved_failure",
+        "decision_token_1_based": 46,
+        "selection": "evenly spaced ranks of first mismatch positions"
+      },
+      {
+        "id": 146,
+        "category": "stem",
+        "group": "saved_failure",
+        "decision_token_1_based": 128,
+        "selection": "evenly spaced ranks of first mismatch positions"
+      },
+      {
+        "id": 145,
+        "category": "stem",
+        "group": "saved_pass_control",
+        "decision_token_1_based": 4,
+        "matched_failure_id": 147,
+        "same_decision_position": true,
+        "selection": "available passing prompt; prefer matching position, category, prompt length"
+      },
+      {
+        "id": 153,
+        "category": "humanities",
+        "group": "saved_pass_control",
+        "decision_token_1_based": 46,
+        "matched_failure_id": 151,
+        "same_decision_position": true,
+        "selection": "available passing prompt; prefer matching position, category, prompt length"
+      },
+      {
+        "id": 142,
+        "category": "stem",
+        "group": "saved_pass_control",
+        "decision_token_1_based": 128,
+        "matched_failure_id": 146,
+        "same_decision_position": true,
+        "selection": "available passing prompt; prefer matching position, category, prompt length"
+      }
+    ],
+    "excluded": [],
+    "note": "Selected cases are a diagnostic sample, not a failure-rate estimate or predictor evaluation."
+  },
+  "environment": {
+    "torch": "2.15.0",
+    "transformers": "5.22.1",
+    "bitsandbytes": "0.50.2",
+    "accelerate": "1.15.0",
+    "python": "3.13.12",
+    "platform": "macOS-26.4.1-arm64-arm-64bit-Mach-O",
+    "device": "mps",
+    "dtype": "torch.float16",
+    "attention": "sdpa"
+  },
+  "source_sha256": {
+    "benchmarks/speculative_history_cases.py": "1cc1eb649fb74810479d7c08b136204e3382baedf20cb94ab89b475ee56b7b35",
+    "benchmarks/speculative_failure_trace.py": "dfa53c4afe4c8773fcb2f20063f1195b742e5f2252035ba6711fcc3599a8a0f8",
+    "benchmarks/speculative_divergence.py": "c1d1bd10db694573e8be3284f2ea86f9afdc065747bfc0e48ddf150302d1bd8d",
+    "benchmarks/speculative_mt_bench.py": "bc935650b88b33380911c26663beecf5c5d87c8d2eb4623246e855fdb31818cf",
+    "speculative_cached.py": "4542787096f8542415cd5fba40e0e47944a428d97c299a6ebe36962038a290bb"
+  },
+  "scope": "Selected accuracy replays only; no timing or predictor performance. Synthetic cache perturbations are not used. Passing controls are selected before new inference. No precision repair is tested.",
+  "cases": [
+    {
+      "id": 147,
+      "category": "stem",
+      "group": "saved_failure",
+      "decision_token_1_based": 4,
+      "selection": "evenly spaced ranks of first mismatch positions",
+      "status": "complete",
+      "baseline_repeat_matches": true,
+      "baseline_matches_saved": true,
+      "observed_decision_token_1_based": 4,
+      "earlier_divergence_than_planned": false,
+      "tokens_agree_at_observed_decision": false,
+      "verification_context": {
+        "phase": "verification",
+        "prefix_token_ids": [
+          14582,
+          25,
+          576,
+          3283,
+          315,
+          64606,
+          43230,
+          311,
+          1936,
+          264,
+          14164,
+          429,
+          686,
+          9390,
+          279,
+          89913,
+          6721,
+          10948,
+          11,
+          18202,
+          264,
+          6010,
+          315,
+          220,
+          16,
+          13,
+          23,
+          40568,
+          13,
+          576,
+          10981,
+          3728,
+          17066,
+          2878,
+          264,
+          511,
+          2142,
+          2673,
+          4541,
+          3082,
+          429,
+          702,
+          10321,
+          3807,
+          1550,
+          1448,
+          34715,
+          65479,
+          13,
+          16246,
+          1493,
+          13161,
+          11,
+          1128,
+          1035,
+          387,
+          279,
+          1850,
+          5486,
+          311,
+          49353,
+          279,
+          14164,
+          5267,
+          16141,
+          25,
+          362,
+          13
+        ],
+        "input_token_ids": [
+          18678,
+          279,
+          14164,
+          1667
+        ],
+        "row": 0,
+        "baseline_token": 279,
+        "speculative_token": 287,
+        "emission_source": "correction"
+      },
+      "observations_available_during_speculation": {
+        "current_top_two_gap": 0.125,
+        "current_block_length": 4,
+        "verification_row": 0,
+        "verification_lengths_so_far": [
+          4,
+          4
+        ],
+        "cache_prefix_length": 68
+      },
+      "four_way": {
+        "status": "complete",
+        "controls": {
+          "all_restored_cache_values_match": true,
+          "ordinary_serial_reproduces_baseline_logits": true,
+          "speculative_block_reproduces_actual_logits": true,
+          "all_repeats_exact": true,
+          "lineage_passed": true,
+          "positions_observed_and_correct": true,
+          "retained_cache_values_preserved": true
+        },
+        "cells": {
+          "ordinary_serial": [
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 279,
+              "argmax_text": " the",
+              "top_two_gap": 0.0,
+              "baseline_token_score": 26.625,
+              "speculative_token_score": 26.625,
+              "baseline_minus_speculative_score": 0.0,
+              "top10": [
+                {
+                  "id": 287,
+                  "text": "ing",
+                  "logit": 26.625
+                },
+                {
+                  "id": 279,
+                  "text": " the",
+                  "logit": 26.625
+                },
+                {
+                  "id": 264,
+                  "text": " a",
+                  "logit": 25.625
+                },
+                {
+                  "id": 458,
+                  "text": " an",
+                  "logit": 22.75
+                },
+                {
+                  "id": 2041,
+                  "text": " without",
+                  "logit": 22.375
+                },
+                {
+                  "id": 1667,
+                  "text": " using",
+                  "logit": 21.75
+                },
+                {
+                  "id": 448,
+                  "text": " with",
+                  "logit": 21.625
+                },
+                {
+                  "id": 432,
+                  "text": " it",
+                  "logit": 21.5
+                },
+                {
+                  "id": 1172,
+                  "text": " only",
+                  "logit": 20.75
+                },
+                {
+                  "id": 304,
+                  "text": " in",
+                  "logit": 20.125
+                }
+              ]
+            },
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 279,
+              "argmax_text": " the",
+              "top_two_gap": 0.0,
+              "baseline_token_score": 26.625,
+              "speculative_token_score": 26.625,
+              "baseline_minus_speculative_score": 0.0,
+              "top10": [
+                {
+                  "id": 287,
+                  "text": "ing",
+                  "logit": 26.625
+                },
+                {
+                  "id": 279,
+                  "text": " the",
+                  "logit": 26.625
+                },
+                {
+                  "id": 264,
+                  "text": " a",
+                  "logit": 25.625
+                },
+                {
+                  "id": 458,
+                  "text": " an",
+                  "logit": 22.75
+                },
+                {
+                  "id": 2041,
+                  "text": " without",
+                  "logit": 22.375
+                },
+                {
+                  "id": 1667,
+                  "text": " using",
+                  "logit": 21.75
+                },
+                {
+                  "id": 448,
+                  "text": " with",
+                  "logit": 21.625
+                },
+                {
+                  "id": 432,
+                  "text": " it",
+                  "logit": 21.5
+                },
+                {
+                  "id": 1172,
+                  "text": " only",
+                  "logit": 20.75
+                },
+                {
+                  "id": 304,
+                  "text": " in",
+                  "logit": 20.125
+                }
+              ]
+            }
+          ],
+          "ordinary_block": [
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 279,
+              "argmax_text": " the",
+              "top_two_gap": 0.0,
+              "baseline_token_score": 26.625,
+              "speculative_token_score": 26.625,
+              "baseline_minus_speculative_score": 0.0,
+              "top10": [
+                {
+                  "id": 287,
+                  "text": "ing",
+                  "logit": 26.625
+                },
+                {
+                  "id": 279,
+                  "text": " the",
+                  "logit": 26.625
+                },
+                {
+                  "id": 264,
+                  "text": " a",
+                  "logit": 25.625
+                },
+                {
+                  "id": 458,
+                  "text": " an",
+                  "logit": 22.625
+                },
+                {
+                  "id": 2041,
+                  "text": " without",
+                  "logit": 22.375
+                },
+                {
+                  "id": 1667,
+                  "text": " using",
+                  "logit": 21.625
+                },
+                {
+                  "id": 448,
+                  "text": " with",
+                  "logit": 21.625
+                },
+                {
+                  "id": 432,
+                  "text": " it",
+                  "logit": 21.375
+                },
+                {
+                  "id": 1172,
+                  "text": " only",
+                  "logit": 20.75
+                },
+                {
+                  "id": 304,
+                  "text": " in",
+                  "logit": 20.125
+                }
+              ]
+            },
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 279,
+              "argmax_text": " the",
+              "top_two_gap": 0.0,
+              "baseline_token_score": 26.625,
+              "speculative_token_score": 26.625,
+              "baseline_minus_speculative_score": 0.0,
+              "top10": [
+                {
+                  "id": 287,
+                  "text": "ing",
+                  "logit": 26.625
+                },
+                {
+                  "id": 279,
+                  "text": " the",
+                  "logit": 26.625
+                },
+                {
+                  "id": 264,
+                  "text": " a",
+                  "logit": 25.625
+                },
+                {
+                  "id": 458,
+                  "text": " an",
+                  "logit": 22.625
+                },
+                {
+                  "id": 2041,
+                  "text": " without",
+                  "logit": 22.375
+                },
+                {
+                  "id": 1667,
+                  "text": " using",
+                  "logit": 21.625
+                },
+                {
+                  "id": 448,
+                  "text": " with",
+                  "logit": 21.625
+                },
+                {
+                  "id": 432,
+                  "text": " it",
+                  "logit": 21.375
+                },
+                {
+                  "id": 1172,
+                  "text": " only",
+                  "logit": 20.75
+                },
+                {
+                  "id": 304,
+                  "text": " in",
+                  "logit": 20.125
+                }
+              ]
+            }
+          ],
+          "speculative_serial": [
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 287,
+              "argmax_text": "ing",
+              "top_two_gap": 0.125,
+              "baseline_token_score": 26.625,
+              "speculative_token_score": 26.75,
+              "baseline_minus_speculative_score": -0.125,
+              "top10": [
+                {
+                  "id": 287,
+                  "text": "ing",
+                  "logit": 26.75
+                },
+                {
+                  "id": 279,
+                  "text": " the",
+                  "logit": 26.625
+                },
+                {
+                  "id": 264,
+                  "text": " a",
+                  "logit": 25.625
+                },
+                {
+                  "id": 458,
+                  "text": " an",
+                  "logit": 22.75
+                },
+                {
+                  "id": 2041,
+                  "text": " without",
+                  "logit": 22.375
+                },
+                {
+                  "id": 448,
+                  "text": " with",
+                  "logit": 21.625
+                },
+                {
+                  "id": 1667,
+                  "text": " using",
+                  "logit": 21.625
+                },
+                {
+                  "id": 432,
+                  "text": " it",
+                  "logit": 21.5
+                },
+                {
+                  "id": 1172,
+                  "text": " only",
+                  "logit": 20.75
+                },
+                {
+                  "id": 304,
+                  "text": " in",
+                  "logit": 20.125
+                }
+              ]
+            },
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 287,
+              "argmax_text": "ing",
+              "top_two_gap": 0.125,
+              "baseline_token_score": 26.625,
+              "speculative_token_score": 26.75,
+              "baseline_minus_speculative_score": -0.125,
+              "top10": [
+                {
+                  "id": 287,
+                  "text": "ing",
+                  "logit": 26.75
+                },
+                {
+                  "id": 279,
+                  "text": " the",
+                  "logit": 26.625
+                },
+                {
+                  "id": 264,
+                  "text": " a",
+                  "logit": 25.625
+                },
+                {
+                  "id": 458,
+                  "text": " an",
+                  "logit": 22.75
+                },
+                {
+                  "id": 2041,
+                  "text": " without",
+                  "logit": 22.375
+                },
+                {
+                  "id": 448,
+                  "text": " with",
+                  "logit": 21.625
+                },
+                {
+                  "id": 1667,
+                  "text": " using",
+                  "logit": 21.625
+                },
+                {
+                  "id": 432,
+                  "text": " it",
+                  "logit": 21.5
+                },
+                {
+                  "id": 1172,
+                  "text": " only",
+                  "logit": 20.75
+                },
+                {
+                  "id": 304,
+                  "text": " in",
+                  "logit": 20.125
+                }
+              ]
+            }
+          ],
+          "speculative_block": [
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 287,
+              "argmax_text": "ing",
+              "top_two_gap": 0.125,
+              "baseline_token_score": 26.5,
+              "speculative_token_score": 26.625,
+              "baseline_minus_speculative_score": -0.125,
+              "top10": [
+                {
+                  "id": 287,
+                  "text": "ing",
+                  "logit": 26.625
+                },
+                {
+                  "id": 279,
+                  "text": " the",
+                  "logit": 26.5
+                },
+                {
+                  "id": 264,
+                  "text": " a",
+                  "logit": 25.5
+                },
+                {
+                  "id": 458,
+                  "text": " an",
+                  "logit": 22.625
+                },
+                {
+                  "id": 2041,
+                  "text": " without",
+                  "logit": 22.25
+                },
+                {
+                  "id": 1667,
+                  "text": " using",
+                  "logit": 21.625
+                },
+                {
+                  "id": 448,
+                  "text": " with",
+                  "logit": 21.5
+                },
+                {
+                  "id": 432,
+                  "text": " it",
+                  "logit": 21.375
+                },
+                {
+                  "id": 1172,
+                  "text": " only",
+                  "logit": 20.625
+                },
+                {
+                  "id": 304,
+                  "text": " in",
+                  "logit": 20.0
+                }
+              ]
+            },
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 287,
+              "argmax_text": "ing",
+              "top_two_gap": 0.125,
+              "baseline_token_score": 26.5,
+              "speculative_token_score": 26.625,
+              "baseline_minus_speculative_score": -0.125,
+              "top10": [
+                {
+                  "id": 287,
+                  "text": "ing",
+                  "logit": 26.625
+                },
+                {
+                  "id": 279,
+                  "text": " the",
+                  "logit": 26.5
+                },
+                {
+                  "id": 264,
+                  "text": " a",
+                  "logit": 25.5
+                },
+                {
+                  "id": 458,
+                  "text": " an",
+                  "logit": 22.625
+                },
+                {
+                  "id": 2041,
+                  "text": " without",
+                  "logit": 22.25
+                },
+                {
+                  "id": 1667,
+                  "text": " using",
+                  "logit": 21.625
+                },
+                {
+                  "id": 448,
+                  "text": " with",
+                  "logit": 21.5
+                },
+                {
+                  "id": 432,
+                  "text": " it",
+                  "logit": 21.375
+                },
+                {
+                  "id": 1172,
+                  "text": " only",
+                  "logit": 20.625
+                },
+                {
+                  "id": 304,
+                  "text": " in",
+                  "logit": 20.0
+                }
+              ]
+            }
+          ]
+        },
+        "logit_comparisons": {
+          "shape_with_ordinary_cache": {
+            "max_abs_logit_difference": 0.25,
+            "mean_abs_logit_difference": 0.044439297169446945,
+            "different_logit_values": 130294,
+            "argmax_matches": true
+          },
+          "shape_with_speculative_cache": {
+            "max_abs_logit_difference": 0.1875,
+            "mean_abs_logit_difference": 0.020684143528342247,
+            "different_logit_values": 104884,
+            "argmax_matches": true
+          },
+          "history_with_serial_execution": {
+            "max_abs_logit_difference": 0.1875,
+            "mean_abs_logit_difference": 0.03450992703437805,
+            "different_logit_values": 125329,
+            "argmax_matches": false
+          },
+          "history_with_block_execution": {
+            "max_abs_logit_difference": 0.125,
+            "mean_abs_logit_difference": 0.019248105585575104,
+            "different_logit_values": 101733,
+            "argmax_matches": false
+          }
+        },
+        "winner_pattern": "cache_history_winner_effect_only",
+        "oracle_only_cache_distance": [
+          {
+            "layer": 0,
+            "keys": {
+              "elements": 34816,
+              "different_values": 0,
+              "max_abs": 0.0
+            },
+            "values": {
+              "elements": 34816,
+              "different_values": 1,
+              "max_abs": 7.62939453125e-06
+            }
+          },
+          {
+            "layer": 1,
+            "keys": {
+              "elements": 34816,
+              "different_values": 31,
+              "max_abs": 0.03125
+            },
+            "values": {
+              "elements": 34816,
+              "different_values": 130,
+              "max_abs": 0.001953125
+            }
+          },
+          {
+            "layer": 2,
+            "keys": {
+              "elements": 34816,
+              "different_values": 228,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 34816,
+              "different_values": 339,
+              "max_abs": 0.0078125
+            }
+          },
+          {
+            "layer": 3,
+            "keys": {
+              "elements": 34816,
+              "different_values": 236,
+              "max_abs": 0.125
+            },
+            "values": {
+              "elements": 34816,
+              "different_values": 358,
+              "max_abs": 0.00390625
+            }
+          },
+          {
+            "layer": 4,
+            "keys": {
+              "elements": 34816,
+              "different_values": 280,
+              "max_abs": 0.03125
+            },
+            "values": {
+              "elements": 34816,
+              "different_values": 403,
+              "max_abs": 0.015625
+            }
+          },
+          {
+            "layer": 5,
+            "keys": {
+              "elements": 34816,
+              "different_values": 355,
+              "max_abs": 0.03125
+            },
+            "values": {
+              "elements": 34816,
+              "different_values": 458,
+              "max_abs": 0.01171875
+            }
+          },
+          {
+            "layer": 6,
+            "keys": {
+              "elements": 34816,
+              "different_values": 466,
+              "max_abs": 0.03125
+            },
+            "values": {
+              "elements": 34816,
+              "different_values": 686,
+              "max_abs": 0.015625
+            }
+          },
+          {
+            "layer": 7,
+            "keys": {
+              "elements": 34816,
+              "different_values": 597,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 34816,
+              "different_values": 804,
+              "max_abs": 0.0234375
+            }
+          },
+          {
+            "layer": 8,
+            "keys": {
+              "elements": 34816,
+              "different_values": 652,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 34816,
+              "different_values": 800,
+              "max_abs": 0.017578125
+            }
+          },
+          {
+            "layer": 9,
+            "keys": {
+              "elements": 34816,
+              "different_values": 688,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 34816,
+              "different_values": 866,
+              "max_abs": 0.03125
+            }
+          },
+          {
+            "layer": 10,
+            "keys": {
+              "elements": 34816,
+              "different_values": 644,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 34816,
+              "different_values": 835,
+              "max_abs": 0.01953125
+            }
+          },
+          {
+            "layer": 11,
+            "keys": {
+              "elements": 34816,
+              "different_values": 670,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 34816,
+              "different_values": 824,
+              "max_abs": 0.015625
+            }
+          },
+          {
+            "layer": 12,
+            "keys": {
+              "elements": 34816,
+              "different_values": 726,
+              "max_abs": 0.03125
+            },
+            "values": {
+              "elements": 34816,
+              "different_values": 846,
+              "max_abs": 0.021484375
+            }
+          },
+          {
+            "layer": 13,
+            "keys": {
+              "elements": 34816,
+              "different_values": 712,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 34816,
+              "different_values": 883,
+              "max_abs": 0.0234375
+            }
+          },
+          {
+            "layer": 14,
+            "keys": {
+              "elements": 34816,
+              "different_values": 742,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 34816,
+              "different_values": 887,
+              "max_abs": 0.0234375
+            }
+          },
+          {
+            "layer": 15,
+            "keys": {
+              "elements": 34816,
+              "different_values": 707,
+              "max_abs": 0.03125
+            },
+            "values": {
+              "elements": 34816,
+              "different_values": 835,
+              "max_abs": 0.01806640625
+            }
+          },
+          {
+            "layer": 16,
+            "keys": {
+              "elements": 34816,
+              "different_values": 707,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 34816,
+              "different_values": 854,
+              "max_abs": 0.0234375
+            }
+          },
+          {
+            "layer": 17,
+            "keys": {
+              "elements": 34816,
+              "different_values": 730,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 34816,
+              "different_values": 851,
+              "max_abs": 0.0234375
+            }
+          },
+          {
+            "layer": 18,
+            "keys": {
+              "elements": 34816,
+              "different_values": 688,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 34816,
+              "different_values": 887,
+              "max_abs": 0.038330078125
+            }
+          },
+          {
+            "layer": 19,
+            "keys": {
+              "elements": 34816,
+              "different_values": 709,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 34816,
+              "different_values": 866,
+              "max_abs": 0.03125
+            }
+          },
+          {
+            "layer": 20,
+            "keys": {
+              "elements": 34816,
+              "different_values": 749,
+              "max_abs": 0.03125
+            },
+            "values": {
+              "elements": 34816,
+              "different_values": 868,
+              "max_abs": 0.02734375
+            }
+          },
+          {
+            "layer": 21,
+            "keys": {
+              "elements": 34816,
+              "different_values": 708,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 34816,
+              "different_values": 878,
+              "max_abs": 0.0390625
+            }
+          },
+          {
+            "layer": 22,
+            "keys": {
+              "elements": 34816,
+              "different_values": 743,
+              "max_abs": 0.046875
+            },
+            "values": {
+              "elements": 34816,
+              "different_values": 838,
+              "max_abs": 0.0390625
+            }
+          },
+          {
+            "layer": 23,
+            "keys": {
+              "elements": 34816,
+              "different_values": 736,
+              "max_abs": 0.03125
+            },
+            "values": {
+              "elements": 34816,
+              "different_values": 854,
+              "max_abs": 0.0390625
+            }
+          },
+          {
+            "layer": 24,
+            "keys": {
+              "elements": 34816,
+              "different_values": 754,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 34816,
+              "different_values": 846,
+              "max_abs": 0.0625
+            }
+          },
+          {
+            "layer": 25,
+            "keys": {
+              "elements": 34816,
+              "different_values": 768,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 34816,
+              "different_values": 891,
+              "max_abs": 0.078125
+            }
+          },
+          {
+            "layer": 26,
+            "keys": {
+              "elements": 34816,
+              "different_values": 810,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 34816,
+              "different_values": 888,
+              "max_abs": 0.10546875
+            }
+          },
+          {
+            "layer": 27,
+            "keys": {
+              "elements": 34816,
+              "different_values": 780,
+              "max_abs": 0.125
+            },
+            "values": {
+              "elements": 34816,
+              "different_values": 893,
+              "max_abs": 0.125
+            }
+          }
+        ],
+        "watched_ids": [
+          279,
+          287
+        ],
+        "note": "A winner pattern describes this decision only. Cache construction changes prior arithmetic; cache differences alone are not bugs or deployable predictor features. No FP32 repair is tested."
+      }
+    },
+    {
+      "id": 151,
+      "category": "humanities",
+      "group": "saved_failure",
+      "decision_token_1_based": 46,
+      "selection": "evenly spaced ranks of first mismatch positions",
+      "status": "complete",
+      "baseline_repeat_matches": true,
+      "baseline_matches_saved": true,
+      "observed_decision_token_1_based": 46,
+      "earlier_divergence_than_planned": false,
+      "tokens_agree_at_observed_decision": false,
+      "verification_context": {
+        "phase": "verification",
+        "prefix_token_ids": [
+          14582,
+          25,
+          39565,
+          25709,
+          1119,
+          279,
+          25588,
+          1948,
+          6955,
+          33724,
+          1741,
+          438,
+          29730,
+          11,
+          24527,
+          11,
+          323,
+          25608,
+          7813,
+          13,
+          81917,
+          1246,
+          19743,
+          323,
+          32284,
+          10186,
+          7802,
+          1846,
+          33724,
+          624,
+          16141,
+          25,
+          22546,
+          33724,
+          1741,
+          438,
+          29730,
+          11,
+          24527,
+          11,
+          323,
+          25608,
+          7813,
+          525,
+          16587,
+          369,
+          8660,
+          279,
+          2820,
+          315,
+          458,
+          8584,
+          13,
+          29730,
+          320,
+          38,
+          2128,
+          51749,
+          5643,
+          8,
+          10953,
+          279,
+          2790,
+          897,
+          315,
+          11561,
+          323,
+          3516,
+          8947,
+          2878,
+          264,
+          3146,
+          594,
+          23806
+        ],
+        "input_token_ids": [
+          11,
+          1393,
+          24527,
+          10953
+        ],
+        "row": 2,
+        "baseline_token": 10953,
+        "speculative_token": 19257,
+        "emission_source": "correction"
+      },
+      "observations_available_during_speculation": {
+        "current_top_two_gap": 0.125,
+        "current_block_length": 4,
+        "verification_row": 2,
+        "verification_lengths_so_far": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "cache_prefix_length": 74
+      },
+      "four_way": {
+        "status": "complete",
+        "controls": {
+          "all_restored_cache_values_match": true,
+          "ordinary_serial_reproduces_baseline_logits": true,
+          "speculative_block_reproduces_actual_logits": true,
+          "all_repeats_exact": true,
+          "lineage_passed": true,
+          "positions_observed_and_correct": true,
+          "retained_cache_values_preserved": true
+        },
+        "cells": {
+          "ordinary_serial": [
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 10953,
+              "argmax_text": " measures",
+              "top_two_gap": 0.0,
+              "baseline_token_score": 25.375,
+              "speculative_token_score": 25.375,
+              "baseline_minus_speculative_score": 0.0,
+              "top10": [
+                {
+                  "id": 10953,
+                  "text": " measures",
+                  "logit": 25.375
+                },
+                {
+                  "id": 19257,
+                  "text": " refers",
+                  "logit": 25.375
+                },
+                {
+                  "id": 25963,
+                  "text": " reflects",
+                  "logit": 25.0
+                },
+                {
+                  "id": 14807,
+                  "text": " indicates",
+                  "logit": 24.75
+                },
+                {
+                  "id": 10868,
+                  "text": " represents",
+                  "logit": 24.5
+                },
+                {
+                  "id": 7813,
+                  "text": " rates",
+                  "logit": 24.125
+                },
+                {
+                  "id": 374,
+                  "text": " is",
+                  "logit": 24.125
+                },
+                {
+                  "id": 13918,
+                  "text": " tracks",
+                  "logit": 23.25
+                },
+                {
+                  "id": 13510,
+                  "text": " ga",
+                  "logit": 23.0
+                },
+                {
+                  "id": 4379,
+                  "text": " rate",
+                  "logit": 22.25
+                }
+              ]
+            },
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 10953,
+              "argmax_text": " measures",
+              "top_two_gap": 0.0,
+              "baseline_token_score": 25.375,
+              "speculative_token_score": 25.375,
+              "baseline_minus_speculative_score": 0.0,
+              "top10": [
+                {
+                  "id": 10953,
+                  "text": " measures",
+                  "logit": 25.375
+                },
+                {
+                  "id": 19257,
+                  "text": " refers",
+                  "logit": 25.375
+                },
+                {
+                  "id": 25963,
+                  "text": " reflects",
+                  "logit": 25.0
+                },
+                {
+                  "id": 14807,
+                  "text": " indicates",
+                  "logit": 24.75
+                },
+                {
+                  "id": 10868,
+                  "text": " represents",
+                  "logit": 24.5
+                },
+                {
+                  "id": 7813,
+                  "text": " rates",
+                  "logit": 24.125
+                },
+                {
+                  "id": 374,
+                  "text": " is",
+                  "logit": 24.125
+                },
+                {
+                  "id": 13918,
+                  "text": " tracks",
+                  "logit": 23.25
+                },
+                {
+                  "id": 13510,
+                  "text": " ga",
+                  "logit": 23.0
+                },
+                {
+                  "id": 4379,
+                  "text": " rate",
+                  "logit": 22.25
+                }
+              ]
+            }
+          ],
+          "ordinary_block": [
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 10953,
+              "argmax_text": " measures",
+              "top_two_gap": 0.0,
+              "baseline_token_score": 25.25,
+              "speculative_token_score": 25.25,
+              "baseline_minus_speculative_score": 0.0,
+              "top10": [
+                {
+                  "id": 10953,
+                  "text": " measures",
+                  "logit": 25.25
+                },
+                {
+                  "id": 19257,
+                  "text": " refers",
+                  "logit": 25.25
+                },
+                {
+                  "id": 25963,
+                  "text": " reflects",
+                  "logit": 24.875
+                },
+                {
+                  "id": 14807,
+                  "text": " indicates",
+                  "logit": 24.625
+                },
+                {
+                  "id": 10868,
+                  "text": " represents",
+                  "logit": 24.375
+                },
+                {
+                  "id": 7813,
+                  "text": " rates",
+                  "logit": 24.0
+                },
+                {
+                  "id": 374,
+                  "text": " is",
+                  "logit": 24.0
+                },
+                {
+                  "id": 13918,
+                  "text": " tracks",
+                  "logit": 23.125
+                },
+                {
+                  "id": 13510,
+                  "text": " ga",
+                  "logit": 23.0
+                },
+                {
+                  "id": 4379,
+                  "text": " rate",
+                  "logit": 22.125
+                }
+              ]
+            },
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 10953,
+              "argmax_text": " measures",
+              "top_two_gap": 0.0,
+              "baseline_token_score": 25.25,
+              "speculative_token_score": 25.25,
+              "baseline_minus_speculative_score": 0.0,
+              "top10": [
+                {
+                  "id": 10953,
+                  "text": " measures",
+                  "logit": 25.25
+                },
+                {
+                  "id": 19257,
+                  "text": " refers",
+                  "logit": 25.25
+                },
+                {
+                  "id": 25963,
+                  "text": " reflects",
+                  "logit": 24.875
+                },
+                {
+                  "id": 14807,
+                  "text": " indicates",
+                  "logit": 24.625
+                },
+                {
+                  "id": 10868,
+                  "text": " represents",
+                  "logit": 24.375
+                },
+                {
+                  "id": 7813,
+                  "text": " rates",
+                  "logit": 24.0
+                },
+                {
+                  "id": 374,
+                  "text": " is",
+                  "logit": 24.0
+                },
+                {
+                  "id": 13918,
+                  "text": " tracks",
+                  "logit": 23.125
+                },
+                {
+                  "id": 13510,
+                  "text": " ga",
+                  "logit": 23.0
+                },
+                {
+                  "id": 4379,
+                  "text": " rate",
+                  "logit": 22.125
+                }
+              ]
+            }
+          ],
+          "speculative_serial": [
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 10953,
+              "argmax_text": " measures",
+              "top_two_gap": 0.0,
+              "baseline_token_score": 25.25,
+              "speculative_token_score": 25.25,
+              "baseline_minus_speculative_score": 0.0,
+              "top10": [
+                {
+                  "id": 10953,
+                  "text": " measures",
+                  "logit": 25.25
+                },
+                {
+                  "id": 19257,
+                  "text": " refers",
+                  "logit": 25.25
+                },
+                {
+                  "id": 25963,
+                  "text": " reflects",
+                  "logit": 24.875
+                },
+                {
+                  "id": 14807,
+                  "text": " indicates",
+                  "logit": 24.625
+                },
+                {
+                  "id": 10868,
+                  "text": " represents",
+                  "logit": 24.5
+                },
+                {
+                  "id": 7813,
+                  "text": " rates",
+                  "logit": 24.0
+                },
+                {
+                  "id": 374,
+                  "text": " is",
+                  "logit": 24.0
+                },
+                {
+                  "id": 13918,
+                  "text": " tracks",
+                  "logit": 23.125
+                },
+                {
+                  "id": 13510,
+                  "text": " ga",
+                  "logit": 23.0
+                },
+                {
+                  "id": 4379,
+                  "text": " rate",
+                  "logit": 22.25
+                }
+              ]
+            },
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 10953,
+              "argmax_text": " measures",
+              "top_two_gap": 0.0,
+              "baseline_token_score": 25.25,
+              "speculative_token_score": 25.25,
+              "baseline_minus_speculative_score": 0.0,
+              "top10": [
+                {
+                  "id": 10953,
+                  "text": " measures",
+                  "logit": 25.25
+                },
+                {
+                  "id": 19257,
+                  "text": " refers",
+                  "logit": 25.25
+                },
+                {
+                  "id": 25963,
+                  "text": " reflects",
+                  "logit": 24.875
+                },
+                {
+                  "id": 14807,
+                  "text": " indicates",
+                  "logit": 24.625
+                },
+                {
+                  "id": 10868,
+                  "text": " represents",
+                  "logit": 24.5
+                },
+                {
+                  "id": 7813,
+                  "text": " rates",
+                  "logit": 24.0
+                },
+                {
+                  "id": 374,
+                  "text": " is",
+                  "logit": 24.0
+                },
+                {
+                  "id": 13918,
+                  "text": " tracks",
+                  "logit": 23.125
+                },
+                {
+                  "id": 13510,
+                  "text": " ga",
+                  "logit": 23.0
+                },
+                {
+                  "id": 4379,
+                  "text": " rate",
+                  "logit": 22.25
+                }
+              ]
+            }
+          ],
+          "speculative_block": [
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 19257,
+              "argmax_text": " refers",
+              "top_two_gap": 0.125,
+              "baseline_token_score": 25.125,
+              "speculative_token_score": 25.25,
+              "baseline_minus_speculative_score": -0.125,
+              "top10": [
+                {
+                  "id": 19257,
+                  "text": " refers",
+                  "logit": 25.25
+                },
+                {
+                  "id": 10953,
+                  "text": " measures",
+                  "logit": 25.125
+                },
+                {
+                  "id": 25963,
+                  "text": " reflects",
+                  "logit": 24.875
+                },
+                {
+                  "id": 14807,
+                  "text": " indicates",
+                  "logit": 24.625
+                },
+                {
+                  "id": 10868,
+                  "text": " represents",
+                  "logit": 24.375
+                },
+                {
+                  "id": 7813,
+                  "text": " rates",
+                  "logit": 23.875
+                },
+                {
+                  "id": 374,
+                  "text": " is",
+                  "logit": 23.875
+                },
+                {
+                  "id": 13918,
+                  "text": " tracks",
+                  "logit": 23.0
+                },
+                {
+                  "id": 13510,
+                  "text": " ga",
+                  "logit": 22.875
+                },
+                {
+                  "id": 4379,
+                  "text": " rate",
+                  "logit": 22.125
+                }
+              ]
+            },
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 19257,
+              "argmax_text": " refers",
+              "top_two_gap": 0.125,
+              "baseline_token_score": 25.125,
+              "speculative_token_score": 25.25,
+              "baseline_minus_speculative_score": -0.125,
+              "top10": [
+                {
+                  "id": 19257,
+                  "text": " refers",
+                  "logit": 25.25
+                },
+                {
+                  "id": 10953,
+                  "text": " measures",
+                  "logit": 25.125
+                },
+                {
+                  "id": 25963,
+                  "text": " reflects",
+                  "logit": 24.875
+                },
+                {
+                  "id": 14807,
+                  "text": " indicates",
+                  "logit": 24.625
+                },
+                {
+                  "id": 10868,
+                  "text": " represents",
+                  "logit": 24.375
+                },
+                {
+                  "id": 7813,
+                  "text": " rates",
+                  "logit": 23.875
+                },
+                {
+                  "id": 374,
+                  "text": " is",
+                  "logit": 23.875
+                },
+                {
+                  "id": 13918,
+                  "text": " tracks",
+                  "logit": 23.0
+                },
+                {
+                  "id": 13510,
+                  "text": " ga",
+                  "logit": 22.875
+                },
+                {
+                  "id": 4379,
+                  "text": " rate",
+                  "logit": 22.125
+                }
+              ]
+            }
+          ]
+        },
+        "logit_comparisons": {
+          "shape_with_ordinary_cache": {
+            "max_abs_logit_difference": 0.25,
+            "mean_abs_logit_difference": 0.05767689272761345,
+            "different_logit_values": 148986,
+            "argmax_matches": true
+          },
+          "shape_with_speculative_cache": {
+            "max_abs_logit_difference": 0.25,
+            "mean_abs_logit_difference": 0.03223726525902748,
+            "different_logit_values": 136001,
+            "argmax_matches": false
+          },
+          "history_with_serial_execution": {
+            "max_abs_logit_difference": 0.25,
+            "mean_abs_logit_difference": 0.055055201053619385,
+            "different_logit_values": 148198,
+            "argmax_matches": true
+          },
+          "history_with_block_execution": {
+            "max_abs_logit_difference": 0.1875,
+            "mean_abs_logit_difference": 0.030563194304704666,
+            "different_logit_values": 133516,
+            "argmax_matches": false
+          }
+        },
+        "winner_pattern": "both_factors_or_interaction",
+        "oracle_only_cache_distance": [
+          {
+            "layer": 0,
+            "keys": {
+              "elements": 37888,
+              "different_values": 0,
+              "max_abs": 0.0
+            },
+            "values": {
+              "elements": 37888,
+              "different_values": 3,
+              "max_abs": 7.62939453125e-06
+            }
+          },
+          {
+            "layer": 1,
+            "keys": {
+              "elements": 37888,
+              "different_values": 425,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 37888,
+              "different_values": 1839,
+              "max_abs": 0.0078125
+            }
+          },
+          {
+            "layer": 2,
+            "keys": {
+              "elements": 37888,
+              "different_values": 5977,
+              "max_abs": 0.125
+            },
+            "values": {
+              "elements": 37888,
+              "different_values": 10499,
+              "max_abs": 0.015625
+            }
+          },
+          {
+            "layer": 3,
+            "keys": {
+              "elements": 37888,
+              "different_values": 8177,
+              "max_abs": 0.25
+            },
+            "values": {
+              "elements": 37888,
+              "different_values": 13490,
+              "max_abs": 0.015625
+            }
+          },
+          {
+            "layer": 4,
+            "keys": {
+              "elements": 37888,
+              "different_values": 11208,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 37888,
+              "different_values": 14787,
+              "max_abs": 0.015625
+            }
+          },
+          {
+            "layer": 5,
+            "keys": {
+              "elements": 37888,
+              "different_values": 12767,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 37888,
+              "different_values": 15928,
+              "max_abs": 0.03125
+            }
+          },
+          {
+            "layer": 6,
+            "keys": {
+              "elements": 37888,
+              "different_values": 13110,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 37888,
+              "different_values": 16774,
+              "max_abs": 0.020751953125
+            }
+          },
+          {
+            "layer": 7,
+            "keys": {
+              "elements": 37888,
+              "different_values": 13253,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 37888,
+              "different_values": 17377,
+              "max_abs": 0.03125
+            }
+          },
+          {
+            "layer": 8,
+            "keys": {
+              "elements": 37888,
+              "different_values": 13488,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 37888,
+              "different_values": 16860,
+              "max_abs": 0.03125
+            }
+          },
+          {
+            "layer": 9,
+            "keys": {
+              "elements": 37888,
+              "different_values": 13757,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 37888,
+              "different_values": 17662,
+              "max_abs": 0.03515625
+            }
+          },
+          {
+            "layer": 10,
+            "keys": {
+              "elements": 37888,
+              "different_values": 14040,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 37888,
+              "different_values": 17066,
+              "max_abs": 0.03125
+            }
+          },
+          {
+            "layer": 11,
+            "keys": {
+              "elements": 37888,
+              "different_values": 14268,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 37888,
+              "different_values": 16945,
+              "max_abs": 0.03125
+            }
+          },
+          {
+            "layer": 12,
+            "keys": {
+              "elements": 37888,
+              "different_values": 14548,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 37888,
+              "different_values": 17504,
+              "max_abs": 0.046875
+            }
+          },
+          {
+            "layer": 13,
+            "keys": {
+              "elements": 37888,
+              "different_values": 14525,
+              "max_abs": 0.25
+            },
+            "values": {
+              "elements": 37888,
+              "different_values": 17726,
+              "max_abs": 0.0390625
+            }
+          },
+          {
+            "layer": 14,
+            "keys": {
+              "elements": 37888,
+              "different_values": 14996,
+              "max_abs": 0.078125
+            },
+            "values": {
+              "elements": 37888,
+              "different_values": 17631,
+              "max_abs": 0.03125
+            }
+          },
+          {
+            "layer": 15,
+            "keys": {
+              "elements": 37888,
+              "different_values": 14758,
+              "max_abs": 0.125
+            },
+            "values": {
+              "elements": 37888,
+              "different_values": 17474,
+              "max_abs": 0.046875
+            }
+          },
+          {
+            "layer": 16,
+            "keys": {
+              "elements": 37888,
+              "different_values": 15150,
+              "max_abs": 0.078125
+            },
+            "values": {
+              "elements": 37888,
+              "different_values": 17894,
+              "max_abs": 0.0390625
+            }
+          },
+          {
+            "layer": 17,
+            "keys": {
+              "elements": 37888,
+              "different_values": 15669,
+              "max_abs": 0.07421875
+            },
+            "values": {
+              "elements": 37888,
+              "different_values": 17960,
+              "max_abs": 0.0625
+            }
+          },
+          {
+            "layer": 18,
+            "keys": {
+              "elements": 37888,
+              "different_values": 15244,
+              "max_abs": 0.09375
+            },
+            "values": {
+              "elements": 37888,
+              "different_values": 18308,
+              "max_abs": 0.078125
+            }
+          },
+          {
+            "layer": 19,
+            "keys": {
+              "elements": 37888,
+              "different_values": 15360,
+              "max_abs": 0.25
+            },
+            "values": {
+              "elements": 37888,
+              "different_values": 17797,
+              "max_abs": 0.048828125
+            }
+          },
+          {
+            "layer": 20,
+            "keys": {
+              "elements": 37888,
+              "different_values": 15125,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 37888,
+              "different_values": 17619,
+              "max_abs": 0.045166015625
+            }
+          },
+          {
+            "layer": 21,
+            "keys": {
+              "elements": 37888,
+              "different_values": 15016,
+              "max_abs": 0.09375
+            },
+            "values": {
+              "elements": 37888,
+              "different_values": 17542,
+              "max_abs": 0.0625
+            }
+          },
+          {
+            "layer": 22,
+            "keys": {
+              "elements": 37888,
+              "different_values": 15449,
+              "max_abs": 0.078125
+            },
+            "values": {
+              "elements": 37888,
+              "different_values": 17636,
+              "max_abs": 0.0625
+            }
+          },
+          {
+            "layer": 23,
+            "keys": {
+              "elements": 37888,
+              "different_values": 15238,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 37888,
+              "different_values": 17838,
+              "max_abs": 0.078125
+            }
+          },
+          {
+            "layer": 24,
+            "keys": {
+              "elements": 37888,
+              "different_values": 15659,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 37888,
+              "different_values": 17391,
+              "max_abs": 0.09375
+            }
+          },
+          {
+            "layer": 25,
+            "keys": {
+              "elements": 37888,
+              "different_values": 15886,
+              "max_abs": 0.06640625
+            },
+            "values": {
+              "elements": 37888,
+              "different_values": 17869,
+              "max_abs": 0.109375
+            }
+          },
+          {
+            "layer": 26,
+            "keys": {
+              "elements": 37888,
+              "different_values": 16220,
+              "max_abs": 0.09375
+            },
+            "values": {
+              "elements": 37888,
+              "different_values": 18165,
+              "max_abs": 0.203125
+            }
+          },
+          {
+            "layer": 27,
+            "keys": {
+              "elements": 37888,
+              "different_values": 15549,
+              "max_abs": 2.0
+            },
+            "values": {
+              "elements": 37888,
+              "different_values": 18499,
+              "max_abs": 0.234375
+            }
+          }
+        ],
+        "watched_ids": [
+          10953,
+          19257
+        ],
+        "note": "A winner pattern describes this decision only. Cache construction changes prior arithmetic; cache differences alone are not bugs or deployable predictor features. No FP32 repair is tested."
+      }
+    },
+    {
+      "id": 146,
+      "category": "stem",
+      "group": "saved_failure",
+      "decision_token_1_based": 128,
+      "selection": "evenly spaced ranks of first mismatch positions",
+      "status": "complete",
+      "baseline_repeat_matches": true,
+      "baseline_matches_saved": true,
+      "observed_decision_token_1_based": 128,
+      "earlier_divergence_than_planned": false,
+      "tokens_agree_at_observed_decision": false,
+      "verification_context": {
+        "phase": "verification",
+        "prefix_token_ids": [
+          14582,
+          25,
+          5209,
+          10339,
+          279,
+          11799,
+          1948,
+          505,
+          1575,
+          21220,
+          323,
+          835,
+          1575,
+          21220,
+          24473,
+          11,
+          323,
+          2924,
+          279,
+          12890,
+          498,
+          1483,
+          311,
+          32037,
+          1948,
+          1105,
+          13,
+          22406,
+          11,
+          4486,
+          3410,
+          264,
+          1931,
+          30084,
+          3110,
+          311,
+          40368,
+          697,
+          16148,
+          624,
+          16141,
+          25,
+          1374,
+          1575,
+          21220,
+          323,
+          835,
+          1575,
+          21220,
+          24473,
+          525,
+          1378,
+          4494,
+          315,
+          11483,
+          24473,
+          429,
+          1745,
+          304,
+          279,
+          1616,
+          807,
+          8317,
+          4802,
+          13,
+          1374,
+          1575,
+          21220,
+          24473,
+          4879,
+          4802,
+          304,
+          279,
+          1352,
+          315,
+          8628,
+          11,
+          3100,
+          11,
+          476,
+          5112,
+          11,
+          1393,
+          835,
+          1575,
+          21220,
+          24473,
+          34306,
+          4802,
+          504,
+          862,
+          39090,
+          13,
+          576,
+          12890,
+          1483,
+          311,
+          32037,
+          1948,
+          1105,
+          374,
+          279,
+          2297,
+          304,
+          1197,
+          11866,
+          3288,
+          320,
+          144665,
+          39,
+          8,
+          315,
+          279,
+          12720,
+          13,
+          1416,
+          81163,
+          39,
+          374,
+          8225,
+          11,
+          279,
+          12720,
+          374,
+          505,
+          1575,
+          21220,
+          11,
+          323,
+          421,
+          81163,
+          39,
+          374,
+          6785,
+          11,
+          279,
+          12720,
+          374,
+          835,
+          1575,
+          21220,
+          13,
+          362,
+          1931,
+          30084,
+          3110,
+          315,
+          458,
+          505,
+          1575,
+          21220,
+          12720,
+          374,
+          279,
+          58233,
+          315,
+          45495,
+          304,
+          264,
+          1803,
+          4712,
+          11,
+          892,
+          19232,
+          264,
+          3460,
+          3311,
+          315
+        ],
+        "input_token_ids": [
+          8628,
+          323
+        ],
+        "row": 0,
+        "baseline_token": 4802,
+        "speculative_token": 323,
+        "emission_source": "accepted_proposal"
+      },
+      "observations_available_during_speculation": {
+        "current_top_two_gap": 0.0,
+        "current_block_length": 2,
+        "verification_row": 0,
+        "verification_lengths_so_far": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          2
+        ],
+        "cache_prefix_length": 168
+      },
+      "four_way": {
+        "status": "complete",
+        "controls": {
+          "all_restored_cache_values_match": true,
+          "ordinary_serial_reproduces_baseline_logits": true,
+          "speculative_block_reproduces_actual_logits": true,
+          "all_repeats_exact": true,
+          "lineage_passed": true,
+          "positions_observed_and_correct": true,
+          "retained_cache_values_preserved": true
+        },
+        "cells": {
+          "ordinary_serial": [
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 4802,
+              "argmax_text": " energy",
+              "top_two_gap": 0.125,
+              "baseline_token_score": 29.375,
+              "speculative_token_score": 29.25,
+              "baseline_minus_speculative_score": 0.125,
+              "top10": [
+                {
+                  "id": 4802,
+                  "text": " energy",
+                  "logit": 29.375
+                },
+                {
+                  "id": 323,
+                  "text": " and",
+                  "logit": 29.25
+                },
+                {
+                  "id": 13,
+                  "text": ".",
+                  "logit": 28.75
+                },
+                {
+                  "id": 11,
+                  "text": ",",
+                  "logit": 26.5
+                },
+                {
+                  "id": 438,
+                  "text": " as",
+                  "logit": 25.875
+                },
+                {
+                  "id": 311,
+                  "text": " to",
+                  "logit": 25.625
+                },
+                {
+                  "id": 624,
+                  "text": ".\n",
+                  "logit": 25.5
+                },
+                {
+                  "id": 304,
+                  "text": " in",
+                  "logit": 25.375
+                },
+                {
+                  "id": 382,
+                  "text": ".\n\n",
+                  "logit": 24.875
+                },
+                {
+                  "id": 429,
+                  "text": " that",
+                  "logit": 24.375
+                }
+              ]
+            },
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 4802,
+              "argmax_text": " energy",
+              "top_two_gap": 0.125,
+              "baseline_token_score": 29.375,
+              "speculative_token_score": 29.25,
+              "baseline_minus_speculative_score": 0.125,
+              "top10": [
+                {
+                  "id": 4802,
+                  "text": " energy",
+                  "logit": 29.375
+                },
+                {
+                  "id": 323,
+                  "text": " and",
+                  "logit": 29.25
+                },
+                {
+                  "id": 13,
+                  "text": ".",
+                  "logit": 28.75
+                },
+                {
+                  "id": 11,
+                  "text": ",",
+                  "logit": 26.5
+                },
+                {
+                  "id": 438,
+                  "text": " as",
+                  "logit": 25.875
+                },
+                {
+                  "id": 311,
+                  "text": " to",
+                  "logit": 25.625
+                },
+                {
+                  "id": 624,
+                  "text": ".\n",
+                  "logit": 25.5
+                },
+                {
+                  "id": 304,
+                  "text": " in",
+                  "logit": 25.375
+                },
+                {
+                  "id": 382,
+                  "text": ".\n\n",
+                  "logit": 24.875
+                },
+                {
+                  "id": 429,
+                  "text": " that",
+                  "logit": 24.375
+                }
+              ]
+            }
+          ],
+          "ordinary_block": [
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 4802,
+              "argmax_text": " energy",
+              "top_two_gap": 0.125,
+              "baseline_token_score": 29.375,
+              "speculative_token_score": 29.25,
+              "baseline_minus_speculative_score": 0.125,
+              "top10": [
+                {
+                  "id": 4802,
+                  "text": " energy",
+                  "logit": 29.375
+                },
+                {
+                  "id": 323,
+                  "text": " and",
+                  "logit": 29.25
+                },
+                {
+                  "id": 13,
+                  "text": ".",
+                  "logit": 28.75
+                },
+                {
+                  "id": 11,
+                  "text": ",",
+                  "logit": 26.5
+                },
+                {
+                  "id": 438,
+                  "text": " as",
+                  "logit": 25.75
+                },
+                {
+                  "id": 311,
+                  "text": " to",
+                  "logit": 25.625
+                },
+                {
+                  "id": 624,
+                  "text": ".\n",
+                  "logit": 25.5
+                },
+                {
+                  "id": 304,
+                  "text": " in",
+                  "logit": 25.25
+                },
+                {
+                  "id": 382,
+                  "text": ".\n\n",
+                  "logit": 24.75
+                },
+                {
+                  "id": 429,
+                  "text": " that",
+                  "logit": 24.375
+                }
+              ]
+            },
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 4802,
+              "argmax_text": " energy",
+              "top_two_gap": 0.125,
+              "baseline_token_score": 29.375,
+              "speculative_token_score": 29.25,
+              "baseline_minus_speculative_score": 0.125,
+              "top10": [
+                {
+                  "id": 4802,
+                  "text": " energy",
+                  "logit": 29.375
+                },
+                {
+                  "id": 323,
+                  "text": " and",
+                  "logit": 29.25
+                },
+                {
+                  "id": 13,
+                  "text": ".",
+                  "logit": 28.75
+                },
+                {
+                  "id": 11,
+                  "text": ",",
+                  "logit": 26.5
+                },
+                {
+                  "id": 438,
+                  "text": " as",
+                  "logit": 25.75
+                },
+                {
+                  "id": 311,
+                  "text": " to",
+                  "logit": 25.625
+                },
+                {
+                  "id": 624,
+                  "text": ".\n",
+                  "logit": 25.5
+                },
+                {
+                  "id": 304,
+                  "text": " in",
+                  "logit": 25.25
+                },
+                {
+                  "id": 382,
+                  "text": ".\n\n",
+                  "logit": 24.75
+                },
+                {
+                  "id": 429,
+                  "text": " that",
+                  "logit": 24.375
+                }
+              ]
+            }
+          ],
+          "speculative_serial": [
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 4802,
+              "argmax_text": " energy",
+              "top_two_gap": 0.125,
+              "baseline_token_score": 29.25,
+              "speculative_token_score": 29.125,
+              "baseline_minus_speculative_score": 0.125,
+              "top10": [
+                {
+                  "id": 4802,
+                  "text": " energy",
+                  "logit": 29.25
+                },
+                {
+                  "id": 323,
+                  "text": " and",
+                  "logit": 29.125
+                },
+                {
+                  "id": 13,
+                  "text": ".",
+                  "logit": 28.625
+                },
+                {
+                  "id": 11,
+                  "text": ",",
+                  "logit": 26.375
+                },
+                {
+                  "id": 438,
+                  "text": " as",
+                  "logit": 25.625
+                },
+                {
+                  "id": 311,
+                  "text": " to",
+                  "logit": 25.5
+                },
+                {
+                  "id": 624,
+                  "text": ".\n",
+                  "logit": 25.25
+                },
+                {
+                  "id": 304,
+                  "text": " in",
+                  "logit": 25.0
+                },
+                {
+                  "id": 382,
+                  "text": ".\n\n",
+                  "logit": 24.625
+                },
+                {
+                  "id": 429,
+                  "text": " that",
+                  "logit": 24.25
+                }
+              ]
+            },
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 4802,
+              "argmax_text": " energy",
+              "top_two_gap": 0.125,
+              "baseline_token_score": 29.25,
+              "speculative_token_score": 29.125,
+              "baseline_minus_speculative_score": 0.125,
+              "top10": [
+                {
+                  "id": 4802,
+                  "text": " energy",
+                  "logit": 29.25
+                },
+                {
+                  "id": 323,
+                  "text": " and",
+                  "logit": 29.125
+                },
+                {
+                  "id": 13,
+                  "text": ".",
+                  "logit": 28.625
+                },
+                {
+                  "id": 11,
+                  "text": ",",
+                  "logit": 26.375
+                },
+                {
+                  "id": 438,
+                  "text": " as",
+                  "logit": 25.625
+                },
+                {
+                  "id": 311,
+                  "text": " to",
+                  "logit": 25.5
+                },
+                {
+                  "id": 624,
+                  "text": ".\n",
+                  "logit": 25.25
+                },
+                {
+                  "id": 304,
+                  "text": " in",
+                  "logit": 25.0
+                },
+                {
+                  "id": 382,
+                  "text": ".\n\n",
+                  "logit": 24.625
+                },
+                {
+                  "id": 429,
+                  "text": " that",
+                  "logit": 24.25
+                }
+              ]
+            }
+          ],
+          "speculative_block": [
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 323,
+              "argmax_text": " and",
+              "top_two_gap": 0.0,
+              "baseline_token_score": 29.375,
+              "speculative_token_score": 29.375,
+              "baseline_minus_speculative_score": 0.0,
+              "top10": [
+                {
+                  "id": 323,
+                  "text": " and",
+                  "logit": 29.375
+                },
+                {
+                  "id": 4802,
+                  "text": " energy",
+                  "logit": 29.375
+                },
+                {
+                  "id": 13,
+                  "text": ".",
+                  "logit": 28.75
+                },
+                {
+                  "id": 11,
+                  "text": ",",
+                  "logit": 26.5
+                },
+                {
+                  "id": 438,
+                  "text": " as",
+                  "logit": 25.75
+                },
+                {
+                  "id": 311,
+                  "text": " to",
+                  "logit": 25.625
+                },
+                {
+                  "id": 624,
+                  "text": ".\n",
+                  "logit": 25.375
+                },
+                {
+                  "id": 304,
+                  "text": " in",
+                  "logit": 25.25
+                },
+                {
+                  "id": 382,
+                  "text": ".\n\n",
+                  "logit": 24.75
+                },
+                {
+                  "id": 429,
+                  "text": " that",
+                  "logit": 24.375
+                }
+              ]
+            },
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 323,
+              "argmax_text": " and",
+              "top_two_gap": 0.0,
+              "baseline_token_score": 29.375,
+              "speculative_token_score": 29.375,
+              "baseline_minus_speculative_score": 0.0,
+              "top10": [
+                {
+                  "id": 323,
+                  "text": " and",
+                  "logit": 29.375
+                },
+                {
+                  "id": 4802,
+                  "text": " energy",
+                  "logit": 29.375
+                },
+                {
+                  "id": 13,
+                  "text": ".",
+                  "logit": 28.75
+                },
+                {
+                  "id": 11,
+                  "text": ",",
+                  "logit": 26.5
+                },
+                {
+                  "id": 438,
+                  "text": " as",
+                  "logit": 25.75
+                },
+                {
+                  "id": 311,
+                  "text": " to",
+                  "logit": 25.625
+                },
+                {
+                  "id": 624,
+                  "text": ".\n",
+                  "logit": 25.375
+                },
+                {
+                  "id": 304,
+                  "text": " in",
+                  "logit": 25.25
+                },
+                {
+                  "id": 382,
+                  "text": ".\n\n",
+                  "logit": 24.75
+                },
+                {
+                  "id": 429,
+                  "text": " that",
+                  "logit": 24.375
+                }
+              ]
+            }
+          ]
+        },
+        "logit_comparisons": {
+          "shape_with_ordinary_cache": {
+            "max_abs_logit_difference": 0.2109375,
+            "mean_abs_logit_difference": 0.059559132903814316,
+            "different_logit_values": 149098,
+            "argmax_matches": true
+          },
+          "shape_with_speculative_cache": {
+            "max_abs_logit_difference": 0.3125,
+            "mean_abs_logit_difference": 0.03896977752447128,
+            "different_logit_values": 137016,
+            "argmax_matches": false
+          },
+          "history_with_serial_execution": {
+            "max_abs_logit_difference": 0.375,
+            "mean_abs_logit_difference": 0.07016262412071228,
+            "different_logit_values": 147456,
+            "argmax_matches": true
+          },
+          "history_with_block_execution": {
+            "max_abs_logit_difference": 0.15625,
+            "mean_abs_logit_difference": 0.029646456241607666,
+            "different_logit_values": 130021,
+            "argmax_matches": false
+          }
+        },
+        "winner_pattern": "both_factors_or_interaction",
+        "oracle_only_cache_distance": [
+          {
+            "layer": 0,
+            "keys": {
+              "elements": 86016,
+              "different_values": 0,
+              "max_abs": 0.0
+            },
+            "values": {
+              "elements": 86016,
+              "different_values": 8,
+              "max_abs": 0.00048828125
+            }
+          },
+          {
+            "layer": 1,
+            "keys": {
+              "elements": 86016,
+              "different_values": 1731,
+              "max_abs": 0.125
+            },
+            "values": {
+              "elements": 86016,
+              "different_values": 7876,
+              "max_abs": 0.0078125
+            }
+          },
+          {
+            "layer": 2,
+            "keys": {
+              "elements": 86016,
+              "different_values": 19039,
+              "max_abs": 0.125
+            },
+            "values": {
+              "elements": 86016,
+              "different_values": 34377,
+              "max_abs": 0.015625
+            }
+          },
+          {
+            "layer": 3,
+            "keys": {
+              "elements": 86016,
+              "different_values": 24512,
+              "max_abs": 0.25
+            },
+            "values": {
+              "elements": 86016,
+              "different_values": 41716,
+              "max_abs": 0.015625
+            }
+          },
+          {
+            "layer": 4,
+            "keys": {
+              "elements": 86016,
+              "different_values": 33546,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 86016,
+              "different_values": 45264,
+              "max_abs": 0.015625
+            }
+          },
+          {
+            "layer": 5,
+            "keys": {
+              "elements": 86016,
+              "different_values": 38361,
+              "max_abs": 0.0703125
+            },
+            "values": {
+              "elements": 86016,
+              "different_values": 48387,
+              "max_abs": 0.033203125
+            }
+          },
+          {
+            "layer": 6,
+            "keys": {
+              "elements": 86016,
+              "different_values": 39023,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 86016,
+              "different_values": 50054,
+              "max_abs": 0.03125
+            }
+          },
+          {
+            "layer": 7,
+            "keys": {
+              "elements": 86016,
+              "different_values": 39488,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 86016,
+              "different_values": 52237,
+              "max_abs": 0.046875
+            }
+          },
+          {
+            "layer": 8,
+            "keys": {
+              "elements": 86016,
+              "different_values": 40938,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 86016,
+              "different_values": 50779,
+              "max_abs": 0.03125
+            }
+          },
+          {
+            "layer": 9,
+            "keys": {
+              "elements": 86016,
+              "different_values": 41816,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 86016,
+              "different_values": 53489,
+              "max_abs": 0.046875
+            }
+          },
+          {
+            "layer": 10,
+            "keys": {
+              "elements": 86016,
+              "different_values": 42539,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 86016,
+              "different_values": 51919,
+              "max_abs": 0.03125
+            }
+          },
+          {
+            "layer": 11,
+            "keys": {
+              "elements": 86016,
+              "different_values": 43779,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 86016,
+              "different_values": 51432,
+              "max_abs": 0.03125
+            }
+          },
+          {
+            "layer": 12,
+            "keys": {
+              "elements": 86016,
+              "different_values": 44743,
+              "max_abs": 0.1015625
+            },
+            "values": {
+              "elements": 86016,
+              "different_values": 53248,
+              "max_abs": 0.0390625
+            }
+          },
+          {
+            "layer": 13,
+            "keys": {
+              "elements": 86016,
+              "different_values": 44141,
+              "max_abs": 0.25
+            },
+            "values": {
+              "elements": 86016,
+              "different_values": 54047,
+              "max_abs": 0.0390625
+            }
+          },
+          {
+            "layer": 14,
+            "keys": {
+              "elements": 86016,
+              "different_values": 45737,
+              "max_abs": 0.1015625
+            },
+            "values": {
+              "elements": 86016,
+              "different_values": 53471,
+              "max_abs": 0.046875
+            }
+          },
+          {
+            "layer": 15,
+            "keys": {
+              "elements": 86016,
+              "different_values": 44548,
+              "max_abs": 0.125
+            },
+            "values": {
+              "elements": 86016,
+              "different_values": 53194,
+              "max_abs": 0.0732421875
+            }
+          },
+          {
+            "layer": 16,
+            "keys": {
+              "elements": 86016,
+              "different_values": 45515,
+              "max_abs": 0.16796875
+            },
+            "values": {
+              "elements": 86016,
+              "different_values": 53881,
+              "max_abs": 0.094970703125
+            }
+          },
+          {
+            "layer": 17,
+            "keys": {
+              "elements": 86016,
+              "different_values": 47122,
+              "max_abs": 0.15625
+            },
+            "values": {
+              "elements": 86016,
+              "different_values": 54368,
+              "max_abs": 0.12109375
+            }
+          },
+          {
+            "layer": 18,
+            "keys": {
+              "elements": 86016,
+              "different_values": 45847,
+              "max_abs": 0.1328125
+            },
+            "values": {
+              "elements": 86016,
+              "different_values": 55084,
+              "max_abs": 0.09765625
+            }
+          },
+          {
+            "layer": 19,
+            "keys": {
+              "elements": 86016,
+              "different_values": 45844,
+              "max_abs": 0.25
+            },
+            "values": {
+              "elements": 86016,
+              "different_values": 53384,
+              "max_abs": 0.09765625
+            }
+          },
+          {
+            "layer": 20,
+            "keys": {
+              "elements": 86016,
+              "different_values": 45622,
+              "max_abs": 0.08984375
+            },
+            "values": {
+              "elements": 86016,
+              "different_values": 53000,
+              "max_abs": 0.0703125
+            }
+          },
+          {
+            "layer": 21,
+            "keys": {
+              "elements": 86016,
+              "different_values": 44507,
+              "max_abs": 0.09375
+            },
+            "values": {
+              "elements": 86016,
+              "different_values": 53282,
+              "max_abs": 0.0625
+            }
+          },
+          {
+            "layer": 22,
+            "keys": {
+              "elements": 86016,
+              "different_values": 45878,
+              "max_abs": 0.129669189453125
+            },
+            "values": {
+              "elements": 86016,
+              "different_values": 53324,
+              "max_abs": 0.0625
+            }
+          },
+          {
+            "layer": 23,
+            "keys": {
+              "elements": 86016,
+              "different_values": 45439,
+              "max_abs": 0.078125
+            },
+            "values": {
+              "elements": 86016,
+              "different_values": 53703,
+              "max_abs": 0.125
+            }
+          },
+          {
+            "layer": 24,
+            "keys": {
+              "elements": 86016,
+              "different_values": 46267,
+              "max_abs": 0.08447265625
+            },
+            "values": {
+              "elements": 86016,
+              "different_values": 52438,
+              "max_abs": 0.09765625
+            }
+          },
+          {
+            "layer": 25,
+            "keys": {
+              "elements": 86016,
+              "different_values": 46982,
+              "max_abs": 0.064453125
+            },
+            "values": {
+              "elements": 86016,
+              "different_values": 54263,
+              "max_abs": 0.140625
+            }
+          },
+          {
+            "layer": 26,
+            "keys": {
+              "elements": 86016,
+              "different_values": 47955,
+              "max_abs": 0.09375
+            },
+            "values": {
+              "elements": 86016,
+              "different_values": 55036,
+              "max_abs": 0.203125
+            }
+          },
+          {
+            "layer": 27,
+            "keys": {
+              "elements": 86016,
+              "different_values": 46002,
+              "max_abs": 2.0
+            },
+            "values": {
+              "elements": 86016,
+              "different_values": 55903,
+              "max_abs": 0.265625
+            }
+          }
+        ],
+        "watched_ids": [
+          4802,
+          323
+        ],
+        "note": "A winner pattern describes this decision only. Cache construction changes prior arithmetic; cache differences alone are not bugs or deployable predictor features. No FP32 repair is tested."
+      }
+    },
+    {
+      "id": 145,
+      "category": "stem",
+      "group": "saved_pass_control",
+      "decision_token_1_based": 4,
+      "matched_failure_id": 147,
+      "same_decision_position": true,
+      "selection": "available passing prompt; prefer matching position, category, prompt length",
+      "status": "complete",
+      "baseline_repeat_matches": true,
+      "baseline_matches_saved": true,
+      "observed_decision_token_1_based": 4,
+      "earlier_divergence_than_planned": false,
+      "tokens_agree_at_observed_decision": true,
+      "verification_context": {
+        "phase": "verification",
+        "prefix_token_ids": [
+          14582,
+          25,
+          60785,
+          279,
+          1882,
+          323,
+          3270,
+          700,
+          279,
+          23831,
+          11483,
+          23606,
+          369,
+          279,
+          12720,
+          429,
+          13666,
+          979,
+          6437,
+          34619,
+          83343,
+          68845,
+          448,
+          16643,
+          71867,
+          292,
+          13621,
+          311,
+          1352,
+          65200,
+          782,
+          34619,
+          81782,
+          11,
+          12499,
+          39489,
+          11,
+          323,
+          3015,
+          13,
+          3555,
+          943,
+          315,
+          12720,
+          374,
+          419,
+          11,
+          323,
+          1128,
+          23722,
+          2578,
+          13216,
+          429,
+          279,
+          12720,
+          374,
+          4633,
+          1992,
+          5267,
+          16141,
+          25,
+          576,
+          12720
+        ],
+        "input_token_ids": [
+          1948,
+          6437,
+          34619,
+          83343
+        ],
+        "row": 0,
+        "baseline_token": 6437,
+        "speculative_token": 6437,
+        "emission_source": "accepted_proposal"
+      },
+      "observations_available_during_speculation": {
+        "current_top_two_gap": 2.625,
+        "current_block_length": 4,
+        "verification_row": 0,
+        "verification_lengths_so_far": [
+          4,
+          4,
+          4
+        ],
+        "cache_prefix_length": 63
+      },
+      "four_way": {
+        "status": "complete",
+        "controls": {
+          "all_restored_cache_values_match": true,
+          "ordinary_serial_reproduces_baseline_logits": true,
+          "speculative_block_reproduces_actual_logits": true,
+          "all_repeats_exact": true,
+          "lineage_passed": true,
+          "positions_observed_and_correct": true,
+          "retained_cache_values_preserved": true
+        },
+        "cells": {
+          "ordinary_serial": [
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 6437,
+              "argmax_text": " solid",
+              "top_two_gap": 2.625,
+              "baseline_token_score": 23.625,
+              "speculative_token_score": 21.0,
+              "baseline_minus_speculative_score": 2.625,
+              "top10": [
+                {
+                  "id": 6437,
+                  "text": " solid",
+                  "logit": 23.625
+                },
+                {
+                  "id": 34619,
+                  "text": " calcium",
+                  "logit": 21.0
+                },
+                {
+                  "id": 264,
+                  "text": " a",
+                  "logit": 18.0
+                },
+                {
+                  "id": 65200,
+                  "text": " aque",
+                  "logit": 16.625
+                },
+                {
+                  "id": 279,
+                  "text": " the",
+                  "logit": 15.875
+                },
+                {
+                  "id": 43916,
+                  "text": " limestone",
+                  "logit": 15.6875
+                },
+                {
+                  "id": 14413,
+                  "text": " Ca",
+                  "logit": 15.3125
+                },
+                {
+                  "id": 458,
+                  "text": " an",
+                  "logit": 14.75
+                },
+                {
+                  "id": 81386,
+                  "text": " solids",
+                  "logit": 14.625
+                },
+                {
+                  "id": 38595,
+                  "text": " sodium",
+                  "logit": 14.625
+                }
+              ]
+            },
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 6437,
+              "argmax_text": " solid",
+              "top_two_gap": 2.625,
+              "baseline_token_score": 23.625,
+              "speculative_token_score": 21.0,
+              "baseline_minus_speculative_score": 2.625,
+              "top10": [
+                {
+                  "id": 6437,
+                  "text": " solid",
+                  "logit": 23.625
+                },
+                {
+                  "id": 34619,
+                  "text": " calcium",
+                  "logit": 21.0
+                },
+                {
+                  "id": 264,
+                  "text": " a",
+                  "logit": 18.0
+                },
+                {
+                  "id": 65200,
+                  "text": " aque",
+                  "logit": 16.625
+                },
+                {
+                  "id": 279,
+                  "text": " the",
+                  "logit": 15.875
+                },
+                {
+                  "id": 43916,
+                  "text": " limestone",
+                  "logit": 15.6875
+                },
+                {
+                  "id": 14413,
+                  "text": " Ca",
+                  "logit": 15.3125
+                },
+                {
+                  "id": 458,
+                  "text": " an",
+                  "logit": 14.75
+                },
+                {
+                  "id": 81386,
+                  "text": " solids",
+                  "logit": 14.625
+                },
+                {
+                  "id": 38595,
+                  "text": " sodium",
+                  "logit": 14.625
+                }
+              ]
+            }
+          ],
+          "ordinary_block": [
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 6437,
+              "argmax_text": " solid",
+              "top_two_gap": 2.75,
+              "baseline_token_score": 23.625,
+              "speculative_token_score": 20.875,
+              "baseline_minus_speculative_score": 2.75,
+              "top10": [
+                {
+                  "id": 6437,
+                  "text": " solid",
+                  "logit": 23.625
+                },
+                {
+                  "id": 34619,
+                  "text": " calcium",
+                  "logit": 20.875
+                },
+                {
+                  "id": 264,
+                  "text": " a",
+                  "logit": 17.875
+                },
+                {
+                  "id": 65200,
+                  "text": " aque",
+                  "logit": 16.625
+                },
+                {
+                  "id": 279,
+                  "text": " the",
+                  "logit": 15.8125
+                },
+                {
+                  "id": 43916,
+                  "text": " limestone",
+                  "logit": 15.625
+                },
+                {
+                  "id": 14413,
+                  "text": " Ca",
+                  "logit": 15.1875
+                },
+                {
+                  "id": 458,
+                  "text": " an",
+                  "logit": 14.75
+                },
+                {
+                  "id": 81386,
+                  "text": " solids",
+                  "logit": 14.625
+                },
+                {
+                  "id": 38595,
+                  "text": " sodium",
+                  "logit": 14.5625
+                }
+              ]
+            },
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 6437,
+              "argmax_text": " solid",
+              "top_two_gap": 2.75,
+              "baseline_token_score": 23.625,
+              "speculative_token_score": 20.875,
+              "baseline_minus_speculative_score": 2.75,
+              "top10": [
+                {
+                  "id": 6437,
+                  "text": " solid",
+                  "logit": 23.625
+                },
+                {
+                  "id": 34619,
+                  "text": " calcium",
+                  "logit": 20.875
+                },
+                {
+                  "id": 264,
+                  "text": " a",
+                  "logit": 17.875
+                },
+                {
+                  "id": 65200,
+                  "text": " aque",
+                  "logit": 16.625
+                },
+                {
+                  "id": 279,
+                  "text": " the",
+                  "logit": 15.8125
+                },
+                {
+                  "id": 43916,
+                  "text": " limestone",
+                  "logit": 15.625
+                },
+                {
+                  "id": 14413,
+                  "text": " Ca",
+                  "logit": 15.1875
+                },
+                {
+                  "id": 458,
+                  "text": " an",
+                  "logit": 14.75
+                },
+                {
+                  "id": 81386,
+                  "text": " solids",
+                  "logit": 14.625
+                },
+                {
+                  "id": 38595,
+                  "text": " sodium",
+                  "logit": 14.5625
+                }
+              ]
+            }
+          ],
+          "speculative_serial": [
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 6437,
+              "argmax_text": " solid",
+              "top_two_gap": 2.75,
+              "baseline_token_score": 23.625,
+              "speculative_token_score": 20.875,
+              "baseline_minus_speculative_score": 2.75,
+              "top10": [
+                {
+                  "id": 6437,
+                  "text": " solid",
+                  "logit": 23.625
+                },
+                {
+                  "id": 34619,
+                  "text": " calcium",
+                  "logit": 20.875
+                },
+                {
+                  "id": 264,
+                  "text": " a",
+                  "logit": 17.875
+                },
+                {
+                  "id": 65200,
+                  "text": " aque",
+                  "logit": 16.625
+                },
+                {
+                  "id": 279,
+                  "text": " the",
+                  "logit": 15.8125
+                },
+                {
+                  "id": 43916,
+                  "text": " limestone",
+                  "logit": 15.625
+                },
+                {
+                  "id": 14413,
+                  "text": " Ca",
+                  "logit": 15.1875
+                },
+                {
+                  "id": 458,
+                  "text": " an",
+                  "logit": 14.6875
+                },
+                {
+                  "id": 81386,
+                  "text": " solids",
+                  "logit": 14.5625
+                },
+                {
+                  "id": 38595,
+                  "text": " sodium",
+                  "logit": 14.5625
+                }
+              ]
+            },
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 6437,
+              "argmax_text": " solid",
+              "top_two_gap": 2.75,
+              "baseline_token_score": 23.625,
+              "speculative_token_score": 20.875,
+              "baseline_minus_speculative_score": 2.75,
+              "top10": [
+                {
+                  "id": 6437,
+                  "text": " solid",
+                  "logit": 23.625
+                },
+                {
+                  "id": 34619,
+                  "text": " calcium",
+                  "logit": 20.875
+                },
+                {
+                  "id": 264,
+                  "text": " a",
+                  "logit": 17.875
+                },
+                {
+                  "id": 65200,
+                  "text": " aque",
+                  "logit": 16.625
+                },
+                {
+                  "id": 279,
+                  "text": " the",
+                  "logit": 15.8125
+                },
+                {
+                  "id": 43916,
+                  "text": " limestone",
+                  "logit": 15.625
+                },
+                {
+                  "id": 14413,
+                  "text": " Ca",
+                  "logit": 15.1875
+                },
+                {
+                  "id": 458,
+                  "text": " an",
+                  "logit": 14.6875
+                },
+                {
+                  "id": 81386,
+                  "text": " solids",
+                  "logit": 14.5625
+                },
+                {
+                  "id": 38595,
+                  "text": " sodium",
+                  "logit": 14.5625
+                }
+              ]
+            }
+          ],
+          "speculative_block": [
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 6437,
+              "argmax_text": " solid",
+              "top_two_gap": 2.625,
+              "baseline_token_score": 23.5,
+              "speculative_token_score": 20.875,
+              "baseline_minus_speculative_score": 2.625,
+              "top10": [
+                {
+                  "id": 6437,
+                  "text": " solid",
+                  "logit": 23.5
+                },
+                {
+                  "id": 34619,
+                  "text": " calcium",
+                  "logit": 20.875
+                },
+                {
+                  "id": 264,
+                  "text": " a",
+                  "logit": 17.875
+                },
+                {
+                  "id": 65200,
+                  "text": " aque",
+                  "logit": 16.625
+                },
+                {
+                  "id": 279,
+                  "text": " the",
+                  "logit": 15.75
+                },
+                {
+                  "id": 43916,
+                  "text": " limestone",
+                  "logit": 15.5625
+                },
+                {
+                  "id": 14413,
+                  "text": " Ca",
+                  "logit": 15.25
+                },
+                {
+                  "id": 458,
+                  "text": " an",
+                  "logit": 14.75
+                },
+                {
+                  "id": 81386,
+                  "text": " solids",
+                  "logit": 14.5625
+                },
+                {
+                  "id": 38595,
+                  "text": " sodium",
+                  "logit": 14.5625
+                }
+              ]
+            },
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 6437,
+              "argmax_text": " solid",
+              "top_two_gap": 2.625,
+              "baseline_token_score": 23.5,
+              "speculative_token_score": 20.875,
+              "baseline_minus_speculative_score": 2.625,
+              "top10": [
+                {
+                  "id": 6437,
+                  "text": " solid",
+                  "logit": 23.5
+                },
+                {
+                  "id": 34619,
+                  "text": " calcium",
+                  "logit": 20.875
+                },
+                {
+                  "id": 264,
+                  "text": " a",
+                  "logit": 17.875
+                },
+                {
+                  "id": 65200,
+                  "text": " aque",
+                  "logit": 16.625
+                },
+                {
+                  "id": 279,
+                  "text": " the",
+                  "logit": 15.75
+                },
+                {
+                  "id": 43916,
+                  "text": " limestone",
+                  "logit": 15.5625
+                },
+                {
+                  "id": 14413,
+                  "text": " Ca",
+                  "logit": 15.25
+                },
+                {
+                  "id": 458,
+                  "text": " an",
+                  "logit": 14.75
+                },
+                {
+                  "id": 81386,
+                  "text": " solids",
+                  "logit": 14.5625
+                },
+                {
+                  "id": 38595,
+                  "text": " sodium",
+                  "logit": 14.5625
+                }
+              ]
+            }
+          ]
+        },
+        "logit_comparisons": {
+          "shape_with_ordinary_cache": {
+            "max_abs_logit_difference": 0.125,
+            "mean_abs_logit_difference": 0.016299765557050705,
+            "different_logit_values": 104561,
+            "argmax_matches": true
+          },
+          "shape_with_speculative_cache": {
+            "max_abs_logit_difference": 0.125,
+            "mean_abs_logit_difference": 0.01744198612868786,
+            "different_logit_values": 108887,
+            "argmax_matches": true
+          },
+          "history_with_serial_execution": {
+            "max_abs_logit_difference": 0.125,
+            "mean_abs_logit_difference": 0.015554203651845455,
+            "different_logit_values": 103241,
+            "argmax_matches": true
+          },
+          "history_with_block_execution": {
+            "max_abs_logit_difference": 0.1875,
+            "mean_abs_logit_difference": 0.030371608212590218,
+            "different_logit_values": 133447,
+            "argmax_matches": true
+          }
+        },
+        "winner_pattern": "no_winner_effect_observed",
+        "oracle_only_cache_distance": [
+          {
+            "layer": 0,
+            "keys": {
+              "elements": 32256,
+              "different_values": 0,
+              "max_abs": 0.0
+            },
+            "values": {
+              "elements": 32256,
+              "different_values": 0,
+              "max_abs": 0.0
+            }
+          },
+          {
+            "layer": 1,
+            "keys": {
+              "elements": 32256,
+              "different_values": 6,
+              "max_abs": 0.00390625
+            },
+            "values": {
+              "elements": 32256,
+              "different_values": 45,
+              "max_abs": 0.001953125
+            }
+          },
+          {
+            "layer": 2,
+            "keys": {
+              "elements": 32256,
+              "different_values": 237,
+              "max_abs": 0.03125
+            },
+            "values": {
+              "elements": 32256,
+              "different_values": 486,
+              "max_abs": 0.015625
+            }
+          },
+          {
+            "layer": 3,
+            "keys": {
+              "elements": 32256,
+              "different_values": 300,
+              "max_abs": 0.03125
+            },
+            "values": {
+              "elements": 32256,
+              "different_values": 581,
+              "max_abs": 0.0078125
+            }
+          },
+          {
+            "layer": 4,
+            "keys": {
+              "elements": 32256,
+              "different_values": 531,
+              "max_abs": 0.01953125
+            },
+            "values": {
+              "elements": 32256,
+              "different_values": 674,
+              "max_abs": 0.0078125
+            }
+          },
+          {
+            "layer": 5,
+            "keys": {
+              "elements": 32256,
+              "different_values": 579,
+              "max_abs": 0.03125
+            },
+            "values": {
+              "elements": 32256,
+              "different_values": 754,
+              "max_abs": 0.009765625
+            }
+          },
+          {
+            "layer": 6,
+            "keys": {
+              "elements": 32256,
+              "different_values": 610,
+              "max_abs": 0.03125
+            },
+            "values": {
+              "elements": 32256,
+              "different_values": 790,
+              "max_abs": 0.01171875
+            }
+          },
+          {
+            "layer": 7,
+            "keys": {
+              "elements": 32256,
+              "different_values": 593,
+              "max_abs": 0.03125
+            },
+            "values": {
+              "elements": 32256,
+              "different_values": 832,
+              "max_abs": 0.015625
+            }
+          },
+          {
+            "layer": 8,
+            "keys": {
+              "elements": 32256,
+              "different_values": 613,
+              "max_abs": 0.03125
+            },
+            "values": {
+              "elements": 32256,
+              "different_values": 791,
+              "max_abs": 0.015625
+            }
+          },
+          {
+            "layer": 9,
+            "keys": {
+              "elements": 32256,
+              "different_values": 691,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 32256,
+              "different_values": 836,
+              "max_abs": 0.0234375
+            }
+          },
+          {
+            "layer": 10,
+            "keys": {
+              "elements": 32256,
+              "different_values": 681,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 32256,
+              "different_values": 831,
+              "max_abs": 0.0234375
+            }
+          },
+          {
+            "layer": 11,
+            "keys": {
+              "elements": 32256,
+              "different_values": 725,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 32256,
+              "different_values": 817,
+              "max_abs": 0.0234375
+            }
+          },
+          {
+            "layer": 12,
+            "keys": {
+              "elements": 32256,
+              "different_values": 720,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 32256,
+              "different_values": 847,
+              "max_abs": 0.0234375
+            }
+          },
+          {
+            "layer": 13,
+            "keys": {
+              "elements": 32256,
+              "different_values": 736,
+              "max_abs": 0.25
+            },
+            "values": {
+              "elements": 32256,
+              "different_values": 886,
+              "max_abs": 0.0234375
+            }
+          },
+          {
+            "layer": 14,
+            "keys": {
+              "elements": 32256,
+              "different_values": 745,
+              "max_abs": 0.046875
+            },
+            "values": {
+              "elements": 32256,
+              "different_values": 875,
+              "max_abs": 0.025390625
+            }
+          },
+          {
+            "layer": 15,
+            "keys": {
+              "elements": 32256,
+              "different_values": 725,
+              "max_abs": 0.037109375
+            },
+            "values": {
+              "elements": 32256,
+              "different_values": 865,
+              "max_abs": 0.0234375
+            }
+          },
+          {
+            "layer": 16,
+            "keys": {
+              "elements": 32256,
+              "different_values": 753,
+              "max_abs": 0.046875
+            },
+            "values": {
+              "elements": 32256,
+              "different_values": 873,
+              "max_abs": 0.0234375
+            }
+          },
+          {
+            "layer": 17,
+            "keys": {
+              "elements": 32256,
+              "different_values": 772,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 32256,
+              "different_values": 879,
+              "max_abs": 0.03125
+            }
+          },
+          {
+            "layer": 18,
+            "keys": {
+              "elements": 32256,
+              "different_values": 763,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 32256,
+              "different_values": 880,
+              "max_abs": 0.032958984375
+            }
+          },
+          {
+            "layer": 19,
+            "keys": {
+              "elements": 32256,
+              "different_values": 725,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 32256,
+              "different_values": 845,
+              "max_abs": 0.03125
+            }
+          },
+          {
+            "layer": 20,
+            "keys": {
+              "elements": 32256,
+              "different_values": 742,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 32256,
+              "different_values": 845,
+              "max_abs": 0.02734375
+            }
+          },
+          {
+            "layer": 21,
+            "keys": {
+              "elements": 32256,
+              "different_values": 715,
+              "max_abs": 0.041015625
+            },
+            "values": {
+              "elements": 32256,
+              "different_values": 869,
+              "max_abs": 0.03125
+            }
+          },
+          {
+            "layer": 22,
+            "keys": {
+              "elements": 32256,
+              "different_values": 711,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 32256,
+              "different_values": 834,
+              "max_abs": 0.03759765625
+            }
+          },
+          {
+            "layer": 23,
+            "keys": {
+              "elements": 32256,
+              "different_values": 738,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 32256,
+              "different_values": 864,
+              "max_abs": 0.0625
+            }
+          },
+          {
+            "layer": 24,
+            "keys": {
+              "elements": 32256,
+              "different_values": 704,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 32256,
+              "different_values": 808,
+              "max_abs": 0.046875
+            }
+          },
+          {
+            "layer": 25,
+            "keys": {
+              "elements": 32256,
+              "different_values": 722,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 32256,
+              "different_values": 878,
+              "max_abs": 0.076171875
+            }
+          },
+          {
+            "layer": 26,
+            "keys": {
+              "elements": 32256,
+              "different_values": 730,
+              "max_abs": 0.0390625
+            },
+            "values": {
+              "elements": 32256,
+              "different_values": 838,
+              "max_abs": 0.125
+            }
+          },
+          {
+            "layer": 27,
+            "keys": {
+              "elements": 32256,
+              "different_values": 737,
+              "max_abs": 0.125
+            },
+            "values": {
+              "elements": 32256,
+              "different_values": 871,
+              "max_abs": 0.1875
+            }
+          }
+        ],
+        "watched_ids": [
+          6437,
+          34619
+        ],
+        "note": "A winner pattern describes this decision only. Cache construction changes prior arithmetic; cache differences alone are not bugs or deployable predictor features. No FP32 repair is tested."
+      }
+    },
+    {
+      "id": 153,
+      "category": "humanities",
+      "group": "saved_pass_control",
+      "decision_token_1_based": 46,
+      "matched_failure_id": 151,
+      "same_decision_position": true,
+      "selection": "available passing prompt; prefer matching position, category, prompt length",
+      "status": "complete",
+      "baseline_repeat_matches": true,
+      "baseline_matches_saved": true,
+      "observed_decision_token_1_based": 46,
+      "earlier_divergence_than_planned": false,
+      "tokens_agree_at_observed_decision": true,
+      "verification_context": {
+        "phase": "verification",
+        "prefix_token_ids": [
+          14582,
+          25,
+          65279,
+          3196,
+          84871,
+          6872,
+          323,
+          862,
+          5421,
+          389,
+          3081,
+          10707,
+          13,
+          23768,
+          279,
+          3196,
+          84871,
+          6872,
+          304,
+          2274,
+          323,
+          5616,
+          3156,
+          448,
+          1045,
+          1142,
+          7822,
+          624,
+          16141,
+          25,
+          6755,
+          84871,
+          6872,
+          525,
+          6188,
+          311,
+          11926,
+          10707,
+          323,
+          5358,
+          74153,
+          550,
+          13,
+          758,
+          279,
+          2274,
+          11,
+          3196,
+          84871,
+          6872,
+          525,
+          44321,
+          553,
+          279,
+          12137,
+          17214,
+          9652,
+          320,
+          3994,
+          34,
+          8,
+          323,
+          279,
+          5887,
+          315,
+          11745,
+          320,
+          5865,
+          41,
+          568,
+          758
+        ],
+        "input_token_ids": [
+          5616,
+          11,
+          3196,
+          84871
+        ],
+        "row": 3,
+        "baseline_token": 6872,
+        "speculative_token": 6872,
+        "emission_source": "bonus"
+      },
+      "observations_available_during_speculation": {
+        "current_top_two_gap": 5.125,
+        "current_block_length": 4,
+        "verification_row": 3,
+        "verification_lengths_so_far": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "cache_prefix_length": 71
+      },
+      "four_way": {
+        "status": "complete",
+        "controls": {
+          "all_restored_cache_values_match": true,
+          "ordinary_serial_reproduces_baseline_logits": true,
+          "speculative_block_reproduces_actual_logits": true,
+          "all_repeats_exact": true,
+          "lineage_passed": true,
+          "positions_observed_and_correct": true,
+          "retained_cache_values_preserved": true
+        },
+        "cells": {
+          "ordinary_serial": [
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 6872,
+              "argmax_text": " laws",
+              "top_two_gap": 5.125,
+              "baseline_token_score": 29.25,
+              "speculative_token_score": 24.125,
+              "baseline_minus_speculative_score": 5.125,
+              "top10": [
+                {
+                  "id": 6872,
+                  "text": " laws",
+                  "logit": 29.25
+                },
+                {
+                  "id": 13324,
+                  "text": " enforcement",
+                  "logit": 24.125
+                },
+                {
+                  "id": 2329,
+                  "text": " law",
+                  "logit": 23.625
+                },
+                {
+                  "id": 14305,
+                  "text": " regulations",
+                  "logit": 22.875
+                },
+                {
+                  "id": 374,
+                  "text": " is",
+                  "logit": 22.0
+                },
+                {
+                  "id": 10186,
+                  "text": " policies",
+                  "logit": 21.25
+                },
+                {
+                  "id": 19256,
+                  "text": " regulation",
+                  "logit": 21.0
+                },
+                {
+                  "id": 13240,
+                  "text": " legislation",
+                  "logit": 21.0
+                },
+                {
+                  "id": 5601,
+                  "text": " rules",
+                  "logit": 20.25
+                },
+                {
+                  "id": 323,
+                  "text": " and",
+                  "logit": 19.5
+                }
+              ]
+            },
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 6872,
+              "argmax_text": " laws",
+              "top_two_gap": 5.125,
+              "baseline_token_score": 29.25,
+              "speculative_token_score": 24.125,
+              "baseline_minus_speculative_score": 5.125,
+              "top10": [
+                {
+                  "id": 6872,
+                  "text": " laws",
+                  "logit": 29.25
+                },
+                {
+                  "id": 13324,
+                  "text": " enforcement",
+                  "logit": 24.125
+                },
+                {
+                  "id": 2329,
+                  "text": " law",
+                  "logit": 23.625
+                },
+                {
+                  "id": 14305,
+                  "text": " regulations",
+                  "logit": 22.875
+                },
+                {
+                  "id": 374,
+                  "text": " is",
+                  "logit": 22.0
+                },
+                {
+                  "id": 10186,
+                  "text": " policies",
+                  "logit": 21.25
+                },
+                {
+                  "id": 19256,
+                  "text": " regulation",
+                  "logit": 21.0
+                },
+                {
+                  "id": 13240,
+                  "text": " legislation",
+                  "logit": 21.0
+                },
+                {
+                  "id": 5601,
+                  "text": " rules",
+                  "logit": 20.25
+                },
+                {
+                  "id": 323,
+                  "text": " and",
+                  "logit": 19.5
+                }
+              ]
+            }
+          ],
+          "ordinary_block": [
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 6872,
+              "argmax_text": " laws",
+              "top_two_gap": 5.25,
+              "baseline_token_score": 29.5,
+              "speculative_token_score": 24.25,
+              "baseline_minus_speculative_score": 5.25,
+              "top10": [
+                {
+                  "id": 6872,
+                  "text": " laws",
+                  "logit": 29.5
+                },
+                {
+                  "id": 13324,
+                  "text": " enforcement",
+                  "logit": 24.25
+                },
+                {
+                  "id": 2329,
+                  "text": " law",
+                  "logit": 23.75
+                },
+                {
+                  "id": 14305,
+                  "text": " regulations",
+                  "logit": 23.0
+                },
+                {
+                  "id": 374,
+                  "text": " is",
+                  "logit": 22.125
+                },
+                {
+                  "id": 10186,
+                  "text": " policies",
+                  "logit": 21.375
+                },
+                {
+                  "id": 19256,
+                  "text": " regulation",
+                  "logit": 21.125
+                },
+                {
+                  "id": 13240,
+                  "text": " legislation",
+                  "logit": 21.125
+                },
+                {
+                  "id": 5601,
+                  "text": " rules",
+                  "logit": 20.375
+                },
+                {
+                  "id": 323,
+                  "text": " and",
+                  "logit": 19.625
+                }
+              ]
+            },
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 6872,
+              "argmax_text": " laws",
+              "top_two_gap": 5.25,
+              "baseline_token_score": 29.5,
+              "speculative_token_score": 24.25,
+              "baseline_minus_speculative_score": 5.25,
+              "top10": [
+                {
+                  "id": 6872,
+                  "text": " laws",
+                  "logit": 29.5
+                },
+                {
+                  "id": 13324,
+                  "text": " enforcement",
+                  "logit": 24.25
+                },
+                {
+                  "id": 2329,
+                  "text": " law",
+                  "logit": 23.75
+                },
+                {
+                  "id": 14305,
+                  "text": " regulations",
+                  "logit": 23.0
+                },
+                {
+                  "id": 374,
+                  "text": " is",
+                  "logit": 22.125
+                },
+                {
+                  "id": 10186,
+                  "text": " policies",
+                  "logit": 21.375
+                },
+                {
+                  "id": 19256,
+                  "text": " regulation",
+                  "logit": 21.125
+                },
+                {
+                  "id": 13240,
+                  "text": " legislation",
+                  "logit": 21.125
+                },
+                {
+                  "id": 5601,
+                  "text": " rules",
+                  "logit": 20.375
+                },
+                {
+                  "id": 323,
+                  "text": " and",
+                  "logit": 19.625
+                }
+              ]
+            }
+          ],
+          "speculative_serial": [
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 6872,
+              "argmax_text": " laws",
+              "top_two_gap": 5.125,
+              "baseline_token_score": 29.25,
+              "speculative_token_score": 24.125,
+              "baseline_minus_speculative_score": 5.125,
+              "top10": [
+                {
+                  "id": 6872,
+                  "text": " laws",
+                  "logit": 29.25
+                },
+                {
+                  "id": 13324,
+                  "text": " enforcement",
+                  "logit": 24.125
+                },
+                {
+                  "id": 2329,
+                  "text": " law",
+                  "logit": 23.625
+                },
+                {
+                  "id": 14305,
+                  "text": " regulations",
+                  "logit": 22.875
+                },
+                {
+                  "id": 374,
+                  "text": " is",
+                  "logit": 22.0
+                },
+                {
+                  "id": 10186,
+                  "text": " policies",
+                  "logit": 21.25
+                },
+                {
+                  "id": 19256,
+                  "text": " regulation",
+                  "logit": 21.0
+                },
+                {
+                  "id": 13240,
+                  "text": " legislation",
+                  "logit": 21.0
+                },
+                {
+                  "id": 5601,
+                  "text": " rules",
+                  "logit": 20.25
+                },
+                {
+                  "id": 5048,
+                  "text": " cases",
+                  "logit": 19.375
+                }
+              ]
+            },
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 6872,
+              "argmax_text": " laws",
+              "top_two_gap": 5.125,
+              "baseline_token_score": 29.25,
+              "speculative_token_score": 24.125,
+              "baseline_minus_speculative_score": 5.125,
+              "top10": [
+                {
+                  "id": 6872,
+                  "text": " laws",
+                  "logit": 29.25
+                },
+                {
+                  "id": 13324,
+                  "text": " enforcement",
+                  "logit": 24.125
+                },
+                {
+                  "id": 2329,
+                  "text": " law",
+                  "logit": 23.625
+                },
+                {
+                  "id": 14305,
+                  "text": " regulations",
+                  "logit": 22.875
+                },
+                {
+                  "id": 374,
+                  "text": " is",
+                  "logit": 22.0
+                },
+                {
+                  "id": 10186,
+                  "text": " policies",
+                  "logit": 21.25
+                },
+                {
+                  "id": 19256,
+                  "text": " regulation",
+                  "logit": 21.0
+                },
+                {
+                  "id": 13240,
+                  "text": " legislation",
+                  "logit": 21.0
+                },
+                {
+                  "id": 5601,
+                  "text": " rules",
+                  "logit": 20.25
+                },
+                {
+                  "id": 5048,
+                  "text": " cases",
+                  "logit": 19.375
+                }
+              ]
+            }
+          ],
+          "speculative_block": [
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 6872,
+              "argmax_text": " laws",
+              "top_two_gap": 5.125,
+              "baseline_token_score": 29.25,
+              "speculative_token_score": 24.125,
+              "baseline_minus_speculative_score": 5.125,
+              "top10": [
+                {
+                  "id": 6872,
+                  "text": " laws",
+                  "logit": 29.25
+                },
+                {
+                  "id": 13324,
+                  "text": " enforcement",
+                  "logit": 24.125
+                },
+                {
+                  "id": 2329,
+                  "text": " law",
+                  "logit": 23.625
+                },
+                {
+                  "id": 14305,
+                  "text": " regulations",
+                  "logit": 22.875
+                },
+                {
+                  "id": 374,
+                  "text": " is",
+                  "logit": 22.0
+                },
+                {
+                  "id": 10186,
+                  "text": " policies",
+                  "logit": 21.25
+                },
+                {
+                  "id": 19256,
+                  "text": " regulation",
+                  "logit": 21.0
+                },
+                {
+                  "id": 13240,
+                  "text": " legislation",
+                  "logit": 21.0
+                },
+                {
+                  "id": 5601,
+                  "text": " rules",
+                  "logit": 20.25
+                },
+                {
+                  "id": 323,
+                  "text": " and",
+                  "logit": 19.5
+                }
+              ]
+            },
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 6872,
+              "argmax_text": " laws",
+              "top_two_gap": 5.125,
+              "baseline_token_score": 29.25,
+              "speculative_token_score": 24.125,
+              "baseline_minus_speculative_score": 5.125,
+              "top10": [
+                {
+                  "id": 6872,
+                  "text": " laws",
+                  "logit": 29.25
+                },
+                {
+                  "id": 13324,
+                  "text": " enforcement",
+                  "logit": 24.125
+                },
+                {
+                  "id": 2329,
+                  "text": " law",
+                  "logit": 23.625
+                },
+                {
+                  "id": 14305,
+                  "text": " regulations",
+                  "logit": 22.875
+                },
+                {
+                  "id": 374,
+                  "text": " is",
+                  "logit": 22.0
+                },
+                {
+                  "id": 10186,
+                  "text": " policies",
+                  "logit": 21.25
+                },
+                {
+                  "id": 19256,
+                  "text": " regulation",
+                  "logit": 21.0
+                },
+                {
+                  "id": 13240,
+                  "text": " legislation",
+                  "logit": 21.0
+                },
+                {
+                  "id": 5601,
+                  "text": " rules",
+                  "logit": 20.25
+                },
+                {
+                  "id": 323,
+                  "text": " and",
+                  "logit": 19.5
+                }
+              ]
+            }
+          ]
+        },
+        "logit_comparisons": {
+          "shape_with_ordinary_cache": {
+            "max_abs_logit_difference": 0.25,
+            "mean_abs_logit_difference": 0.034375689923763275,
+            "different_logit_values": 131278,
+            "argmax_matches": true
+          },
+          "shape_with_speculative_cache": {
+            "max_abs_logit_difference": 0.1875,
+            "mean_abs_logit_difference": 0.03695778176188469,
+            "different_logit_values": 140685,
+            "argmax_matches": true
+          },
+          "history_with_serial_execution": {
+            "max_abs_logit_difference": 0.140625,
+            "mean_abs_logit_difference": 0.023950837552547455,
+            "different_logit_values": 127792,
+            "argmax_matches": true
+          },
+          "history_with_block_execution": {
+            "max_abs_logit_difference": 0.25,
+            "mean_abs_logit_difference": 0.039122965186834335,
+            "different_logit_values": 138918,
+            "argmax_matches": true
+          }
+        },
+        "winner_pattern": "no_winner_effect_observed",
+        "oracle_only_cache_distance": [
+          {
+            "layer": 0,
+            "keys": {
+              "elements": 36352,
+              "different_values": 0,
+              "max_abs": 0.0
+            },
+            "values": {
+              "elements": 36352,
+              "different_values": 1,
+              "max_abs": 7.62939453125e-06
+            }
+          },
+          {
+            "layer": 1,
+            "keys": {
+              "elements": 36352,
+              "different_values": 393,
+              "max_abs": 0.125
+            },
+            "values": {
+              "elements": 36352,
+              "different_values": 1946,
+              "max_abs": 0.00390625
+            }
+          },
+          {
+            "layer": 2,
+            "keys": {
+              "elements": 36352,
+              "different_values": 5877,
+              "max_abs": 0.125
+            },
+            "values": {
+              "elements": 36352,
+              "different_values": 10791,
+              "max_abs": 0.015625
+            }
+          },
+          {
+            "layer": 3,
+            "keys": {
+              "elements": 36352,
+              "different_values": 8155,
+              "max_abs": 0.25
+            },
+            "values": {
+              "elements": 36352,
+              "different_values": 13836,
+              "max_abs": 0.009765625
+            }
+          },
+          {
+            "layer": 4,
+            "keys": {
+              "elements": 36352,
+              "different_values": 10930,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 36352,
+              "different_values": 14556,
+              "max_abs": 0.03125
+            }
+          },
+          {
+            "layer": 5,
+            "keys": {
+              "elements": 36352,
+              "different_values": 12210,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 36352,
+              "different_values": 15636,
+              "max_abs": 0.015625
+            }
+          },
+          {
+            "layer": 6,
+            "keys": {
+              "elements": 36352,
+              "different_values": 12655,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 36352,
+              "different_values": 16194,
+              "max_abs": 0.025390625
+            }
+          },
+          {
+            "layer": 7,
+            "keys": {
+              "elements": 36352,
+              "different_values": 12811,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 36352,
+              "different_values": 16909,
+              "max_abs": 0.03125
+            }
+          },
+          {
+            "layer": 8,
+            "keys": {
+              "elements": 36352,
+              "different_values": 13242,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 36352,
+              "different_values": 16479,
+              "max_abs": 0.0234375
+            }
+          },
+          {
+            "layer": 9,
+            "keys": {
+              "elements": 36352,
+              "different_values": 13469,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 36352,
+              "different_values": 17223,
+              "max_abs": 0.046875
+            }
+          },
+          {
+            "layer": 10,
+            "keys": {
+              "elements": 36352,
+              "different_values": 13688,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 36352,
+              "different_values": 16660,
+              "max_abs": 0.03125
+            }
+          },
+          {
+            "layer": 11,
+            "keys": {
+              "elements": 36352,
+              "different_values": 13910,
+              "max_abs": 0.09375
+            },
+            "values": {
+              "elements": 36352,
+              "different_values": 16789,
+              "max_abs": 0.03125
+            }
+          },
+          {
+            "layer": 12,
+            "keys": {
+              "elements": 36352,
+              "different_values": 14397,
+              "max_abs": 0.064453125
+            },
+            "values": {
+              "elements": 36352,
+              "different_values": 17150,
+              "max_abs": 0.03125
+            }
+          },
+          {
+            "layer": 13,
+            "keys": {
+              "elements": 36352,
+              "different_values": 14142,
+              "max_abs": 0.25
+            },
+            "values": {
+              "elements": 36352,
+              "different_values": 17268,
+              "max_abs": 0.046875
+            }
+          },
+          {
+            "layer": 14,
+            "keys": {
+              "elements": 36352,
+              "different_values": 14637,
+              "max_abs": 0.07373046875
+            },
+            "values": {
+              "elements": 36352,
+              "different_values": 17147,
+              "max_abs": 0.0390625
+            }
+          },
+          {
+            "layer": 15,
+            "keys": {
+              "elements": 36352,
+              "different_values": 14171,
+              "max_abs": 0.125
+            },
+            "values": {
+              "elements": 36352,
+              "different_values": 17140,
+              "max_abs": 0.037109375
+            }
+          },
+          {
+            "layer": 16,
+            "keys": {
+              "elements": 36352,
+              "different_values": 14777,
+              "max_abs": 0.078125
+            },
+            "values": {
+              "elements": 36352,
+              "different_values": 17593,
+              "max_abs": 0.046875
+            }
+          },
+          {
+            "layer": 17,
+            "keys": {
+              "elements": 36352,
+              "different_values": 15226,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 36352,
+              "different_values": 17546,
+              "max_abs": 0.0390625
+            }
+          },
+          {
+            "layer": 18,
+            "keys": {
+              "elements": 36352,
+              "different_values": 14871,
+              "max_abs": 0.06640625
+            },
+            "values": {
+              "elements": 36352,
+              "different_values": 17747,
+              "max_abs": 0.078125
+            }
+          },
+          {
+            "layer": 19,
+            "keys": {
+              "elements": 36352,
+              "different_values": 14864,
+              "max_abs": 0.078125
+            },
+            "values": {
+              "elements": 36352,
+              "different_values": 17284,
+              "max_abs": 0.05078125
+            }
+          },
+          {
+            "layer": 20,
+            "keys": {
+              "elements": 36352,
+              "different_values": 14696,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 36352,
+              "different_values": 17158,
+              "max_abs": 0.0390625
+            }
+          },
+          {
+            "layer": 21,
+            "keys": {
+              "elements": 36352,
+              "different_values": 14397,
+              "max_abs": 0.078125
+            },
+            "values": {
+              "elements": 36352,
+              "different_values": 17221,
+              "max_abs": 0.048828125
+            }
+          },
+          {
+            "layer": 22,
+            "keys": {
+              "elements": 36352,
+              "different_values": 14886,
+              "max_abs": 0.078125
+            },
+            "values": {
+              "elements": 36352,
+              "different_values": 17096,
+              "max_abs": 0.0546875
+            }
+          },
+          {
+            "layer": 23,
+            "keys": {
+              "elements": 36352,
+              "different_values": 14545,
+              "max_abs": 0.0703125
+            },
+            "values": {
+              "elements": 36352,
+              "different_values": 17346,
+              "max_abs": 0.078125
+            }
+          },
+          {
+            "layer": 24,
+            "keys": {
+              "elements": 36352,
+              "different_values": 15170,
+              "max_abs": 0.09375
+            },
+            "values": {
+              "elements": 36352,
+              "different_values": 16986,
+              "max_abs": 0.078125
+            }
+          },
+          {
+            "layer": 25,
+            "keys": {
+              "elements": 36352,
+              "different_values": 15466,
+              "max_abs": 0.0703125
+            },
+            "values": {
+              "elements": 36352,
+              "different_values": 17623,
+              "max_abs": 0.15625
+            }
+          },
+          {
+            "layer": 26,
+            "keys": {
+              "elements": 36352,
+              "different_values": 15718,
+              "max_abs": 0.125
+            },
+            "values": {
+              "elements": 36352,
+              "different_values": 17735,
+              "max_abs": 0.21875
+            }
+          },
+          {
+            "layer": 27,
+            "keys": {
+              "elements": 36352,
+              "different_values": 14733,
+              "max_abs": 2.0
+            },
+            "values": {
+              "elements": 36352,
+              "different_values": 17891,
+              "max_abs": 0.21875
+            }
+          }
+        ],
+        "watched_ids": [
+          6872,
+          13324
+        ],
+        "note": "A winner pattern describes this decision only. Cache construction changes prior arithmetic; cache differences alone are not bugs or deployable predictor features. No FP32 repair is tested."
+      }
+    },
+    {
+      "id": 142,
+      "category": "stem",
+      "group": "saved_pass_control",
+      "decision_token_1_based": 128,
+      "matched_failure_id": 146,
+      "same_decision_position": true,
+      "selection": "available passing prompt; prefer matching position, category, prompt length",
+      "status": "complete",
+      "baseline_repeat_matches": true,
+      "baseline_matches_saved": true,
+      "observed_decision_token_1_based": 128,
+      "earlier_divergence_than_planned": false,
+      "tokens_agree_at_observed_decision": true,
+      "verification_context": {
+        "phase": "verification",
+        "prefix_token_ids": [
+          14582,
+          25,
+          21144,
+          264,
+          23210,
+          429,
+          374,
+          304,
+          264,
+          26931,
+          26507,
+          2163,
+          279,
+          9237,
+          13,
+          576,
+          4628,
+          315,
+          279,
+          23210,
+          42054,
+          13,
+          3555,
+          686,
+          3537,
+          311,
+          279,
+          23210,
+          594,
+          64591,
+          10578,
+          323,
+          4168,
+          315,
+          13791,
+          30,
+          5209,
+          9357,
+          697,
+          4226,
+          1667,
+          16170,
+          315,
+          21321,
+          624,
+          16141,
+          25,
+          576,
+          23210,
+          594,
+          64591,
+          10578,
+          686,
+          5263,
+          323,
+          1181,
+          4168,
+          315,
+          13791,
+          686,
+          1083,
+          5263,
+          13,
+          1096,
+          374,
+          1576,
+          11,
+          4092,
+          311,
+          279,
+          28611,
+          315,
+          20314,
+          23270,
+          11,
+          279,
+          1985,
+          315,
+          279,
+          23210,
+          594,
+          3072,
+          11,
+          15435,
+          11,
+          323,
+          10578,
+          8458,
+          6783,
+          13,
+          1634,
+          279,
+          4628,
+          42054,
+          11,
+          279,
+          10578,
+          1969,
+          5263,
+          311,
+          10306,
+          279,
+          1852,
+          20314,
+          23270,
+          13,
+          22406,
+          11,
+          279,
+          4168,
+          315,
+          13791,
+          374,
+          5961,
+          54172,
+          311,
+          279,
+          64591,
+          10578,
+          11,
+          773,
+          438,
+          279,
+          10578,
+          12703,
+          11,
+          279,
+          4168,
+          315,
+          13791,
+          686,
+          1083,
+          5263,
+          624,
+          14582,
+          25,
+          362,
+          1803,
+          374,
+          20971,
+          389,
+          264,
+          7678,
+          5636,
+          13,
+          576,
+          5579,
+          16790,
+          279,
+          44564,
+          11,
+          323,
+          279,
+          1803,
+          4041,
+          311,
+          264,
+          2936,
+          13,
+          3555,
+          374,
+          279,
+          5025,
+          1948,
+          279,
+          1803,
+          594,
+          2856,
+          4628,
+          323,
+          279
+        ],
+        "input_token_ids": [
+          6010,
+          432,
+          34192,
+          1573
+        ],
+        "row": 2,
+        "baseline_token": 1573,
+        "speculative_token": 1573,
+        "emission_source": "accepted_proposal"
+      },
+      "observations_available_during_speculation": {
+        "current_top_two_gap": 1.0,
+        "current_block_length": 4,
+        "verification_row": 2,
+        "verification_lengths_so_far": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "cache_prefix_length": 171
+      },
+      "four_way": {
+        "status": "complete",
+        "controls": {
+          "all_restored_cache_values_match": true,
+          "ordinary_serial_reproduces_baseline_logits": true,
+          "speculative_block_reproduces_actual_logits": true,
+          "all_repeats_exact": true,
+          "lineage_passed": true,
+          "positions_observed_and_correct": true,
+          "retained_cache_values_preserved": true
+        },
+        "cells": {
+          "ordinary_serial": [
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 1573,
+              "argmax_text": " before",
+              "top_two_gap": 1.0,
+              "baseline_token_score": 28.875,
+              "speculative_token_score": 27.875,
+              "baseline_minus_speculative_score": 1.0,
+              "top10": [
+                {
+                  "id": 1573,
+                  "text": " before",
+                  "logit": 28.875
+                },
+                {
+                  "id": 1393,
+                  "text": " while",
+                  "logit": 27.875
+                },
+                {
+                  "id": 311,
+                  "text": " to",
+                  "logit": 25.875
+                },
+                {
+                  "id": 2337,
+                  "text": " during",
+                  "logit": 25.875
+                },
+                {
+                  "id": 1283,
+                  "text": " after",
+                  "logit": 24.625
+                },
+                {
+                  "id": 3080,
+                  "text": " until",
+                  "logit": 23.25
+                },
+                {
+                  "id": 30,
+                  "text": "?",
+                  "logit": 23.125
+                },
+                {
+                  "id": 504,
+                  "text": " from",
+                  "logit": 22.375
+                },
+                {
+                  "id": 389,
+                  "text": " on",
+                  "logit": 22.375
+                },
+                {
+                  "id": 304,
+                  "text": " in",
+                  "logit": 22.125
+                }
+              ]
+            },
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 1573,
+              "argmax_text": " before",
+              "top_two_gap": 1.0,
+              "baseline_token_score": 28.875,
+              "speculative_token_score": 27.875,
+              "baseline_minus_speculative_score": 1.0,
+              "top10": [
+                {
+                  "id": 1573,
+                  "text": " before",
+                  "logit": 28.875
+                },
+                {
+                  "id": 1393,
+                  "text": " while",
+                  "logit": 27.875
+                },
+                {
+                  "id": 311,
+                  "text": " to",
+                  "logit": 25.875
+                },
+                {
+                  "id": 2337,
+                  "text": " during",
+                  "logit": 25.875
+                },
+                {
+                  "id": 1283,
+                  "text": " after",
+                  "logit": 24.625
+                },
+                {
+                  "id": 3080,
+                  "text": " until",
+                  "logit": 23.25
+                },
+                {
+                  "id": 30,
+                  "text": "?",
+                  "logit": 23.125
+                },
+                {
+                  "id": 504,
+                  "text": " from",
+                  "logit": 22.375
+                },
+                {
+                  "id": 389,
+                  "text": " on",
+                  "logit": 22.375
+                },
+                {
+                  "id": 304,
+                  "text": " in",
+                  "logit": 22.125
+                }
+              ]
+            }
+          ],
+          "ordinary_block": [
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 1573,
+              "argmax_text": " before",
+              "top_two_gap": 1.0,
+              "baseline_token_score": 29.0,
+              "speculative_token_score": 28.0,
+              "baseline_minus_speculative_score": 1.0,
+              "top10": [
+                {
+                  "id": 1573,
+                  "text": " before",
+                  "logit": 29.0
+                },
+                {
+                  "id": 1393,
+                  "text": " while",
+                  "logit": 28.0
+                },
+                {
+                  "id": 311,
+                  "text": " to",
+                  "logit": 26.0
+                },
+                {
+                  "id": 2337,
+                  "text": " during",
+                  "logit": 26.0
+                },
+                {
+                  "id": 1283,
+                  "text": " after",
+                  "logit": 24.75
+                },
+                {
+                  "id": 3080,
+                  "text": " until",
+                  "logit": 23.375
+                },
+                {
+                  "id": 30,
+                  "text": "?",
+                  "logit": 23.125
+                },
+                {
+                  "id": 389,
+                  "text": " on",
+                  "logit": 22.5
+                },
+                {
+                  "id": 504,
+                  "text": " from",
+                  "logit": 22.375
+                },
+                {
+                  "id": 304,
+                  "text": " in",
+                  "logit": 22.125
+                }
+              ]
+            },
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 1573,
+              "argmax_text": " before",
+              "top_two_gap": 1.0,
+              "baseline_token_score": 29.0,
+              "speculative_token_score": 28.0,
+              "baseline_minus_speculative_score": 1.0,
+              "top10": [
+                {
+                  "id": 1573,
+                  "text": " before",
+                  "logit": 29.0
+                },
+                {
+                  "id": 1393,
+                  "text": " while",
+                  "logit": 28.0
+                },
+                {
+                  "id": 311,
+                  "text": " to",
+                  "logit": 26.0
+                },
+                {
+                  "id": 2337,
+                  "text": " during",
+                  "logit": 26.0
+                },
+                {
+                  "id": 1283,
+                  "text": " after",
+                  "logit": 24.75
+                },
+                {
+                  "id": 3080,
+                  "text": " until",
+                  "logit": 23.375
+                },
+                {
+                  "id": 30,
+                  "text": "?",
+                  "logit": 23.125
+                },
+                {
+                  "id": 389,
+                  "text": " on",
+                  "logit": 22.5
+                },
+                {
+                  "id": 504,
+                  "text": " from",
+                  "logit": 22.375
+                },
+                {
+                  "id": 304,
+                  "text": " in",
+                  "logit": 22.125
+                }
+              ]
+            }
+          ],
+          "speculative_serial": [
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 1573,
+              "argmax_text": " before",
+              "top_two_gap": 1.0,
+              "baseline_token_score": 29.0,
+              "speculative_token_score": 28.0,
+              "baseline_minus_speculative_score": 1.0,
+              "top10": [
+                {
+                  "id": 1573,
+                  "text": " before",
+                  "logit": 29.0
+                },
+                {
+                  "id": 1393,
+                  "text": " while",
+                  "logit": 28.0
+                },
+                {
+                  "id": 2337,
+                  "text": " during",
+                  "logit": 26.0
+                },
+                {
+                  "id": 311,
+                  "text": " to",
+                  "logit": 25.875
+                },
+                {
+                  "id": 1283,
+                  "text": " after",
+                  "logit": 24.625
+                },
+                {
+                  "id": 3080,
+                  "text": " until",
+                  "logit": 23.25
+                },
+                {
+                  "id": 30,
+                  "text": "?",
+                  "logit": 23.125
+                },
+                {
+                  "id": 504,
+                  "text": " from",
+                  "logit": 22.375
+                },
+                {
+                  "id": 389,
+                  "text": " on",
+                  "logit": 22.375
+                },
+                {
+                  "id": 304,
+                  "text": " in",
+                  "logit": 22.0
+                }
+              ]
+            },
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 1573,
+              "argmax_text": " before",
+              "top_two_gap": 1.0,
+              "baseline_token_score": 29.0,
+              "speculative_token_score": 28.0,
+              "baseline_minus_speculative_score": 1.0,
+              "top10": [
+                {
+                  "id": 1573,
+                  "text": " before",
+                  "logit": 29.0
+                },
+                {
+                  "id": 1393,
+                  "text": " while",
+                  "logit": 28.0
+                },
+                {
+                  "id": 2337,
+                  "text": " during",
+                  "logit": 26.0
+                },
+                {
+                  "id": 311,
+                  "text": " to",
+                  "logit": 25.875
+                },
+                {
+                  "id": 1283,
+                  "text": " after",
+                  "logit": 24.625
+                },
+                {
+                  "id": 3080,
+                  "text": " until",
+                  "logit": 23.25
+                },
+                {
+                  "id": 30,
+                  "text": "?",
+                  "logit": 23.125
+                },
+                {
+                  "id": 504,
+                  "text": " from",
+                  "logit": 22.375
+                },
+                {
+                  "id": 389,
+                  "text": " on",
+                  "logit": 22.375
+                },
+                {
+                  "id": 304,
+                  "text": " in",
+                  "logit": 22.0
+                }
+              ]
+            }
+          ],
+          "speculative_block": [
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 1573,
+              "argmax_text": " before",
+              "top_two_gap": 1.0,
+              "baseline_token_score": 28.875,
+              "speculative_token_score": 27.875,
+              "baseline_minus_speculative_score": 1.0,
+              "top10": [
+                {
+                  "id": 1573,
+                  "text": " before",
+                  "logit": 28.875
+                },
+                {
+                  "id": 1393,
+                  "text": " while",
+                  "logit": 27.875
+                },
+                {
+                  "id": 311,
+                  "text": " to",
+                  "logit": 25.875
+                },
+                {
+                  "id": 2337,
+                  "text": " during",
+                  "logit": 25.875
+                },
+                {
+                  "id": 1283,
+                  "text": " after",
+                  "logit": 24.625
+                },
+                {
+                  "id": 3080,
+                  "text": " until",
+                  "logit": 23.25
+                },
+                {
+                  "id": 30,
+                  "text": "?",
+                  "logit": 23.125
+                },
+                {
+                  "id": 389,
+                  "text": " on",
+                  "logit": 22.375
+                },
+                {
+                  "id": 504,
+                  "text": " from",
+                  "logit": 22.25
+                },
+                {
+                  "id": 304,
+                  "text": " in",
+                  "logit": 22.0
+                }
+              ]
+            },
+            {
+              "original_dtype": "torch.bfloat16",
+              "vocabulary_size": 152064,
+              "argmax_id": 1573,
+              "argmax_text": " before",
+              "top_two_gap": 1.0,
+              "baseline_token_score": 28.875,
+              "speculative_token_score": 27.875,
+              "baseline_minus_speculative_score": 1.0,
+              "top10": [
+                {
+                  "id": 1573,
+                  "text": " before",
+                  "logit": 28.875
+                },
+                {
+                  "id": 1393,
+                  "text": " while",
+                  "logit": 27.875
+                },
+                {
+                  "id": 311,
+                  "text": " to",
+                  "logit": 25.875
+                },
+                {
+                  "id": 2337,
+                  "text": " during",
+                  "logit": 25.875
+                },
+                {
+                  "id": 1283,
+                  "text": " after",
+                  "logit": 24.625
+                },
+                {
+                  "id": 3080,
+                  "text": " until",
+                  "logit": 23.25
+                },
+                {
+                  "id": 30,
+                  "text": "?",
+                  "logit": 23.125
+                },
+                {
+                  "id": 389,
+                  "text": " on",
+                  "logit": 22.375
+                },
+                {
+                  "id": 504,
+                  "text": " from",
+                  "logit": 22.25
+                },
+                {
+                  "id": 304,
+                  "text": " in",
+                  "logit": 22.0
+                }
+              ]
+            }
+          ]
+        },
+        "logit_comparisons": {
+          "shape_with_ordinary_cache": {
+            "max_abs_logit_difference": 0.1875,
+            "mean_abs_logit_difference": 0.04170779511332512,
+            "different_logit_values": 141729,
+            "argmax_matches": true
+          },
+          "shape_with_speculative_cache": {
+            "max_abs_logit_difference": 0.15625,
+            "mean_abs_logit_difference": 0.043833356350660324,
+            "different_logit_values": 146449,
+            "argmax_matches": true
+          },
+          "history_with_serial_execution": {
+            "max_abs_logit_difference": 0.15625,
+            "mean_abs_logit_difference": 0.022568825632333755,
+            "different_logit_values": 126874,
+            "argmax_matches": true
+          },
+          "history_with_block_execution": {
+            "max_abs_logit_difference": 0.25,
+            "mean_abs_logit_difference": 0.08561161905527115,
+            "different_logit_values": 151377,
+            "argmax_matches": true
+          }
+        },
+        "winner_pattern": "no_winner_effect_observed",
+        "oracle_only_cache_distance": [
+          {
+            "layer": 0,
+            "keys": {
+              "elements": 87552,
+              "different_values": 1,
+              "max_abs": 0.001953125
+            },
+            "values": {
+              "elements": 87552,
+              "different_values": 7,
+              "max_abs": 7.62939453125e-06
+            }
+          },
+          {
+            "layer": 1,
+            "keys": {
+              "elements": 87552,
+              "different_values": 1506,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 87552,
+              "different_values": 7088,
+              "max_abs": 0.00390625
+            }
+          },
+          {
+            "layer": 2,
+            "keys": {
+              "elements": 87552,
+              "different_values": 17542,
+              "max_abs": 0.125
+            },
+            "values": {
+              "elements": 87552,
+              "different_values": 33309,
+              "max_abs": 0.015625
+            }
+          },
+          {
+            "layer": 3,
+            "keys": {
+              "elements": 87552,
+              "different_values": 23243,
+              "max_abs": 0.25
+            },
+            "values": {
+              "elements": 87552,
+              "different_values": 41019,
+              "max_abs": 0.0078125
+            }
+          },
+          {
+            "layer": 4,
+            "keys": {
+              "elements": 87552,
+              "different_values": 32758,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 87552,
+              "different_values": 44110,
+              "max_abs": 0.015625
+            }
+          },
+          {
+            "layer": 5,
+            "keys": {
+              "elements": 87552,
+              "different_values": 37427,
+              "max_abs": 0.078125
+            },
+            "values": {
+              "elements": 87552,
+              "different_values": 47494,
+              "max_abs": 0.0390625
+            }
+          },
+          {
+            "layer": 6,
+            "keys": {
+              "elements": 87552,
+              "different_values": 38216,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 87552,
+              "different_values": 49814,
+              "max_abs": 0.03125
+            }
+          },
+          {
+            "layer": 7,
+            "keys": {
+              "elements": 87552,
+              "different_values": 38541,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 87552,
+              "different_values": 51747,
+              "max_abs": 0.046875
+            }
+          },
+          {
+            "layer": 8,
+            "keys": {
+              "elements": 87552,
+              "different_values": 40000,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 87552,
+              "different_values": 50479,
+              "max_abs": 0.037109375
+            }
+          },
+          {
+            "layer": 9,
+            "keys": {
+              "elements": 87552,
+              "different_values": 41188,
+              "max_abs": 0.0625
+            },
+            "values": {
+              "elements": 87552,
+              "different_values": 53157,
+              "max_abs": 0.04296875
+            }
+          },
+          {
+            "layer": 10,
+            "keys": {
+              "elements": 87552,
+              "different_values": 42283,
+              "max_abs": 0.064453125
+            },
+            "values": {
+              "elements": 87552,
+              "different_values": 51413,
+              "max_abs": 0.046875
+            }
+          },
+          {
+            "layer": 11,
+            "keys": {
+              "elements": 87552,
+              "different_values": 42956,
+              "max_abs": 0.109375
+            },
+            "values": {
+              "elements": 87552,
+              "different_values": 51064,
+              "max_abs": 0.0390625
+            }
+          },
+          {
+            "layer": 12,
+            "keys": {
+              "elements": 87552,
+              "different_values": 44131,
+              "max_abs": 0.09375
+            },
+            "values": {
+              "elements": 87552,
+              "different_values": 52962,
+              "max_abs": 0.0625
+            }
+          },
+          {
+            "layer": 13,
+            "keys": {
+              "elements": 87552,
+              "different_values": 43379,
+              "max_abs": 0.25
+            },
+            "values": {
+              "elements": 87552,
+              "different_values": 53435,
+              "max_abs": 0.046875
+            }
+          },
+          {
+            "layer": 14,
+            "keys": {
+              "elements": 87552,
+              "different_values": 45000,
+              "max_abs": 0.109375
+            },
+            "values": {
+              "elements": 87552,
+              "different_values": 53173,
+              "max_abs": 0.05859375
+            }
+          },
+          {
+            "layer": 15,
+            "keys": {
+              "elements": 87552,
+              "different_values": 44373,
+              "max_abs": 0.125
+            },
+            "values": {
+              "elements": 87552,
+              "different_values": 53197,
+              "max_abs": 0.046875
+            }
+          },
+          {
+            "layer": 16,
+            "keys": {
+              "elements": 87552,
+              "different_values": 45582,
+              "max_abs": 0.0859375
+            },
+            "values": {
+              "elements": 87552,
+              "different_values": 53981,
+              "max_abs": 0.05078125
+            }
+          },
+          {
+            "layer": 17,
+            "keys": {
+              "elements": 87552,
+              "different_values": 46976,
+              "max_abs": 0.109375
+            },
+            "values": {
+              "elements": 87552,
+              "different_values": 54316,
+              "max_abs": 0.0625
+            }
+          },
+          {
+            "layer": 18,
+            "keys": {
+              "elements": 87552,
+              "different_values": 46077,
+              "max_abs": 0.09375
+            },
+            "values": {
+              "elements": 87552,
+              "different_values": 54887,
+              "max_abs": 0.09375
+            }
+          },
+          {
+            "layer": 19,
+            "keys": {
+              "elements": 87552,
+              "different_values": 45475,
+              "max_abs": 0.25
+            },
+            "values": {
+              "elements": 87552,
+              "different_values": 53467,
+              "max_abs": 0.0625
+            }
+          },
+          {
+            "layer": 20,
+            "keys": {
+              "elements": 87552,
+              "different_values": 46162,
+              "max_abs": 0.09375
+            },
+            "values": {
+              "elements": 87552,
+              "different_values": 53204,
+              "max_abs": 0.0546875
+            }
+          },
+          {
+            "layer": 21,
+            "keys": {
+              "elements": 87552,
+              "different_values": 44517,
+              "max_abs": 0.125
+            },
+            "values": {
+              "elements": 87552,
+              "different_values": 53216,
+              "max_abs": 0.083984375
+            }
+          },
+          {
+            "layer": 22,
+            "keys": {
+              "elements": 87552,
+              "different_values": 45585,
+              "max_abs": 0.09375
+            },
+            "values": {
+              "elements": 87552,
+              "different_values": 53003,
+              "max_abs": 0.078125
+            }
+          },
+          {
+            "layer": 23,
+            "keys": {
+              "elements": 87552,
+              "different_values": 45251,
+              "max_abs": 0.125
+            },
+            "values": {
+              "elements": 87552,
+              "different_values": 53271,
+              "max_abs": 0.09375
+            }
+          },
+          {
+            "layer": 24,
+            "keys": {
+              "elements": 87552,
+              "different_values": 46384,
+              "max_abs": 0.09375
+            },
+            "values": {
+              "elements": 87552,
+              "different_values": 52630,
+              "max_abs": 0.09375
+            }
+          },
+          {
+            "layer": 25,
+            "keys": {
+              "elements": 87552,
+              "different_values": 46430,
+              "max_abs": 0.078125
+            },
+            "values": {
+              "elements": 87552,
+              "different_values": 54238,
+              "max_abs": 0.1612548828125
+            }
+          },
+          {
+            "layer": 26,
+            "keys": {
+              "elements": 87552,
+              "different_values": 47172,
+              "max_abs": 0.09375
+            },
+            "values": {
+              "elements": 87552,
+              "different_values": 54581,
+              "max_abs": 0.25
+            }
+          },
+          {
+            "layer": 27,
+            "keys": {
+              "elements": 87552,
+              "different_values": 44872,
+              "max_abs": 2.0
+            },
+            "values": {
+              "elements": 87552,
+              "different_values": 55642,
+              "max_abs": 0.3125
+            }
+          }
+        ],
+        "watched_ids": [
+          1573,
+          1393
+        ],
+        "note": "A winner pattern describes this decision only. Cache construction changes prior arithmetic; cache differences alone are not bugs or deployable predictor features. No FP32 repair is tested."
+      }
+    }
+  ],
+  "target_quantization": {
+    "method": "bitsandbytes_4bit",
+    "linear4bit_layers": 196,
+    "checkpoint_config": {
+      "_load_in_4bit": true,
+      "_load_in_8bit": false,
+      "bnb_4bit_compute_dtype": "bfloat16",
+      "bnb_4bit_quant_storage": "uint8",
+      "bnb_4bit_quant_type": "nf4",
+      "bnb_4bit_use_double_quant": true,
+      "llm_int8_enable_fp32_cpu_offload": false,
+      "llm_int8_has_fp16_weight": false,
+      "llm_int8_skip_modules": [
+        "lm_head",
+        "multi_modal_projector",
+        "merger",
+        "modality_projection"
+      ],
+      "llm_int8_threshold": 6.0,
+      "load_in_4bit": true,
+      "load_in_8bit": false,
+      "quant_method": "bitsandbytes"
+    },
+    "effective_config": {
+      "_load_in_4bit": true,
+      "_load_in_8bit": false,
+      "bnb_4bit_compute_dtype": "float16",
+      "bnb_4bit_quant_storage": "uint8",
+      "bnb_4bit_quant_type": "nf4",
+      "bnb_4bit_use_double_quant": true,
+      "llm_int8_enable_fp32_cpu_offload": false,
+      "llm_int8_has_fp16_weight": false,
+      "llm_int8_skip_modules": [
+        "lm_head",
+        "multi_modal_projector",
+        "merger",
+        "modality_projection"
+      ],
+      "llm_int8_threshold": 6.0,
+      "load_in_4bit": true,
+      "load_in_8bit": false,
+      "quant_method": "bitsandbytes"
+    },
+    "compute_dtype": "torch.float16",
+    "device_map": {
+      "": "mps"
+    }
+  }
+}
