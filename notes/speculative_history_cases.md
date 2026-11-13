@@ -1,8 +1,80 @@
 # Cases for investigating speculative numerical divergence
 
-This is a prepared accuracy diagnostic, not an adaptive precision policy. It
-does not benchmark inference or claim a new repair method. Model runs are for
-the user to execute; local verification used helper tests and JSON-only plans.
+This accuracy diagnostic has user-run all-80 results recorded below. It is not
+an adaptive precision policy, speed benchmark or demonstrated repair method.
+The agent verified saved reports without rerunning model inference.
+
+## Completed all-80 result: November 13, 2026
+
+Evidence: [full replay report](../results/raw/speculative_history_cases_20261113T071415805347Z.json),
+using the [original quantized benchmark](../results/raw/speculative_mt_bench_20261111T072715614993Z.json).
+
+```bash
+python benchmarks/speculative_history_cases.py \
+  --report results/raw/speculative_mt_bench_20261111T072715614993Z.json \
+  --all-cases --repeats 4
+```
+
+All **80/80 prompts completed**: the 34 saved failures and 46 saved passing
+controls. Every original failure reproduced at its saved first-mismatch
+position. Each of the four cells ran four times: **1,280 replay evaluations**.
+All recorded full-vector repeat checks were exact, and repeated saved score
+descriptions agree. Baseline generation matched its independent repeat and the
+saved output in all cases. Source-report and diagnostic-code hashes matched
+when audited.
+
+| Winner pattern | Cases | Interpretation at the examined decision |
+| --- | ---: | --- |
+| Cache-history effect only | 11 | Cache replacement changes the winner; serial/block switching does not |
+| Current-execution effect only | 5 | Serial/block switching changes the winner; cache replacement does not |
+| Both factors or interaction | 18 | Both factors affect the winner, possibly only in combination |
+| No winner effect | 46 | All four combinations choose the same token |
+
+The first three rows account for all 34 saved failures. All 46 saved passing
+controls had no winner effect at their selected decision. Cache values and
+logits can still differ in these passing cases; cache disagreement alone is
+not sufficient evidence of a token mismatch.
+
+Examples (leading spaces omitted for readability):
+
+| Case | Ordinary cache + serial | Ordinary cache + block | Speculative cache + serial | Speculative cache + block |
+| --- | --- | --- | --- | --- |
+| 147 | `the` | `the` | `ing` | `ing` |
+| 139 | `_` | `1` | `_` | `1` |
+| 151 | `measures` | `measures` | `measures` | `refers` |
+
+Every case passed cache-restoration, lineage, rotary-position and retained-cache
+checks. Ordinary-cache/serial reproduced baseline logits exactly, while
+speculative-cache/block reproduced actual verification logits exactly.
+
+### Score gaps and precision observation
+
+At the selected actual speculative decisions, all 34 failures had top-two
+score gaps of **0 or 0.125**, including **14 exact ties**. The 46 passing
+controls had gaps of **at least 0.25**. A gap threshold therefore separates
+these selected observations; this is not a validated detector across all
+generation positions or unseen prompts. We have not shown that history features
+improve prediction over a score-gap-only policy.
+
+Although the report requests FP16 compute, **all recorded replay logit vectors
+are BF16** (`original_dtype: torch.bfloat16`). This does not invalidate the
+controlled comparisons, but the run must not be described as uniformly FP16.
+Which operation introduced BF16, and whether it contributed to divergence,
+remain unresolved. Casting already-rounded scores to FP16 would not recover
+discarded distinctions.
+
+### Scope and next evidence
+
+This covers one selected decision per prompt, not every generated token. Cases
+were selected using saved failure positions; the passing controls do not sample
+all low-margin passing decisions. No precision intervention, repair latency,
+predictor improvement or backend bug is established.
+
+Next, audit actual layer/input/output dtypes, then collect score gaps across
+generation to identify close passing decisions. Those provide stronger controls
+for testing whether numerical history contributes useful predictive information
+beyond the current score gap. The proposed history-aware repair remains a
+research hypothesis, not a result of this run.
 
 ## First quantized pilot
 

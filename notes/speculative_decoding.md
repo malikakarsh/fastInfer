@@ -83,10 +83,12 @@ See [commands and detailed methodology](speculative_mt_bench.md). Any remedy
 must preserve token agreement across cache construction, sequential decode and
 block verification, then be measured for its performance cost.
 
-A [four-way history/execution diagnostic with passing controls](speculative_history_cases.md)
-is prepared for user execution on both FP16 and NF4 targets. It collects
-evidence for the history-aware repair hypothesis; it does not implement a
-predictor or establish a successful precision repair.
+The [completed NF4 all-80 history/execution diagnostic](speculative_history_cases.md#completed-all-80-result-november-13-2026)
+reproduced all 34 quantized failures with stable four-repeat controls. Winner
+effects split into 11 history-only, 5 current-execution-only and 18 mixed cases;
+all 46 selected passing decisions retained their winner. Recorded logits were
+BF16 despite requested FP16 compute. These results do not yet show that history
+improves prediction beyond the score gap, or establish a successful repair.
 
 Related reading: [finite-precision speculative losslessness](https://arxiv.org/abs/2609.15504),
 [numerical reproducibility and LayerCast](https://arxiv.org/abs/2506.09501), and

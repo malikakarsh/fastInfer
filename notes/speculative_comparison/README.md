@@ -47,6 +47,13 @@ not establish a PyTorch bug. The 34 quantized failures have not been individuall
 diagnosed, so the FP16 mechanisms must not be assumed to explain all of them.
 See the [numerical-equivalence findings](../speculative_decoding.md).
 
+The subsequent [all-80 four-way replay](../speculative_history_cases.md#completed-all-80-result-november-13-2026)
+reproduced all 34 quantized failures: 11 cache-history winner effects only,
+5 current-execution effects only, and 18 mixed/interaction effects. All 46
+selected passing decisions kept their winner. All replay controls passed with
+four repeats per cell. Recorded logits were BF16 despite FP16 compute being
+requested; this precision detail remains under investigation.
+
 ## Timing on the same 46 passing prompts
 
 To compare the configurations, restrict both saved runs to the intersection of

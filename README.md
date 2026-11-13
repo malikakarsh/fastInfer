@@ -78,6 +78,15 @@ entire inference slowdown remains unresolved. See the
 
 ## Speculative decoding: current computation versus cached history
 
+The [completed all-80 quantized replay](notes/speculative_history_cases.md#completed-all-80-result-november-13-2026)
+reproduced 34 failures: **11 cache-history-only, 5 current-execution-only and
+18 mixed/interaction winner effects**. All 46 selected passing decisions kept
+their winner, and every replay control passed with four repeats per cell.
+All failures had score gaps at most 0.125; selected passing controls had gaps
+at least 0.25, so additional predictive value from history is not established.
+Recorded logits were **BF16 despite requested FP16 compute**; layer dtype
+inspection is pending. This is a one-decision-per-prompt diagnostic, not a repair.
+
 Two FP16 MPS failures exposed different sources of numerical sensitivity:
 
 - **Case 148 — current computation:** from an identical starting KV cache and
