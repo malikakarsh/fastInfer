@@ -42,8 +42,13 @@ def spread_indices(size, count):
     return [i * (size - 1) // (count - 1) for i in range(count)]
 
 
-def make_plan(saved, failure_count, control_count):
+def make_plan(saved, failure_count, control_count, all_cases=False):
     """Freeze selection from saved outcomes, never from new probe results."""
+    identifiers = [case["id"] for case in saved["cases"]]
+    if len(identifiers) != len(set(identifiers)):
+        raise ValueError("source report contains duplicate case IDs")
+    if all_cases:
+        failure_count = control_count = len(saved["cases"])
     failures, controls, excluded = [], [], []
     for case in saved["cases"]:
         baseline = case.get("validation", {}).get("baseline", {}).get("generated", [])
@@ -51,7 +56,9 @@ def make_plan(saved, failure_count, control_count):
             excluded.append({"id": case["id"], "reason": "saved baseline unstable or unavailable"})
         elif case.get("correctness_passed") and len(baseline) > 1:
             controls.append(case)
-        elif not case.get("correctness_passed"):
+        elif case.get("correctness_passed"):
+            excluded.append({"id": case["id"], "reason": "passing output too short for a post-prefill decision"})
+        else:
             index = first_difference(case)
             if index is None or index == 0:
                 excluded.append({"id": case["id"], "reason": "length-only, missing output, or prefill mismatch"})
@@ -78,8 +85,13 @@ def make_plan(saved, failure_count, control_count):
                         "decision_token_1_based": point + 1, "matched_failure_id": failure["id"],
                         "same_decision_position": point == index,
                         "selection": "available passing prompt; prefer matching position, category, prompt length"})
-    return {"entries": entries, "excluded": excluded,
-            "note": "Selected cases are a diagnostic sample, not a failure-rate estimate or predictor evaluation."}
+    if all_cases and {entry["id"] for entry in entries} != set(identifiers):
+        missing = sorted(set(identifiers) - {entry["id"] for entry in entries})
+        raise ValueError(f"cannot replay every source case; unsupported IDs: {missing}. See source outcomes.")
+    return {"entries": entries, "excluded": excluded, "all_cases": all_cases,
+            "source_case_count": len(identifiers), "selected_case_count": len(entries),
+            "note": ("All source prompts, one selected decision per prompt; not an all-token audit or predictor evaluation."
+                     if all_cases else "Selected cases are a diagnostic sample, not a failure-rate estimate or predictor evaluation.")}
 
 
 class DecisionRecorder(Recorder):
@@ -226,16 +238,25 @@ def run_with_recorder(target, draft, prompt, recorder, options, gamma):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--report", required=True, type=Path)
-    parser.add_argument("--failure-count", type=int, default=3)
-    parser.add_argument("--control-count", type=int, default=3)
+    parser.add_argument("--failure-count", type=int)
+    parser.add_argument("--control-count", type=int)
+    parser.add_argument("--all-cases", action="store_true", help="include every prompt in the source report")
     parser.add_argument("--repeats", type=int, default=2)
     parser.add_argument("--plan-only", action="store_true")
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
+    if args.all_cases and (args.failure_count is not None or args.control_count is not None):
+        parser.error("--all-cases cannot be combined with failure/control counts")
+    args.failure_count = 3 if args.failure_count is None else args.failure_count
+    args.control_count = 3 if args.control_count is None else args.control_count
     if args.failure_count < 1 or args.control_count < 0 or args.repeats < 2:
         parser.error("positive failure count, nonnegative control count, and at least two repeats required")
     saved = json.loads(args.report.read_text())
-    plan = make_plan(saved, args.failure_count, args.control_count)
+    try:
+        plan = make_plan(saved, args.failure_count, args.control_count, all_cases=args.all_cases)
+    except ValueError as exc:
+        parser.error(str(exc))
+    print(f"Selected {plan['selected_case_count']}/{plan['source_case_count']} source prompts", flush=True)
     for entry in plan["entries"]:
         print(f"{entry['id']} {entry['category']}: {entry['group']}, "
               f"planned generated token {entry['decision_token_1_based']}", flush=True)
@@ -286,7 +307,8 @@ def main():
         eos = target.generation_config.eos_token_id
         eos = [eos] if isinstance(eos, int) else list(eos or [])
         options = {"max_new_tokens": saved["settings"]["max_new_tokens"], "eos_token_ids": eos}
-        for entry in plan["entries"]:
+        for number, entry in enumerate(plan["entries"], 1):
+            print(f"Case {number}/{len(plan['entries'])}: prompt {entry['id']}", flush=True)
             original = next(c for c in saved["cases"] if c["id"] == entry["id"])
             case = {**entry, "status": "running"}
             report["cases"].append(case)

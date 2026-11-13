@@ -26,6 +26,23 @@ def saved_case(identifier, length, mismatch=None, category="math"):
 
 
 class HistoryCasesTest(unittest.TestCase):
+    def test_all_cases_includes_more_controls_than_failures_without_duplicates(self):
+        cases = [saved_case(1, 20, 2), saved_case(2, 20, 12)]
+        cases += [saved_case(i, 20) for i in range(10, 15)]
+        plan = diagnostic.make_plan({"cases": cases}, 1, 1, all_cases=True)
+        self.assertEqual({e["id"] for e in plan["entries"]}, {c["id"] for c in cases})
+        self.assertEqual(plan["selected_case_count"], 7)
+        self.assertEqual(sum(e["group"] == "saved_failure" for e in plan["entries"]), 2)
+        self.assertEqual(sum(e["group"] == "saved_pass_control" for e in plan["entries"]), 5)
+        self.assertEqual(plan["excluded"], [])
+
+    def test_all_cases_refuses_silently_omitting_unsupported_prompts(self):
+        cases = [saved_case(1, 20, 2), saved_case(2, 1)]
+        with self.assertRaisesRegex(ValueError, "unsupported IDs:.*2"):
+            diagnostic.make_plan({"cases": cases}, 1, 1, all_cases=True)
+        with self.assertRaisesRegex(ValueError, "duplicate"):
+            diagnostic.make_plan({"cases": [cases[0], cases[0]]}, 1, 1, all_cases=True)
+
     def test_plan_spans_early_to_late_and_has_distinct_passing_controls(self):
         failures = [saved_case(i + 10, 30, mismatch=point) for i, point in enumerate([1, 3, 8, 14, 24])]
         passes = [saved_case(i + 100, 30) for i in range(4)]

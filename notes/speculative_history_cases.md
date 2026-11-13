@@ -47,6 +47,31 @@ No model downloads or automatic library upgrades are requested. Baseline
 generation must match its repeat and the saved output before attribution.
 Changes to library versions/backend availability can change reproduction.
 
+## All 80 quantized prompts
+
+After the pilot, investigate every source prompt with:
+
+```bash
+python benchmarks/speculative_history_cases.py \
+  --report results/raw/speculative_mt_bench_20261111T072715614993Z.json \
+  --all-cases --repeats 2
+```
+
+This includes all 34 saved failures and all 46 saved passes, each exactly once.
+Use `--all-cases --plan-only` to inspect coverage without inference. The flag
+cannot be combined with failure/control counts and refuses incomplete coverage
+if a source case is unsupported, rather than silently skipping its selection.
+Runtime reproduction failures remain visible in the output report.
+
+Each failure is examined at its first saved mismatch; each passing prompt at
+one predetermined position matched to a failure where possible. This covers
+all prompts, not every token decision. There is no speed benchmark or repair.
+At repeats=2, the run schedules 160 complete target-only generations, up to 80
+partial speculative generations, one reference-cache rebuild per eligible
+decision, and up to 640 cell replays. Serial replays contain multiple forward
+calls. This can take substantially longer than the pilot. A fresh JSON records
+progress and is saved after each case and on interruption.
+
 ## What is compared
 
 At the first mismatch, or the preselected matching decision, hold the preceding
